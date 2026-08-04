@@ -6617,6 +6617,7 @@ paths:
           enum:
           - organization
           - project
+          - instance
       tags:
       - webhooks
       security:
@@ -6923,7 +6924,11 @@ paths:
         name: type
         schema:
           type: string
+          enum:
+          - organization
+          - project
         description: Type of webhook
+        required: true
       tags:
       - webhooks
       security:
@@ -8018,13 +8023,16 @@ components:
       - create:issue
       - create:job
       - create:membership
+      - create:organization
       - create:project
       - create:task
+      - create:user
       - delete:comment
       - delete:invitation
       - delete:issue
       - delete:job
       - delete:membership
+      - delete:organization
       - delete:project
       - delete:task
       - update:comment
@@ -8048,13 +8056,16 @@ components:
         * `create:issue` - CREATE:ISSUE
         * `create:job` - CREATE:JOB
         * `create:membership` - CREATE:MEMBERSHIP
+        * `create:organization` - CREATE:ORGANIZATION
         * `create:project` - CREATE:PROJECT
         * `create:task` - CREATE:TASK
+        * `create:user` - CREATE:USER
         * `delete:comment` - DELETE:COMMENT
         * `delete:invitation` - DELETE:INVITATION
         * `delete:issue` - DELETE:ISSUE
         * `delete:job` - DELETE:JOB
         * `delete:membership` - DELETE:MEMBERSHIP
+        * `delete:organization` - DELETE:ORGANIZATION
         * `delete:project` - DELETE:PROJECT
         * `delete:task` - DELETE:TASK
         * `update:comment` - UPDATE:COMMENT
@@ -11947,10 +11958,12 @@ components:
       enum:
       - organization
       - project
+      - instance
       type: string
       description: |-
         * `organization` - ORGANIZATION
         * `project` - PROJECT
+        * `instance` - INSTANCE
     WebhookWriteRequest:
       type: object
       properties:

@@ -10,7 +10,7 @@ import pytest
 from deepdiff import DeepDiff
 
 from shared.fixtures.data import Container
-from shared.fixtures.init import CVAT_ROOT_DIR
+from shared.fixtures.init import CVAT_ROOT_DIR, container_exec_cvat
 from shared.utils.config import delete_method, get_method, patch_method, post_method
 from shared.utils.helpers import generate_image_files
 
@@ -21,6 +21,7 @@ from .utils import (
     create_task,
     export_task_backup,
     export_task_dataset,
+    register_new_user,
 )
 
 # Testing webhook functionality:
@@ -78,6 +79,25 @@ def create_webhook(events, webhook_type, project_id=None, org_id=""):
     return response.json()
 
 
+def create_instance_type_webhook(request: pytest.FixtureRequest, events: list[str]) -> int:
+    events_csv = ",".join(sorted(events))
+    code = (
+        "from cvat.apps.webhooks.models import Webhook, WebhookContentTypeChoice, WebhookTypeChoice; "
+        "webhook = Webhook.objects.create("
+        f"target_url={target_url()!r}, "
+        "type=WebhookTypeChoice.INSTANCE, "
+        "content_type=WebhookContentTypeChoice.JSON, "
+        f"events={events_csv!r}, "
+        "is_active=True, "
+        "enable_ssl=False"
+        "); "
+        "print(webhook.id)"
+    )
+
+    webhook_id = int(container_exec_cvat(request, ["./manage.py", "shell", "-c", code]).strip())
+    return webhook_id
+
+
 def get_deliveries(webhook_id, expected_count=1, *, timeout: int = 60):
     start_time = time()
 
@@ -98,6 +118,40 @@ def get_deliveries(webhook_id, expected_count=1, *, timeout: int = 60):
         sleep(1)
 
     return deliveries, delivery_response
+
+
+def get_instance_webhook_deliveries(
+    request: pytest.FixtureRequest,
+    webhook_id: int,
+    expected_count: int = 1,
+    *,
+    timeout: int = 60,
+):
+    start_time = time()
+    code = (
+        "import json; "
+        "from cvat.apps.webhooks.models import WebhookDelivery; "
+        f"qs = list(WebhookDelivery.objects.filter(webhook_id={int(webhook_id)}).order_by('-id')); "
+        "print(json.dumps({"
+        "'count': len(qs), "
+        "'results': [{'response': delivery.response} for delivery in qs]"
+        "}))"
+    )
+
+    while True:
+        deliveries = json.loads(
+            container_exec_cvat(request, ["./manage.py", "shell", "-c", code]).strip(),
+        )
+
+        if deliveries["count"] == expected_count:
+            raw_deliver_response = deliveries["results"][0]["response"]
+            delivery_response = json.loads(raw_deliver_response) if raw_deliver_response else {}
+            return deliveries, delivery_response
+
+        if time() - start_time > timeout:
+            raise TimeoutError("Failed to get deliveries within the specified time interval")
+
+        sleep(1)
 
 
 @pytest.mark.usefixtures("restore_db_per_function")
@@ -978,3 +1032,19 @@ class TestConsensusMergeCompletedRequestEvent:
         assert payload["request"]["operation"]["task_id"] == task["id"]
         assert payload["request"]["result_id"] is None
         assert payload["request"]["result_url"] is None
+
+
+@pytest.mark.usefixtures("restore_db_per_function")
+class TestUserCreatedEvent:
+    def test_webhook_create_user(self, request: pytest.FixtureRequest) -> None:
+        webhook_id = create_instance_type_webhook(request, events=["create:user"])
+
+        user = register_new_user("webhook_create_user")
+
+        _, payload = get_instance_webhook_deliveries(request, webhook_id)
+        assert payload["event"] == "create:user"
+        assert payload["webhook_id"] == webhook_id
+        assert payload["user"]["id"] is not None
+        assert payload["user"]["username"] == user["username"]
+        assert payload["user"]["email"] == user["email"]
+        assert payload["user"]["is_active"] is True

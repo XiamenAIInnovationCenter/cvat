@@ -5,6 +5,7 @@
 import json
 from typing import TypeVar
 
+from django.contrib.auth.models import User
 from django.db import transaction
 from django.db.models import Model
 from django.db.models.signals import post_delete, post_save, pre_delete
@@ -18,7 +19,7 @@ from cvat.apps.events.handlers import (
 from cvat.apps.events.handlers import organization_id as resolve_organization_id
 from cvat.apps.events.handlers import project_id as resolve_project_id
 from cvat.apps.organizations.models import Invitation, Membership, Organization
-from cvat.apps.webhooks import utils
+from cvat.apps.webhooks import serializers, utils
 from cvat.apps.webhooks.event_type import EventKeyChoice, event_key
 
 from .dispatch import batch_add_webhooks_to_queue
@@ -161,6 +162,7 @@ def post_save_resource_event(
 @receiver(pre_delete, sender=Comment)
 @receiver(pre_delete, sender=Invitation)
 @receiver(pre_delete, sender=Membership)
+@receiver(pre_delete, sender=Organization)
 def pre_delete_resource_event(sender: type[ModelT], instance: ModelT, **kwargs):
     resource_name = instance.__class__.__name__.lower()
 
@@ -180,6 +182,7 @@ def pre_delete_resource_event(sender: type[ModelT], instance: ModelT, **kwargs):
 @receiver(post_delete, sender=Comment)
 @receiver(post_delete, sender=Invitation)
 @receiver(post_delete, sender=Membership)
+@receiver(post_delete, sender=Organization)
 def post_delete_resource_event(sender: type[ModelT], instance: ModelT, **kwargs):
     resource_name = instance.__class__.__name__.lower()
 
@@ -205,6 +208,47 @@ def post_delete_resource_event(sender: type[ModelT], instance: ModelT, **kwargs)
         "event": event_key_,
         resource_name: deleted_instance_snapshot,
         "sender": utils.get_sender(instance=instance),
+    }
+
+    webhook_payload_pairs = [
+        (webhook, {**webhook_payload, "webhook_id": webhook.id}) for webhook in webhooks
+    ]
+
+    transaction.on_commit(
+        lambda: batch_add_webhooks_to_queue(webhook_payload_pairs=webhook_payload_pairs),
+        robust=True,
+    )
+
+
+@receiver(post_save, sender=User)
+def post_save_user_event(
+    sender: type[User],
+    instance: User,
+    created: bool,
+    raw: bool,
+    **kwargs,
+):
+    if not created or raw or instance.is_superuser:
+        return
+
+    event_key_ = event_key(action="create", resource="user")
+    if event_key_ not in (a[0] for a in EventKeyChoice.choices()):
+        return
+
+    webhooks = select_webhooks(
+        event_key=event_key_,
+        project_id=None,
+        organization_id=None,
+        select_for_org=False,
+        select_for_project=False,
+    )
+
+    if not webhooks:
+        return
+
+    webhook_payload = {
+        "event": event_key_,
+        "user": serializers.WebhookUserSerializer(instance=instance).data,
     }
 
     webhook_payload_pairs = [

@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+from django.contrib.auth.models import User
 from django.db import models
 from drf_spectacular.utils import extend_schema_serializer
 from rest_framework import serializers
@@ -13,6 +14,21 @@ from .event_type import EventKeyChoice, OrganizationEvents, ProjectEvents
 from .models import Webhook, WebhookContentTypeChoice, WebhookDelivery, WebhookTypeChoice
 
 
+class WebhookUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "is_active",
+            "date_joined",
+        )
+        read_only_fields = fields
+
+
 class EventKeysValidator:
     requires_context = True
 
@@ -22,6 +38,10 @@ class EventKeysValidator:
         return attrs.get("type")
 
     def __call__(self, attrs, serializer):
+        if attrs.get("type") is not None:
+            if attrs["type"] not in (WebhookTypeChoice.PROJECT, WebhookTypeChoice.ORGANIZATION):
+                raise serializers.ValidationError(f"Invalid type, got {attrs['type']}")
+
         if attrs.get("events") is not None:
             webhook_type = self.get_webhook_type(attrs, serializer)
             events_keys = set(EventKeysField().to_representation(attrs["events"]))
