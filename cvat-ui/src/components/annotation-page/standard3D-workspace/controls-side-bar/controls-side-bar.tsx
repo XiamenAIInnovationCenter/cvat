@@ -31,7 +31,7 @@ import ControlVisibilityObserver from 'components/annotation-page/standard-works
 import { filterApplicableForType } from 'utils/filter-applicable-labels';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 
 interface Props {
     keyMap: KeyMap;
@@ -93,7 +93,7 @@ const componentShortcuts: Record<string, KeyMapItem> = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 const ObservedCursorControl = ControlVisibilityObserver<CursorControlProps>(CursorControl);
 const ObservedMoveControl = ControlVisibilityObserver<MoveControlProps>(MoveControl);

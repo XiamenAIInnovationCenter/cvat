@@ -4,6 +4,8 @@
 
 import React from 'react';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
+import { useTranslation } from 'react-i18next';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import Text from 'antd/lib/typography/Text';
 import Select from 'antd/lib/select';
@@ -44,6 +46,7 @@ const colors = [
 ];
 
 function AnalyticsOverview(props: Props): JSX.Element | null {
+    const { t, i18n } = useTranslation('business');
     const {
         report, timePeriod, reportRefreshingStatus,
         onTimePeriodChange, onCreateReport,
@@ -64,15 +67,20 @@ function AnalyticsOverview(props: Props): JSX.Element | null {
                     <Col span={24}>
                         <Card>
                             <div className='cvat-empty-performance-analytics-item'>
-                                {reportRefreshingStatus ? <Text>{reportRefreshingStatus}</Text> :
-                                    <Text>{`A performance report for the ${report.target} was not computed`}</Text>}
+                                {reportRefreshingStatus ? <Text>{reportRefreshingStatus}</Text> : (
+                                    <Text>
+                                        {t('A performance report for the {{target}} was not computed', {
+                                            target: t(report.target),
+                                        })}
+                                    </Text>
+                                )}
                                 <Button
                                     onClick={onCreateReport}
                                     loading={reportRefreshingStatus !== null}
                                     disabled={reportRefreshingStatus !== null}
                                     type='primary'
                                 >
-                                    Request
+                                    {t('Request')}
                                 </Button>
                             </div>
                         </Card>
@@ -87,7 +95,7 @@ function AnalyticsOverview(props: Props): JSX.Element | null {
         const tooltip = (
             <div className='cvat-analytics-tooltip-inner'>
                 <Text>
-                    {entry.description}
+                    {t(entry.description)}
                 </Text>
             </div>
         );
@@ -106,7 +114,7 @@ function AnalyticsOverview(props: Props): JSX.Element | null {
                 views.push({
                     view: (
                         <AnalyticsCard
-                            title={entry.title}
+                            title={t(entry.title)}
                             tooltip={tooltip}
                             value={typeof value === 'number' ? value.toFixed(1) : 0}
                             key={entry.name}
@@ -143,7 +151,7 @@ function AnalyticsOverview(props: Props): JSX.Element | null {
 
                     colorIndex = colorIndex >= colors.length - 1 ? 0 : colorIndex + 1;
                     return {
-                        label,
+                        label: t(label),
                         data,
                         backgroundColor: colors[colorIndex],
                     };
@@ -161,7 +169,7 @@ function AnalyticsOverview(props: Props): JSX.Element | null {
                         <HistogramView
                             datasets={datasets}
                             labels={dateLabels}
-                            title={entry.title}
+                            title={t(entry.title)}
                             key={entry.name}
                             entryName={entry.name}
                         />
@@ -172,7 +180,7 @@ function AnalyticsOverview(props: Props): JSX.Element | null {
             }
             default: {
                 Notification.warning({
-                    message: `Cannot display analytics view with view type ${entry.defaultView}`,
+                    message: t('Cannot display analytics view with view type {{type}}', { type: entry.defaultView }),
                 });
             }
         }
@@ -182,7 +190,7 @@ function AnalyticsOverview(props: Props): JSX.Element | null {
         <div className='cvat-analytics-overview'>
             <Row justify='space-between'>
                 <Col>
-                    <CVATTooltip title='Request calculating a new report'>
+                    <CVATTooltip title={t('Request calculating a new report')}>
                         <Button
                             className='cvat-analytics-refresh-button'
                             onClick={onCreateReport}
@@ -191,26 +199,29 @@ function AnalyticsOverview(props: Props): JSX.Element | null {
                         />
                     </CVATTooltip>
                     <Text type='secondary'>
-                        { reportRefreshingStatus || `Created ${report?.id ? moment(report.createdDate).fromNow() : ''}`}
+                        {reportRefreshingStatus || t('Created {{time}}', {
+                            time: report?.id ? moment(report.createdDate)
+                                .locale(i18n.language.toLowerCase()).fromNow() : '',
+                        })}
                     </Text>
                 </Col>
                 <Col>
                     <Select
-                        placeholder='Select time period'
+                        placeholder={t('Select time period')}
                         value={timePeriod}
                         onChange={onTimePeriodChange}
                         options={[{
                             value: DateIntervals.LAST_WEEK,
-                            label: DateIntervals.LAST_WEEK,
+                            label: t(DateIntervals.LAST_WEEK),
                         }, {
                             value: DateIntervals.LAST_MONTH,
-                            label: DateIntervals.LAST_MONTH,
+                            label: t(DateIntervals.LAST_MONTH),
                         }, {
                             value: DateIntervals.LAST_QUARTER,
-                            label: DateIntervals.LAST_QUARTER,
+                            label: t(DateIntervals.LAST_QUARTER),
                         }, {
                             value: DateIntervals.LAST_YEAR,
-                            label: DateIntervals.LAST_YEAR,
+                            label: t(DateIntervals.LAST_YEAR),
                         }]}
                     />
                 </Col>

@@ -5,6 +5,7 @@
 
 import React from 'react';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import Text from 'antd/lib/typography/Text';
@@ -14,6 +15,7 @@ import Dropdown from 'antd/lib/dropdown';
 import Button from 'antd/lib/button';
 import Badge from 'antd/lib/badge';
 import { MoreOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState } from 'reducers';
 import { Project } from 'cvat-core-wrapper';
@@ -40,9 +42,10 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
 
     const history = useHistory();
     const ribbonPlugins = usePlugins((state: CombinedState) => state.plugins.components.projectItem.ribbon, props);
+    const { t, i18n } = useTranslation('business');
     const height = useCardHeight();
     const ownerName = instance.owner ? instance.owner.username : null;
-    const updated = moment(instance.updatedDate).fromNow();
+    const updated = moment(instance.updatedDate).locale(i18n.language.toLowerCase()).fromNow();
     const deletes = useSelector((state: CombinedState) => state.projects.activities.deletes);
     const deleted = instance.id in deletes ? deletes[instance.id] : false;
 
@@ -102,11 +105,11 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                             <div>
                                 {ownerName && (
                                     <>
-                                        <Text type='secondary'>{`Created ${ownerName ? `by ${ownerName}` : ''}`}</Text>
+                                        <Text type='secondary'>{t('Created by {{owner}}', { owner: ownerName })}</Text>
                                         <br />
                                     </>
                                 )}
-                                <Text type='secondary'>{`Last updated ${updated}`}</Text>
+                                <Text type='secondary'>{t('Last updated {{time}}', { time: updated })}</Text>
                             </div>
                             <div>
                                 <Dropdown

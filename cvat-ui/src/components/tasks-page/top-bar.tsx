@@ -47,6 +47,7 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
     const history = useHistory();
     const prevImporting = usePrevious(importing);
     const { t, i18n } = useTranslation('base');
+    const { t: tBusiness } = useTranslation('business');
 
     useEffect(() => {
         if (prevImporting && !importing) {
@@ -109,7 +110,7 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
                                     onClick={(): void => history.push('/tasks/create')}
                                     icon={<PlusOutlined />}
                                 >
-                                    {t('search.create_new', 'Create a new task', { item: t('_task') })}
+                                    {tBusiness('Create a new task')}
                                 </Button>
                                 <Button
                                     className='cvat-create-multi-tasks-button'
@@ -117,7 +118,7 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
                                     onClick={(): void => history.push('/tasks/create?many=true')}
                                     icon={<span className='anticon'><MultiPlusIcon /></span>}
                                 >
-                                    {t('search.create_new_more', 'Create multi tasks', { items: t('tasks') })}
+                                    {tBusiness('Create multi tasks')}
                                 </Button>
                                 <Button
                                     className='cvat-import-task-button'

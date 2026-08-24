@@ -22,6 +22,7 @@ import { Row, Col } from 'antd/lib/grid';
 import notification from 'antd/lib/notification';
 import message from 'antd/lib/message';
 import Switch from 'antd/lib/switch';
+import i18n from 'i18n';
 import lodash, { omit } from 'lodash';
 
 import { AIToolsIcon } from 'icons';
@@ -385,7 +386,10 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
 
         try {
             this.interaction.hideMessage = message.loading({
-                content: `Waiting a response from ${activeInteractor?.name}..`,
+                content: i18n.t('Waiting for a response from {{name}}...', {
+                    ns: 'business',
+                    name: activeInteractor?.name,
+                }),
                 duration: 0,
                 className: 'cvat-tracking-notice',
             });
@@ -454,7 +458,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
         } catch (error: any) {
             notification.error({
                 description: <CVATMarkdown>{error.message}</CVATMarkdown>,
-                message: 'Interaction error occurred',
+                message: i18n.t('Interaction error occurred', { ns: 'business' }),
                 duration: null,
             });
         }
@@ -548,7 +552,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
         } catch (error: any) {
             notification.error({
                 description: <CVATMarkdown>{error.message}</CVATMarkdown>,
-                message: 'Tracking error occurred',
+                message: i18n.t('Tracking error occurred', { ns: 'business' }),
                 duration: null,
             });
         }
@@ -578,8 +582,8 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
 
         if (interactor.version < MIN_SUPPORTED_INTERACTOR_VERSION) {
             notification.warning({
-                message: 'Interactor API is outdated',
-                description: 'Probably, you should consider updating the serverless function',
+                message: i18n.t('Interactor API is outdated', { ns: 'business' }),
+                description: i18n.t('Probably, you should consider updating the serverless function', { ns: 'business' }),
             });
         }
 
@@ -617,7 +621,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                         return ReactDOM.createPortal(
                             <Col>
                                 {isTracked ? (
-                                    <CVATTooltip overlay='Disable tracking'>
+                                    <CVATTooltip overlay={i18n.t('Disable tracking', { ns: 'business' })}>
                                         <EnvironmentFilled
                                             onClick={() => {
                                                 const filteredStates = trackedShapes.filter(
@@ -635,7 +639,11 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                         />
                                     </CVATTooltip>
                                 ) : (
-                                    <CVATTooltip overlay={`Enable tracking using ${activeTracker.name}`}>
+                                    <CVATTooltip overlay={i18n.t('Enable tracking using {{tracker}}', {
+                                        ns: 'business',
+                                        tracker: activeTracker.name,
+                                    })}
+                                    >
                                         <EnvironmentOutlined
                                             onClick={() => {
                                                 objectState.descriptions = [`Trackable (${activeTracker.name})`];
@@ -770,9 +778,11 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                         const trackableObjects = trackingData.stateless[trackerID];
                         const numOfObjects = trackableObjects.clientIDs.length;
                         hideMessage = message.loading({
-                            content: `${tracker.name}: states are being initialized for ${numOfObjects} ${
-                                numOfObjects > 1 ? 'objects' : 'object'
-                            } ..`,
+                            content: i18n.t('{{tracker}}: initializing {{count}} object', {
+                                ns: 'business',
+                                tracker: tracker.name,
+                                count: numOfObjects,
+                            }),
                             duration: 0,
                             className: 'cvat-tracking-notice',
                         });
@@ -797,7 +807,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                         delete trackingData.stateless[trackerID];
                     } catch (error: any) {
                         notification.error({
-                            message: 'Tracker initialization error',
+                            message: i18n.t('Tracker initialization error', { ns: 'business' }),
                             description: <CVATMarkdown>{error.message}</CVATMarkdown>,
                             duration: null,
                         });
@@ -818,9 +828,11 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                         const trackableObjects = trackingData.statefull[trackerID];
                         const numOfObjects = trackableObjects.clientIDs.length;
                         hideMessage = message.loading({
-                            content: `${tracker.name}: ${numOfObjects} ${
-                                numOfObjects > 1 ? 'objects are' : 'object is'
-                            } being tracked..`,
+                            content: i18n.t('{{tracker}}: tracking {{count}} object', {
+                                ns: 'business',
+                                tracker: tracker.name,
+                                count: numOfObjects,
+                            }),
                             duration: 0,
                             className: 'cvat-tracking-notice',
                         });
@@ -851,7 +863,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                         }
                     } catch (error: any) {
                         notification.error({
-                            message: 'Tracking error',
+                            message: i18n.t('Tracking error', { ns: 'business' }),
                             description: <CVATMarkdown>{error.message}</CVATMarkdown>,
                             duration: null,
                         });
@@ -910,7 +922,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 await openCVWrapper.initialize(() => {});
             } catch (error: any) {
                 notification.error({
-                    message: 'Could not initialize OpenCV',
+                    message: i18n.t('Could not initialize OpenCV', { ns: 'business' }),
                     description: <CVATMarkdown>{error.message}</CVATMarkdown>,
                     duration: null,
                 });
@@ -960,7 +972,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
             <>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text-color'>Label</Text>
+                        <Text className='cvat-text-color'>{i18n.t('Label', { ns: 'business' })}</Text>
                     </Col>
                 </Row>
                 <Row justify='center'>
@@ -988,7 +1000,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 <Row justify='center' align='middle' style={{ marginTop: '5px' }}>
                     <Col>
                         <Text type='warning' className='cvat-text-color'>
-                            No available trackers found
+                            {i18n.t('No available trackers found', { ns: 'business' })}
                         </Text>
                     </Col>
                 </Row>
@@ -999,7 +1011,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
             <>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text-color'>Tracker</Text>
+                        <Text className='cvat-text-color'>{i18n.t('Tracker', { ns: 'business' })}</Text>
                     </Col>
                 </Row>
                 <Row align='middle' justify='center'>
@@ -1042,7 +1054,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                 }
                             }}
                         >
-                            Track
+                            {i18n.t('Track', { ns: 'business' })}
                         </Button>
                     </Col>
                 </Row>
@@ -1063,7 +1075,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 <Row justify='center' align='middle' style={{ marginTop: '5px' }}>
                     <Col>
                         <Text type='warning' className='cvat-text-color'>
-                            No available interactors found
+                            {i18n.t('No available interactors found', { ns: 'business' })}
                         </Text>
                     </Col>
                 </Row>
@@ -1077,7 +1089,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
             <>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text-color'>Interactor</Text>
+                        <Text className='cvat-text-color'>{i18n.t('Interactor', { ns: 'business' })}</Text>
                     </Col>
                 </Row>
                 <Row align='middle' justify='space-between'>
@@ -1123,7 +1135,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                 this.setState({ convertMasksToPolygons: checked });
                             }}
                         />
-                        <Text>Convert masks to polygons</Text>
+                        <Text>{i18n.t('Convert masks to polygons', { ns: 'business' })}</Text>
                     </div>
 
                     {renderStartWithBox && (
@@ -1132,7 +1144,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                 checked={startInteractingWithBox}
                                 onChange={(value: boolean) => this.setState({ startInteractingWithBox: value })}
                             />
-                            <Text>Start with a bounding box</Text>
+                            <Text>{i18n.t('Start with a bounding box', { ns: 'business' })}</Text>
                         </div>
                     )}
                 </div>
@@ -1164,7 +1176,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                 }
                             }}
                         >
-                            Interact
+                            {i18n.t('Interact', { ns: 'business' })}
                         </Button>
                     </Col>
                 </Row>
@@ -1182,7 +1194,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 <Row justify='center' align='middle' style={{ marginTop: '5px' }}>
                     <Col>
                         <Text type='warning' className='cvat-text-color'>
-                            No available detectors found
+                            {i18n.t('No available detectors found', { ns: 'business' })}
                         </Text>
                     </Col>
                 </Row>
@@ -1367,7 +1379,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                     } catch (error: any) {
                         notification.error({
                             description: <CVATMarkdown>{error.message}</CVATMarkdown>,
-                            message: 'Detection error occurred',
+                            message: i18n.t('Detection error occurred', { ns: 'business' }),
                             duration: null,
                         });
                     } finally {
@@ -1384,7 +1396,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 <Row justify='start'>
                     <Col>
                         <Text className='cvat-text-color' strong>
-                            AI Tools
+                            {i18n.t('AI Tools', { ns: 'business' })}
                         </Text>
                     </Col>
                 </Row>
@@ -1393,7 +1405,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                     tabBarGutter={8}
                     items={[{
                         key: 'interactors',
-                        label: 'Interactors',
+                        label: i18n.t('Interactors', { ns: 'business' }),
                         children: (
                             <>
                                 {this.renderLabelBlock()}
@@ -1402,11 +1414,11 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                         ),
                     }, {
                         key: 'detectors',
-                        label: 'Detectors',
+                        label: i18n.t('Detectors', { ns: 'business' }),
                         children: this.renderDetectorBlock(),
                     }, {
                         key: 'trackers',
-                        label: 'Trackers',
+                        label: i18n.t('Trackers', { ns: 'business' }),
                         children: (
                             <>
                                 {this.renderLabelBlock()}
@@ -1463,14 +1475,14 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
 
         const detectionContent: JSX.Element | null = showDetectionContent ? (
             <Modal
-                title='Making a server request'
+                title={i18n.t('Making a server request', { ns: 'business' })}
                 zIndex={Number.MAX_SAFE_INTEGER}
                 open
                 destroyOnClose
                 closable={false}
                 footer={[]}
             >
-                <Text>Waiting for a server response..</Text>
+                <Text>{i18n.t('Waiting for a server response..', { ns: 'business' })}</Text>
                 <LoadingOutlined style={{ marginLeft: '10px' }} />
             </Modal>
         ) : null;

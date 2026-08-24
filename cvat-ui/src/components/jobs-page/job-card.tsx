@@ -10,6 +10,7 @@ import Card from 'antd/lib/card';
 import Descriptions from 'antd/lib/descriptions';
 import { MoreOutlined } from '@ant-design/icons';
 import Dropdown from 'antd/lib/dropdown';
+import { useTranslation } from 'react-i18next';
 
 import { Job, JobType } from 'cvat-core-wrapper';
 import { useCardHeightHOC } from 'utils/hooks';
@@ -31,6 +32,7 @@ interface Props {
 
 function JobCardComponent(props: Props): JSX.Element {
     const { job } = props;
+    const { t } = useTranslation('business');
 
     const deletes = useSelector((state: CombinedState) => state.jobs.activities.deletes);
     const deleted = job.id in deletes ? deletes[job.id] === true : false;
@@ -54,9 +56,9 @@ function JobCardComponent(props: Props): JSX.Element {
 
     let tag = null;
     if (job.type === JobType.GROUND_TRUTH) {
-        tag = 'Ground truth';
+        tag = t('Ground truth');
     } else if (job.type === JobType.ANNOTATION && job.consensusReplicas > 0) {
-        tag = 'Consensus';
+        tag = t('Consensus');
     }
 
     return (
@@ -74,7 +76,7 @@ function JobCardComponent(props: Props): JSX.Element {
                         previewClassName='cvat-jobs-page-job-item-card-preview'
                     />
                     <div className='cvat-job-page-list-item-id'>
-                        ID:
+                        {`${t('ID')}:`}
                         {` ${job.id}`}
                     </div>
                     {tag && <div className='cvat-job-page-list-item-type'>{tag}</div>}
@@ -84,12 +86,14 @@ function JobCardComponent(props: Props): JSX.Element {
             hoverable
         >
             <Descriptions column={1} size='small'>
-                <Descriptions.Item label='Stage and state'>{`${job.stage} ${job.state}`}</Descriptions.Item>
-                <Descriptions.Item label='Frames'>{job.stopFrame - job.startFrame + 1}</Descriptions.Item>
+                <Descriptions.Item label={t('Stage and state')}>
+                    {`${t(job.stage)} ${t(job.state)}`}
+                </Descriptions.Item>
+                <Descriptions.Item label={t('Frames')}>{job.stopFrame - job.startFrame + 1}</Descriptions.Item>
                 {job.assignee ? (
-                    <Descriptions.Item label='Assignee'>{job.assignee.username}</Descriptions.Item>
+                    <Descriptions.Item label={t('Assignee')}>{job.assignee.username}</Descriptions.Item>
                 ) : (
-                    <Descriptions.Item label='Assignee'> </Descriptions.Item>
+                    <Descriptions.Item label={t('Assignee')}> </Descriptions.Item>
                 )}
             </Descriptions>
             <Dropdown

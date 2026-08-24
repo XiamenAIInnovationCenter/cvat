@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState, ReactPortal } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom';
 import { useDispatch } from 'react-redux';
 import Form from 'antd/lib/form';
@@ -26,6 +27,7 @@ interface FormProps {
 }
 
 function MessageForm(props: FormProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         top, left, angle, scale, fetching, submit, cancel,
     } = props;
@@ -42,9 +44,9 @@ function MessageForm(props: FormProps): JSX.Element {
         >
             <Form.Item
                 name='issue_description'
-                rules={[{ required: true, message: 'Please, fill out the field' }]}
+                rules={[{ required: true, message: t('Please, fill out the field') }]}
             >
-                <Input autoFocus autoComplete='off' placeholder='Please, describe the issue' />
+                <Input autoFocus autoComplete='off' placeholder={t('Please, describe the issue')} />
             </Form.Item>
             <Row justify='space-between'>
                 <Col>
@@ -53,7 +55,7 @@ function MessageForm(props: FormProps): JSX.Element {
                         disabled={fetching}
                         className='cvat-create-issue-dialog-cancel-button'
                     >
-                        Cancel
+                        {t('Cancel')}
                     </Button>
                 </Col>
                 <Col>
@@ -64,7 +66,7 @@ function MessageForm(props: FormProps): JSX.Element {
                         htmlType='submit'
                         className='cvat-create-issue-dialog-submit-button'
                     >
-                        Submit
+                        {t('Submit')}
                     </Button>
                 </Col>
             </Row>

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import { CombinedState } from 'reducers';
@@ -39,6 +40,7 @@ interface RowData {
 const FRAME_NAME_WIDTH_COEF = 0.70;
 
 function AllocationTable(props: Readonly<Props>): JSX.Element | null {
+    const { t } = useTranslation('business');
     const {
         task, gtJobId, gtJobMeta, validationLayout,
         onDeleteFrames, onRestoreFrames, pageSizeData,
@@ -83,7 +85,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
 
     const columns = [
         {
-            title: 'Frame',
+            title: t('Frame'),
             dataIndex: 'frame',
             key: 'frame',
             align: 'center' as const,
@@ -104,7 +106,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
             ),
         },
         {
-            title: 'Name',
+            title: t('Name'),
             dataIndex: 'name',
             key: 'name',
             align: 'center' as const,
@@ -131,12 +133,12 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
             },
         },
         {
-            title: 'Actions',
+            title: t('Actions'),
             dataIndex: 'active',
             key: 'actions',
             filters: [
-                { text: 'Active', value: true },
-                { text: 'Excluded', value: false },
+                { text: t('Active'), value: true },
+                { text: t('Excluded'), value: false },
             ],
             align: 'center' as const,
             sorter: sorter('active'),
@@ -161,7 +163,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
     return (
         <>
             <QualityTableHeader
-                title='Frames'
+                title={t('Frames')}
                 onSearch={handleSearch}
                 onDownload={handleDownload}
                 actions={

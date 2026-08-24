@@ -15,6 +15,8 @@ import Button from 'antd/lib/button';
 import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
+import { useTranslation } from 'react-i18next';
 
 import { CloudStorage, CombinedState } from 'reducers';
 import { deleteCloudStorageAsync } from 'actions/cloud-storage-actions';
@@ -29,6 +31,7 @@ interface Props {
 export default function CloudStorageItemComponent(props: Props): JSX.Element {
     const history = useHistory();
     const dispatch = useDispatch();
+    const { t, i18n } = useTranslation('business');
 
     const { cloudStorage } = props;
     const {
@@ -56,8 +59,8 @@ export default function CloudStorageItemComponent(props: Props): JSX.Element {
 
     const onDelete = useCallback(() => {
         Modal.confirm({
-            title: 'Please, confirm your action',
-            content: `You are going to remove the cloudstorage "${displayName}". Continue?`,
+            title: t('Please, confirm your action'),
+            content: t('You are going to remove the cloud storage "{{name}}". Continue?', { name: displayName }),
             className: 'cvat-delete-cloud-storage-modal',
             onOk: () => {
                 dispatch(deleteCloudStorageAsync(cloudStorage));
@@ -66,7 +69,7 @@ export default function CloudStorageItemComponent(props: Props): JSX.Element {
                 type: 'primary',
                 danger: true,
             },
-            okText: 'Delete',
+            okText: t('Delete'),
         });
     }, [cloudStorage.id]);
 
@@ -102,18 +105,23 @@ export default function CloudStorageItemComponent(props: Props): JSX.Element {
                 description={(
                     <>
                         <Paragraph>
-                            <Text type='secondary'>Provider: </Text>
+                            <Text type='secondary'>{`${t('Provider')}: `}</Text>
                             <Text>{providerType}</Text>
                         </Paragraph>
                         <Paragraph>
-                            <Text type='secondary'>Created </Text>
-                            {owner ? <Text type='secondary'>{`by ${owner.username}`}</Text> : null}
-                            <Text type='secondary'> on </Text>
-                            <Text type='secondary'>{moment(createdDate).format('MMMM Do YYYY')}</Text>
+                            <Text type='secondary'>
+                                {t('Created by {{owner}} on {{date}}', {
+                                    owner: owner?.username || '-',
+                                    date: moment(createdDate).locale(i18n.language.toLowerCase()).format('LL'),
+                                })}
+                            </Text>
                         </Paragraph>
                         <Paragraph>
-                            <Text type='secondary'>Last updated </Text>
-                            <Text type='secondary'>{moment(updatedDate).fromNow()}</Text>
+                            <Text type='secondary'>
+                                {t('Last updated {{time}}', {
+                                    time: moment(updatedDate).locale(i18n.language.toLowerCase()).fromNow(),
+                                })}
+                            </Text>
                         </Paragraph>
                         <Status cloudStorage={cloudStorage} />
                         <Dropdown
@@ -123,11 +131,11 @@ export default function CloudStorageItemComponent(props: Props): JSX.Element {
                                 className: 'cvat-cloud-storage-actions-menu',
                                 items: [{
                                     key: 'update',
-                                    label: 'Update',
+                                    label: t('Update'),
                                     onClick: onUpdate,
                                 }, {
                                     key: 'delete',
-                                    label: 'Delete',
+                                    label: t('Delete'),
                                     onClick: onDelete,
                                 }],
                             }}

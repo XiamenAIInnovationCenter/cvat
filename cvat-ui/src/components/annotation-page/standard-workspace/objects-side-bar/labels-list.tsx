@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import message from 'antd/lib/message';
 
@@ -15,6 +16,7 @@ import GlobalHotKeys, { KeyMapItem } from 'utils/mousetrap-react';
 import Text from 'antd/lib/typography/Text';
 import { ShortcutScope } from 'utils/enums';
 import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { useResetShortcutsOnUnmount } from 'utils/hooks';
 import { getCVATStore } from 'cvat-store';
@@ -33,9 +35,10 @@ for (const index of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]) {
     };
 }
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function LabelsListComponent(): JSX.Element {
+    const { t, i18n } = useTranslation('business');
     const dispatch = useDispatch();
 
     const { labels, keyMap } = useSelector((state: CombinedState) => ({
@@ -60,15 +63,14 @@ function LabelsListComponent(): JSX.Element {
                 updatedComponentShortcuts[key] = {
                     ...updatedComponentShortcuts[key],
                     nonActive: false,
-                    name: `Switch label to ${labelName}`,
-                    description: `Changes the label to ${labelName} for the activated
-                        object or for the next drawn object if no objects are activated`,
+                    name: t('Switch label to {{label}}', { label: labelName }),
+                    description: t('Change the label to {{label}} for the active object, or use it as the default for the next object when none is active', { label: labelName }),
                 };
             }
         }
 
         registerComponentShortcuts(updatedComponentShortcuts);
-    }, [labels]);
+    }, [labels, i18n.language]);
 
     const handleHelper = (event: KeyboardEvent, index: number): void => {
         if (event) event.preventDefault();
@@ -108,7 +110,7 @@ function LabelsListComponent(): JSX.Element {
                 }
 
                 message.destroy();
-                message.success(`Default label has been changed to "${label.name}"`);
+                message.success(t('Default label has been changed to "{{label}}"', { label: label.name }));
             }
         }
     };
@@ -125,7 +127,7 @@ function LabelsListComponent(): JSX.Element {
         <div className='cvat-objects-sidebar-labels-list'>
             <GlobalHotKeys keyMap={subKeyMap(componentShortcuts, keyMap)} handlers={handlers} />
             <div className='cvat-objects-sidebar-labels-list-header'>
-                <Text>{`Items: ${labels.length}`}</Text>
+                <Text>{t('Items: {{count}}', { count: labels.length })}</Text>
             </div>
             {labelIDs.map(
                 (labelID: number): JSX.Element => (

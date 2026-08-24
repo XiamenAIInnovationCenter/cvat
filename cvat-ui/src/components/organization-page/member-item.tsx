@@ -10,6 +10,8 @@ import Text from 'antd/lib/typography/Text';
 import Dropdown from 'antd/lib/dropdown';
 import { Row, Col } from 'antd/lib/grid';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
+import { useTranslation } from 'react-i18next';
 import { DeleteOutlined, MoreOutlined } from '@ant-design/icons';
 import Modal from 'antd/lib/modal';
 import { CombinedState } from 'reducers';
@@ -31,6 +33,7 @@ enum MenuKeys {
 }
 
 function MemberItem(props: Props): JSX.Element {
+    const { t, i18n } = useTranslation('business');
     const {
         membershipInstance, onRemoveMembership, onUpdateMembershipRole,
         onResendInvitation, onDeleteInvitation,
@@ -54,9 +57,9 @@ function MemberItem(props: Props): JSX.Element {
                     }
                 }}
                 >
-                    <Menu.Item key={MenuKeys.RESEND_INVITATION}>Resend invitation</Menu.Item>
+                    <Menu.Item key={MenuKeys.RESEND_INVITATION}>{t('Resend invitation')}</Menu.Item>
                     <Menu.Divider />
-                    <Menu.Item key={MenuKeys.DELETE_INVITATION}>Remove invitation</Menu.Item>
+                    <Menu.Item key={MenuKeys.DELETE_INVITATION}>{t('Remove invitation')}</Menu.Item>
                 </Menu>
             )}
         >
@@ -69,9 +72,9 @@ function MemberItem(props: Props): JSX.Element {
             onClick={() => {
                 Modal.confirm({
                     className: 'cvat-modal-organization-member-remove',
-                    title: `You are removing "${username}" from this organization`,
-                    content: 'The person will not have access to the organization data anymore. Continue?',
-                    okText: 'Yes, remove',
+                    title: t('You are removing "{{username}}" from this organization', { username }),
+                    content: t('The person will not have access to the organization data anymore. Continue?'),
+                    okText: t('Yes, remove'),
                     okButtonProps: {
                         danger: true,
                     },
@@ -96,10 +99,19 @@ function MemberItem(props: Props): JSX.Element {
             <Col span={8} className='cvat-organization-member-item-dates'>
                 {invitation ? (
                     <Text type='secondary'>
-                        {`Invited ${moment(invitation.createdDate).fromNow()} ${invitation.owner ? `by ${invitation.owner.username}` : ''}`}
+                        {t('Invited {{time}} by {{owner}}', {
+                            time: moment(invitation.createdDate).locale(i18n.language.toLowerCase()).fromNow(),
+                            owner: invitation.owner?.username || '-',
+                        })}
                     </Text>
                 ) : null}
-                {joinedDate ? <Text type='secondary'>{`Joined ${moment(joinedDate).fromNow()}`}</Text> : <Text type='secondary'>Invitation pending</Text>}
+                {joinedDate ? (
+                    <Text type='secondary'>
+                        {t('Joined {{time}}', {
+                            time: moment(joinedDate).locale(i18n.language.toLowerCase()).fromNow(),
+                        })}
+                    </Text>
+                ) : <Text type='secondary'>{t('Invitation pending')}</Text>}
             </Col>
             <Col span={3} className='cvat-organization-member-item-role'>
                 <Select
@@ -110,12 +122,12 @@ function MemberItem(props: Props): JSX.Element {
                     disabled={role === 'owner'}
                 >
                     {role === 'owner' ? (
-                        <Select.Option value='owner'>Owner</Select.Option>
+                        <Select.Option value='owner'>{t('Owner')}</Select.Option>
                     ) : (
                         <>
-                            <Select.Option value='worker'>Worker</Select.Option>
-                            <Select.Option value='supervisor'>Supervisor</Select.Option>
-                            <Select.Option value='maintainer'>Maintainer</Select.Option>
+                            <Select.Option value='worker'>{t('Worker')}</Select.Option>
+                            <Select.Option value='supervisor'>{t('Supervisor')}</Select.Option>
+                            <Select.Option value='maintainer'>{t('Maintainer')}</Select.Option>
                         </>
                     )}
                 </Select>

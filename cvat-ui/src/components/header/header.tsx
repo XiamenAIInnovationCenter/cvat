@@ -259,7 +259,7 @@ function HeaderComponent(props: Props): JSX.Element {
             title: `${about.server.name}`,
             content: (
                 <div>
-                    <p>{`${about.server.description}`}</p>
+                    <p>{tHeader('about.description', about.server.description)}</p>
                     <p>
                         <Text strong>
                             {`${tHeader('about.Server version')}:`}

@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     MAX_ACCURACY,
-    marks,
+    makeAccuracyMarks,
 } from 'components/annotation-page/standard-workspace/controls-side-bar/approximation-accuracy';
 import { clamp } from 'utils/math';
 
@@ -315,7 +315,10 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                         value={defaultApproxPolyAccuracy}
                         dots
                         onChange={onChangeDefaultApproxPolyAccuracy}
-                        marks={marks}
+                        marks={makeAccuracyMarks(
+                            tSettingsWorkspace('less', 'less'),
+                            tSettingsWorkspace('more', 'more'),
+                        )}
                     />
                 </Col>
                 <Col>

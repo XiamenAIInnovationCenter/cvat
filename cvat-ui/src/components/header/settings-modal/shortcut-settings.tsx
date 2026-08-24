@@ -90,7 +90,11 @@ function ShortcutsSettingsComponent(props: Props): JSX.Element {
                 scopeTitle.slice(firstAlphaIndex + 1).toLowerCase();
             }
             return {
-                label: <span className='cvat-shortcuts-settings-label'>{scopeTitle}</span>,
+                label: (
+                    <span className='cvat-shortcuts-settings-label'>
+                        {tSettingsShortcuts(`scope.${scope}`, scopeTitle)}
+                    </span>
+                ),
                 key: scope,
                 showArrow: !searchValue,
                 children: (
@@ -124,7 +128,7 @@ function ShortcutsSettingsComponent(props: Props): JSX.Element {
         }
 
         return scopeItems;
-    }, [filteredKeyMap]);
+    }, [filteredKeyMap, keyMap, onKeySequenceUpdate, searchValue, tSettingsShortcuts]);
 
     const handleCollapseChange = (keys: string[] | string): void => {
         if (!searchValue) {
@@ -144,7 +148,9 @@ function ShortcutsSettingsComponent(props: Props): JSX.Element {
                             onChange={onSearchChange}
                             className='cvat-shortcuts-settings-search'
                         />
-                        <Button size='large' onClick={onRestoreDefaults} className='cvat-shortcuts-settings-restore'>Restore Defaults</Button>
+                        <Button size='large' onClick={onRestoreDefaults} className='cvat-shortcuts-settings-restore'>
+                            {tSettingsShortcuts('restore-button', 'Restore Defaults')}
+                        </Button>
                     </Flex>
                 </Col>
             </Row>

@@ -16,6 +16,8 @@ import { subKeyMap } from 'utils/component-subkeymap';
 import { useSelector } from 'react-redux';
 import { CombinedState } from 'reducers';
 import { useResetShortcutsOnUnmount } from 'utils/hooks';
+import { useTranslation } from 'react-i18next';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 
 interface ShortcutLabelMap {
     [index: number]: any;
@@ -39,7 +41,7 @@ for (const idx of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]) {
     };
 }
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 const defaultShortcutLabelMap = {
     1: '',
@@ -55,6 +57,7 @@ const defaultShortcutLabelMap = {
 } as ShortcutLabelMap;
 
 function ShortcutsSelect(props: Props): JSX.Element {
+    const { t, i18n } = useTranslation('business');
     const { labels, onShortcutPress } = props;
     const [shortcutLabelMap, setShortcutLabelMap] = useState(defaultShortcutLabelMap);
 
@@ -89,14 +92,14 @@ function ShortcutsSelect(props: Props): JSX.Element {
                 updatedComponentShortcuts[key] = {
                     ...updatedComponentShortcuts[key],
                     nonActive: false,
-                    name: `Create a new tag "${label.name}"`,
-                    description: `Create a new tag having class "${label.name}"`,
+                    name: t('Create a new tag "{{label}}"', { label: label.name }),
+                    description: t('Create a new tag having class "{{label}}"', { label: label.name }),
                 };
             }
         }
 
         registerComponentShortcuts(updatedComponentShortcuts);
-    }, [shortcutLabelMap]);
+    }, [shortcutLabelMap, i18n.language]);
 
     Object.keys(shortcutLabelMap)
         .map((id) => Number.parseInt(id, 10))
@@ -123,7 +126,7 @@ function ShortcutsSelect(props: Props): JSX.Element {
             <GlobalHotKeys keyMap={subKeyMap(componentShortcuts, keyMap)} handlers={handlers} />
             <Row>
                 <Col>
-                    <Text strong>Shortcuts for labels:</Text>
+                    <Text strong>{t('Shortcuts for labels:')}</Text>
                 </Col>
             </Row>
             {shift(Object.keys(shortcutLabelMap), 1)
@@ -140,7 +143,7 @@ function ShortcutsSelect(props: Props): JSX.Element {
                                 className='cvat-tag-annotation-label-select'
                             >
                                 <Select.Option value=''>
-                                    <Text type='secondary'>None</Text>
+                                    <Text type='secondary'>{t('None')}</Text>
                                 </Select.Option>
                                 {(labels as any[]).map((label: any) => (
                                     <Select.Option key={label.id} value={`${label.id}`}>
@@ -148,7 +151,9 @@ function ShortcutsSelect(props: Props): JSX.Element {
                                     </Select.Option>
                                 ))}
                             </Select>
-                            <Text code className='cvat-tag-annotation-shortcut-key'>{`Key ${id}`}</Text>
+                            <Text code className='cvat-tag-annotation-shortcut-key'>
+                                {t('Key {{id}}', { id })}
+                            </Text>
                         </Col>
                     </Row>
                 ))}

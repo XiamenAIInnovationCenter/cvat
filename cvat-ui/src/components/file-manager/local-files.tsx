@@ -8,6 +8,7 @@ import React from 'react';
 import Text from 'antd/lib/typography/Text';
 import Upload, { RcFile } from 'antd/lib/upload';
 import { InboxOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     files: File[];
@@ -16,9 +17,10 @@ interface Props {
 }
 
 export default function LocalFiles(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { files, onUpload, many } = props;
-    const hintText = many ? 'You can upload one or more videos' :
-        'You can upload an archive with images, a video, or multiple images';
+    const hintText = many ? t('You can upload one or more videos') :
+        t('You can upload an archive with images, a video, or multiple images');
 
     return (
         <>
@@ -36,13 +38,13 @@ export default function LocalFiles(props: Props): JSX.Element {
                 <p className='ant-upload-drag-icon'>
                     <InboxOutlined />
                 </p>
-                <p className='ant-upload-text'>Click or drag files to this area</p>
+                <p className='ant-upload-text'>{t('Click or drag files to this area')}</p>
                 <p className='ant-upload-hint'>{ hintText }</p>
             </Upload.Dragger>
             {files.length >= 5 && (
                 <>
                     <br />
-                    <Text className='cvat-text-color'>{`${files.length} files selected`}</Text>
+                    <Text className='cvat-text-color'>{t('{{count}} files selected', { count: files.length })}</Text>
                 </>
             )}
         </>

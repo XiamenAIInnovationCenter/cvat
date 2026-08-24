@@ -6,6 +6,7 @@
 import React, {
     useState, useEffect, useCallback, CSSProperties,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Row, Col } from 'antd/lib/grid';
 import Icon, { LinkOutlined, DeleteOutlined, CopyOutlined } from '@ant-design/icons';
@@ -20,7 +21,7 @@ import { clamp } from 'utils/math';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import { Workspace } from 'reducers';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 
 interface Props {
@@ -61,9 +62,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function PlayerNavigation(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         startFrame,
         stopFrame,
@@ -98,10 +100,10 @@ function PlayerNavigation(props: Props): JSX.Element {
         if (!playing) {
             switchNavigationBlocked(true);
             Modal.confirm({
-                title: `Do you want to delete frame #${frameNumber}?`,
-                content: 'The frame will not be visible in navigation and exported datasets, but it still can be restored with all the annotations.',
+                title: t('Do you want to delete frame #{{frame}}?', { frame: frameNumber }),
+                content: t('The frame will not be visible in navigation and exported datasets, but it still can be restored with all the annotations.'),
                 className: 'cvat-modal-delete-frame',
-                okText: 'Delete',
+                okText: t('Delete'),
                 okType: 'danger',
                 onOk: () => {
                     switchNavigationBlocked(false);
@@ -133,7 +135,7 @@ function PlayerNavigation(props: Props): JSX.Element {
     } : {};
 
     const deleteFrameIcon = !frameDeleted ? (
-        <CVATTooltip title={`Delete the frame ${deleteFrameShortcut}`}>
+        <CVATTooltip title={t('Delete the frame {{shortcut}}', { shortcut: deleteFrameShortcut })}>
             <DeleteOutlined
                 style={deleteFrameIconStyle}
                 className='cvat-player-delete-frame'
@@ -141,7 +143,7 @@ function PlayerNavigation(props: Props): JSX.Element {
             />
         </CVATTooltip>
     ) : (
-        <CVATTooltip title='Restore the frame'>
+        <CVATTooltip title={t('Restore the frame')}>
             <Icon
                 style={deleteFrameIconStyle}
                 className='cvat-player-restore-frame'
@@ -189,10 +191,10 @@ function PlayerNavigation(props: Props): JSX.Element {
                         </CVATTooltip>
                     </Col>
                     <Col className='cvat-player-frame-actions' offset={1}>
-                        <CVATTooltip title='Copy frame filename'>
+                        <CVATTooltip title={t('Copy frame filename')}>
                             <CopyOutlined className='cvat-player-copy-frame-name-icon' onClick={onCopyFilenameIconClick} />
                         </CVATTooltip>
-                        <CVATTooltip title='Create frame URL'>
+                        <CVATTooltip title={t('Create frame URL')}>
                             <LinkOutlined className='cvat-player-frame-url-icon' onClick={onURLIconClick} />
                         </CVATTooltip>
                         { deleteFrameIcon }
@@ -200,7 +202,7 @@ function PlayerNavigation(props: Props): JSX.Element {
                 </Row>
             </Col>
             <Col>
-                <CVATTooltip title={`Press ${focusFrameInputShortcut} to focus here`}>
+                <CVATTooltip title={t('Press {{shortcut}} to focus here', { shortcut: focusFrameInputShortcut })}>
                     <InputNumber
                         ref={inputFrameRef}
                         className='cvat-player-frame-selector'

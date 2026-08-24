@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
@@ -20,6 +21,7 @@ interface Props {
 }
 
 function SetupTagPopover(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         labels, selectedLabelID, repeatShapeShortcut, onChangeLabel, onSetup,
     } = props;
@@ -29,13 +31,13 @@ function SetupTagPopover(props: Props): JSX.Element {
             <Row justify='start'>
                 <Col>
                     <Text className='cvat-text-color' strong>
-                        Setup tag
+                        {t('Setup tag')}
                     </Text>
                 </Col>
             </Row>
             <Row justify='start'>
                 <Col>
-                    <Text className='cvat-text-color'>Label</Text>
+                    <Text className='cvat-text-color'>{t('Label')}</Text>
                 </Col>
             </Row>
             <Row justify='start'>
@@ -46,7 +48,7 @@ function SetupTagPopover(props: Props): JSX.Element {
                         onChange={onChangeLabel}
                         onEnterPress={() => onSetup()}
                     />
-                    <CVATTooltip title={`Press ${repeatShapeShortcut} to add a tag again`}>
+                    <CVATTooltip title={t('Press {{shortcut}} to add a tag again', { shortcut: repeatShapeShortcut })}>
                         <Button
                             type='primary'
                             className='cvat-add-tag-button'

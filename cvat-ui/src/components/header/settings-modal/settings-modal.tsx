@@ -46,7 +46,7 @@ function SettingsModal(props: SettingsModalProps): JSX.Element {
             dispatch(restoreSettingsAsync());
         } catch {
             notification.error({
-                message: 'Failed to load settings from local storage',
+                message: tSettings('Failed to load settings from local storage'),
                 className: 'cvat-notification-notice-load-settings-fail',
             });
         } finally {

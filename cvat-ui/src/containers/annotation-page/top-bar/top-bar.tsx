@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18n from 'i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router-dom';
@@ -594,7 +595,10 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
 
         writeLatestFrame(jobInstance.id, frameNumber);
         if (jobInstance.annotations.hasUnsavedChanges() && !forceExit) {
-            const confirmationMessage = 'You have unsaved changes, please confirm leaving this page.';
+            const confirmationMessage = i18n.t(
+                'You have unsaved changes, please confirm leaving this page.',
+                { ns: 'business' },
+            );
             // eslint-disable-next-line no-param-reassign
             event.returnValue = confirmationMessage;
             return confirmationMessage;

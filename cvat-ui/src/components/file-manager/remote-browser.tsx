@@ -5,6 +5,7 @@
 import React, {
     MouseEvent, useEffect, useState, useRef, useCallback,
 } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import Breadcrumb from 'antd/lib/breadcrumb';
 import Button from 'antd/lib/button';
 import Pagination from 'antd/lib/pagination';
@@ -114,6 +115,7 @@ const updateRoot = (root: Node, prefix?: string): Node => {
 };
 
 function RemoteBrowser(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { SHARE_MOUNT_GUIDE_URL } = config;
     const {
         resource, manifestPath, defaultPrefix, onSelectFiles,
@@ -198,7 +200,7 @@ function RemoteBrowser(props: Props): JSX.Element {
             } catch (error: any) {
                 if (isRelevant()) {
                     notification.error({
-                        message: 'Storage content fetching failed',
+                        message: t('Storage content fetching failed'),
                         description: error.toString(),
                     });
                 }
@@ -291,7 +293,7 @@ function RemoteBrowser(props: Props): JSX.Element {
 
     const columns = [
         {
-            title: 'Name',
+            title: t('Name'),
             dataIndex: 'name',
             key: 'name',
             render: (name: string, node: Node) => {
@@ -325,11 +327,13 @@ function RemoteBrowser(props: Props): JSX.Element {
             <>
                 <Empty />
                 <Paragraph className='cvat-remote-browser-empty'>
-                    Please, be sure you had
-                    <Text strong>
-                        <a href={SHARE_MOUNT_GUIDE_URL}> mounted </a>
-                    </Text>
-                    share before you built CVAT and the shared storage contains files
+                    <Trans ns='business' i18nKey='remoteBrowser.shareMountTip'>
+                        Please, be sure you had
+                        <Text strong>
+                            <a href={SHARE_MOUNT_GUIDE_URL}> mounted </a>
+                        </Text>
+                        share before you built CVAT and the shared storage contains files
+                    </Trans>
                 </Paragraph>
             </>
         );
@@ -359,12 +363,16 @@ function RemoteBrowser(props: Props): JSX.Element {
                     <Input
                         addonBefore={<SearchOutlined />}
                         suffix={resource !== 'share' && !!resource.prefix && (
-                            <CVATTooltip title={`Default prefix "${resource.prefix}" is used`}>
+                            <CVATTooltip
+                                title={t('Default prefix "{{prefix}}" is used', {
+                                    prefix: resource.prefix,
+                                })}
+                            >
                                 <InfoCircleOutlined style={{ opacity: 0.5 }} />
                             </CVATTooltip>
                         )}
                         disabled={isFetching}
-                        placeholder='Search by prefix'
+                        placeholder={t('Search by prefix')}
                         value={curSearchString}
                         onBlur={() => resetDataSource()}
                         onPressEnter={() => resetDataSource()}
@@ -374,7 +382,7 @@ function RemoteBrowser(props: Props): JSX.Element {
                     />
                 </Col>
                 <Col>
-                    <CVATTooltip title='Refresh'>
+                    <CVATTooltip title={t('Refresh')}>
                         <Button
                             disabled={isFetching}
                             onClick={() => {
@@ -398,7 +406,7 @@ function RemoteBrowser(props: Props): JSX.Element {
                             message={(
                                 <>
                                     <Text>
-                                        There is no intersection between the specified prefix and the default one
+                                        {t('There is no intersection between the specified prefix and the default one')}
                                     </Text>
                                     <Text strong>{` "${defaultPrefix}". `}</Text>
                                 </>

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { QuestionCircleOutlined } from '@ant-design/icons/lib/icons';
 import Text from 'antd/lib/typography/Text';
 import InputNumber from 'antd/lib/input-number';
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Element | null {
+    const { t } = useTranslation('business');
     const { form, settings, onSave } = props;
 
     const initialValues = {
@@ -67,12 +69,12 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
             <Row justify='end' className='cvat-consensus-settings-save-btn'>
                 <Col>
                     <Button onClick={onSave} type='primary'>
-                        Save
+                        {t('Save')}
                     </Button>
                 </Col>
             </Row>
             <Row className='cvat-consensus-settings-title'>
-                <Text strong>General</Text>
+                <Text strong>{t('General')}</Text>
                 <CVATTooltip
                     title={generalTooltip}
                     className='cvat-analytics-tooltip'
@@ -85,7 +87,7 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
                 <Col span={6}>
                     <Form.Item
                         name='quorum'
-                        label='Quorum (%)'
+                        label={t('Quorum (%)')}
                         rules={[{ required: true }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
@@ -94,7 +96,7 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
             </Row>
             <Divider />
             <Row className='cvat-consensus-settings-title'>
-                <Text strong>Shape comparison</Text>
+                <Text strong>{t('Shape comparison')}</Text>
                 <CVATTooltip
                     title={shapeComparisonTooltip}
                     className='cvat-analytics-tooltip'
@@ -107,7 +109,7 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
                 <Col span={6}>
                     <Form.Item
                         name='iouThreshold'
-                        label='Min Overlap (%)'
+                        label={t('Min Overlap (%)')}
                         rules={[{ required: true }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />

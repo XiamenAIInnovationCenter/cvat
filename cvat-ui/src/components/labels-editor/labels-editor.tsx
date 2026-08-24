@@ -9,6 +9,7 @@ import Tabs from 'antd/lib/tabs';
 import Text from 'antd/lib/typography/Text';
 import modal from 'antd/lib/modal';
 import { EditOutlined, BuildOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 import { SerializedLabel, SerializedAttribute } from 'cvat-core-wrapper';
 import RawViewer from './raw-viewer';
@@ -23,7 +24,7 @@ enum ConstructorMode {
     UPDATE = 'UPDATE',
 }
 
-interface LabelsEditorProps {
+interface LabelsEditorProps extends WithTranslation {
     labels: SerializedLabel[];
     onSubmit: (labels: LabelOptColor[]) => void;
 }
@@ -36,7 +37,7 @@ interface LabelsEditorState {
     labelForUpdate: LabelOptColor | null;
 }
 
-export default class LabelsEditor extends React.PureComponent<LabelsEditorProps, LabelsEditorState> {
+class LabelsEditor extends React.PureComponent<LabelsEditorProps, LabelsEditorState> {
     public constructor(props: LabelsEditorProps) {
         super(props);
 
@@ -145,6 +146,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
     };
 
     private handleDelete = (label: LabelOptColor): void => {
+        const { t } = this.props;
         const deleteLabel = (): void => {
             const { unsavedLabels, savedLabels } = this.state;
 
@@ -161,8 +163,8 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
             modal.confirm({
                 className: 'cvat-modal-delete-label',
                 icon: <ExclamationCircleOutlined />,
-                title: `Do you want to delete "${label.name}" label?`,
-                content: 'This action cannot be undone. All annotations associated to the label will be deleted.',
+                title: t('Do you want to delete "{{name}}" label?', { name: label.name }),
+                content: t('This action cannot be undone. All annotations associated to the label will be deleted.'),
                 type: 'warning',
                 okButtonProps: { type: 'primary', danger: true },
                 onOk() {
@@ -208,7 +210,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
     }
 
     public render(): JSX.Element {
-        const { labels } = this.props;
+        const { labels, t } = this.props;
         const {
             savedLabels, unsavedLabels, constructorMode, labelForUpdate, creatorType,
         } = this.state;
@@ -267,7 +269,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                     label: (
                         <span>
                             <EditOutlined />
-                            <Text>Raw</Text>
+                            <Text>{t('Raw')}</Text>
                         </span>
                     ),
                     children: <RawViewer key='raw' labels={savedAndUnsavedLabels} onSubmit={this.handleRawSubmit} />,
@@ -276,7 +278,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                     label: (
                         <span>
                             <BuildOutlined />
-                            <Text>Constructor</Text>
+                            <Text>{t('Constructor')}</Text>
                         </span>
                     ),
                     children: configuratorContent,
@@ -285,3 +287,5 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
         );
     }
 }
+
+export default withTranslation('business')(LabelsEditor);

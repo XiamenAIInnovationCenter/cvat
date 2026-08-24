@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Empty from 'antd/lib/empty';
 import Spin from 'antd/lib/spin';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState, OrganizationMembersQuery } from 'reducers';
 import { Membership, Organization, OrganizationMembersFilter } from 'cvat-core-wrapper';
@@ -34,6 +35,7 @@ function fetchMembers(
 }
 
 function OrganizationPage(): JSX.Element | null {
+    const { t } = useTranslation('business');
     const organization = useSelector((state: CombinedState) => state.organizations.current);
     const fetching = useSelector((state: CombinedState) => state.organizations.fetching);
     const updating = useSelector((state: CombinedState) => state.organizations.updating);
@@ -66,7 +68,7 @@ function OrganizationPage(): JSX.Element | null {
     return (
         <div className='cvat-organization-page'>
             {!organization ? (
-                <Empty description='You are not in an organization' />
+                <Empty description={t('You are not in an organization')} />
             ) : (
                 <>
                     <TopBarComponent

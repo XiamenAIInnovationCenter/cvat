@@ -42,6 +42,7 @@ const SortableItem = SortableElement(
         const isAscendingField = isActiveField && !appliedSorting[value]?.startsWith('-');
         const isDescendingField = isActiveField && !isAscendingField;
         const { t: tSort } = useTranslation(undefined, { keyPrefix: 'sort' });
+        const { t: tBusiness } = useTranslation('business');
 
         const onClick = (): void => {
             if (isDescendingField) {
@@ -60,7 +61,7 @@ const SortableItem = SortableElement(
         return (
             <div className='cvat-sorting-field'>
                 <Radio.Button disabled={valueIndex > anchorIndex}>
-                    <span className='cvat-sorting-field-label'>{label || ''}</span>
+                    <span className='cvat-sorting-field-label'>{tBusiness(label || value)}</span>
                     <span className='cvat-sorting-field-prop'>{value}</span>
                 </Radio.Button>
                 <div>

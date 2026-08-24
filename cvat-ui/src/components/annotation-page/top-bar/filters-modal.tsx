@@ -15,6 +15,7 @@ import Popover from 'antd/lib/popover';
 import Menu from 'antd/lib/menu';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
+import { useTranslation } from 'react-i18next';
 import { CombinedState } from 'reducers';
 import { Label } from 'cvat-core-wrapper';
 import { changeAnnotationsFilters, fetchAnnotationsAsync, showFilters } from 'actions/annotation-actions';
@@ -74,6 +75,7 @@ const getAttributesSubfields = (labels: Label[]): Record<string, any> => {
 };
 
 function FiltersModalComponent(): JSX.Element {
+    const { t, i18n } = useTranslation('business');
     const labels = useSelector((state: CombinedState) => state.annotation.job.labels);
     const activeFilters = useSelector((state: CombinedState) => state.annotation.annotations.filters);
     const visible = useSelector((state: CombinedState) => state.annotation.filtersPanelVisible);
@@ -88,7 +90,7 @@ function FiltersModalComponent(): JSX.Element {
             ...AntdConfig,
             fields: {
                 label: {
-                    label: 'Label',
+                    label: t('Label'),
                     type: 'select',
                     valueSources: ['value'] as ('value')[],
                     fieldSettings: {
@@ -99,60 +101,60 @@ function FiltersModalComponent(): JSX.Element {
                     },
                 },
                 type: {
-                    label: 'Type',
+                    label: t('Type'),
                     type: 'select',
                     fieldSettings: {
                         listValues: [
-                            { value: 'shape', title: 'Shape' },
-                            { value: 'track', title: 'Track' },
-                            { value: 'tag', title: 'Tag' },
+                            { value: 'shape', title: t('Shape') },
+                            { value: 'track', title: t('Track') },
+                            { value: 'tag', title: t('Tag') },
                         ],
                     },
                 },
                 shape: {
-                    label: 'Shape',
+                    label: t('Shape'),
                     type: 'select',
                     fieldSettings: {
                         listValues: [
-                            { value: 'rectangle', title: 'Rectangle' },
-                            { value: 'points', title: 'Points' },
-                            { value: 'polyline', title: 'Polyline' },
-                            { value: 'polygon', title: 'Polygon' },
-                            { value: 'cuboid', title: 'Cuboid' },
-                            { value: 'ellipse', title: 'Ellipse' },
-                            { value: 'skeleton', title: 'Skeleton' },
-                            { value: 'mask', title: 'Mask' },
+                            { value: 'rectangle', title: t('Rectangle') },
+                            { value: 'points', title: t('Points') },
+                            { value: 'polyline', title: t('Polyline') },
+                            { value: 'polygon', title: t('Polygon') },
+                            { value: 'cuboid', title: t('Cuboid') },
+                            { value: 'ellipse', title: t('Ellipse') },
+                            { value: 'skeleton', title: t('Skeleton') },
+                            { value: 'mask', title: t('Mask') },
                         ],
                     },
                 },
                 occluded: {
-                    label: 'Occluded',
+                    label: t('Occluded'),
                     type: 'boolean',
                 },
                 width: {
-                    label: 'Width',
+                    label: t('Width'),
                     type: 'number',
                     fieldSettings: { min: 0 },
                 },
                 height: {
-                    label: 'Height',
+                    label: t('Height'),
                     type: 'number',
                     fieldSettings: { min: 0 },
                 },
                 objectID: {
-                    label: 'ObjectID',
+                    label: t('ObjectID'),
                     type: 'number',
                     hideForCompare: true,
                     fieldSettings: { min: 0 },
                 },
                 serverID: {
-                    label: 'ServerID',
+                    label: t('ServerID'),
                     type: 'number',
                     hideForCompare: true,
                     fieldSettings: { min: 0 },
                 },
                 attr: {
-                    label: 'Attributes',
+                    label: t('Attributes'),
                     type: '!struct',
                     subfields: getAttributesSubfields(labels),
                     fieldSettings: {
@@ -162,6 +164,10 @@ function FiltersModalComponent(): JSX.Element {
             },
             settings: {
                 ...AntdConfig.settings,
+                addRuleLabel: t('Add rule'),
+                addGroupLabel: t('Add group'),
+                notLabel: t('Not'),
+                fieldPlaceholder: t('Select field'),
                 renderField: (_props: any) => (
                     <FieldDropdown {...omit(_props)} customProps={omit(_props.customProps, 'showSearch')} />
                 ),
@@ -177,7 +183,7 @@ function FiltersModalComponent(): JSX.Element {
         } catch (_) {
             setFilters([]);
         }
-    }, []);
+    }, [labels, i18n.language]);
 
     useEffect(() => {
         window.localStorage.setItem(FILTERS_HISTORY, JSON.stringify(filters));
@@ -281,14 +287,14 @@ function FiltersModalComponent(): JSX.Element {
                     onClick={() => applyFilters([])}
                     className='cvat-filters-modal-clear-button'
                 >
-                    Clear filters
+                    {t('Clear filters')}
                 </Button>,
                 <Button
                     key='cancel'
                     onClick={() => dispatch(showFilters(false))}
                     className='cvat-filters-modal-cancel-button'
                 >
-                    Cancel
+                    {t('Cancel')}
                 </Button>,
                 <Button
                     key='submit'
@@ -297,7 +303,7 @@ function FiltersModalComponent(): JSX.Element {
                     onClick={confirmModal}
                     className='cvat-filters-modal-submit-button'
                 >
-                    Submit
+                    {t('Submit')}
                 </Button>,
             ]}
         >
@@ -318,7 +324,7 @@ function FiltersModalComponent(): JSX.Element {
                         type='text'
                         className='cvat-filters-modal-recently-used-button'
                     >
-                        Recently used
+                        {t('Recently used')}
                         {' '}
                         <DownOutlined />
                     </Button>

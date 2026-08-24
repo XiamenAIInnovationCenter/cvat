@@ -6,6 +6,8 @@ import './styles.scss';
 import 'react-grid-layout/css/styles.css';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import PropTypes from 'prop-types';
@@ -37,7 +39,7 @@ import defaultLayout, { ItemLayout, ViewType } from './canvas-layout.conf';
 
 const ReactGridLayout = WidthProvider(RGL);
 
-const ViewFabric = (itemLayout: ItemLayout): JSX.Element => {
+const ViewFabric = (itemLayout: ItemLayout, t: TFunction<'business'>): JSX.Element => {
     const { viewType: type, offset } = itemLayout;
 
     let component = null;
@@ -61,7 +63,7 @@ const ViewFabric = (itemLayout: ItemLayout): JSX.Element => {
             component = <TopViewComponent />;
             break;
         default:
-            component = <div> Undefined view </div>;
+            component = <div>{t('Undefined view')}</div>;
     }
 
     return component;
@@ -141,6 +143,7 @@ const fitLayout = (type: DimensionType, layoutConfig: ItemLayout[]): ItemLayout[
 };
 
 function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
+    const { t } = useTranslation('business');
     const relatedFiles = useSelector((state: CombinedState) => state.annotation.player.frame.relatedFiles);
     const canvasInstance = useSelector((state: CombinedState) => state.annotation.canvas.instance);
     const canvasBackgroundColor = useSelector((state: CombinedState) => state.settings.player.canvasBackgroundColor);
@@ -201,7 +204,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
         window.dispatchEvent(new Event('resize'));
     }, [layoutConfig]);
 
-    const children = layoutConfig.map((value: ItemLayout) => ViewFabric(value));
+    const children = layoutConfig.map((value: ItemLayout) => ViewFabric(value, t));
     const layout = layoutConfig.map((value: ItemLayout) => ({
         x: value.x,
         y: value.y,
@@ -299,7 +302,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
             )}
             { type === DimensionType.DIMENSION_3D && <CanvasWrapper3DComponent /> }
             <div className='cvat-grid-layout-common-setups'>
-                <CVATTooltip title='Fit views'>
+                <CVATTooltip title={t('Fit views')}>
                     <PicCenterOutlined
                         onClick={() => {
                             setLayoutConfig(fitLayout(type as DimensionType, layoutConfig));
@@ -307,7 +310,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Add context image'>
+                <CVATTooltip title={t('Add context image')}>
                     <PlusOutlined
                         style={{
                             pointerEvents: !relatedFiles ? 'none' : undefined,
@@ -346,7 +349,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Reload layout'>
+                <CVATTooltip title={t('Reload layout')}>
                     <ReloadOutlined onClick={() => {
                         setLayoutConfig([...getLayout()]);
                         window.dispatchEvent(new Event('resize'));

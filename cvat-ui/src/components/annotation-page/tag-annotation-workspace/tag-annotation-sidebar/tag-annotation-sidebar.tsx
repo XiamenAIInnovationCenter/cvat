@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState, useEffect } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -31,7 +32,7 @@ import LabelSelector from 'components/label-selector/label-selector';
 import isAbleToChangeFrame from 'utils/is-able-to-change-frame';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import ShortcutsSelect from './shortcuts-select';
 
@@ -97,7 +98,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function mapDispatchToProps(dispatch: ThunkDispatch<CombinedState, {}, Action>): DispatchToProps {
     return {
@@ -117,6 +118,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch<CombinedState, {}, Action>):
 }
 
 function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         states,
         labels,
@@ -260,11 +262,11 @@ function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Elemen
                     setSidebarCollapsed(!sidebarCollapsed);
                 }}
             >
-                {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                {sidebarCollapsed ? <MenuFoldOutlined title={t('Show')} /> : <MenuUnfoldOutlined title={t('Hide')} />}
             </span>
             <Row justify='center' className='cvat-tag-annotation-sidebar-empty'>
                 <Col>
-                    <Text strong>Can&apos;t place tag on this frame.</Text>
+                    <Text strong>{t("Can't place tag on this frame.")}</Text>
                 </Col>
             </Row>
         </Layout.Sider>
@@ -279,11 +281,11 @@ function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Elemen
                         setSidebarCollapsed(!sidebarCollapsed);
                     }}
                 >
-                    {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                    {sidebarCollapsed ? <MenuFoldOutlined title={t('Show')} /> : <MenuUnfoldOutlined title={t('Hide')} />}
                 </span>
                 <Row justify='start' className='cvat-tag-annotation-sidebar-tag-label'>
                     <Col>
-                        <Text strong>Tag label:</Text>
+                        <Text strong>{t('Tag label:')}</Text>
                     </Col>
                 </Row>
                 <Row justify='start' className='cvat-tag-annotation-sidebar-label-select'>
@@ -310,7 +312,7 @@ function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Elemen
                                 setSkipFrame(event.target.checked);
                             }}
                         >
-                            Automatically go to the next frame
+                            {t('Automatically go to the next frame')}
                         </Checkbox>
                     </Col>
                 </Row>
@@ -322,14 +324,11 @@ function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Elemen
                 <Row justify='center' className='cvat-tag-annotation-sidebar-shortcut-help'>
                     <Col>
                         <Text>
-                            Use&nbsp;
-                            <Text code>N</Text>
-                            &nbsp;or digits&nbsp;
-                            <Text code>0-9</Text>
-                            &nbsp;to add selected tag.&nbsp;
-                            Add&nbsp;
-                            <Text code>Shift</Text>
-                            &nbsp;modifier to remove selected tag.
+                            <Trans
+                                t={t}
+                                i18nKey='Use <code>N</code> or digits <code>0-9</code> to add selected tag. Add <code>Shift</code> modifier to remove selected tag.'
+                                components={{ code: <Text code /> }}
+                            />
                         </Text>
                     </Col>
                 </Row>

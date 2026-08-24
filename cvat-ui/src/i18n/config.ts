@@ -21,6 +21,7 @@ export const namespaceList = [
     'base',
     'auth',
     'header',
+    'business',
 ];
 
 export const fallbackLng = {

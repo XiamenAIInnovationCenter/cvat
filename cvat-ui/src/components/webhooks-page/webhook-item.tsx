@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
 import { Col, Row } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
 import Dropdown from 'antd/lib/dropdown';
@@ -14,6 +15,8 @@ import Text from 'antd/lib/typography/Text';
 import { MoreOutlined } from '@ant-design/icons';
 import Modal from 'antd/lib/modal';
 import Paragraph from 'antd/lib/typography/Paragraph';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 
 import { groupEvents } from 'components/setup-webhook-pages/setup-webhook-content';
 import Menu from 'components/dropdown-menu';
@@ -29,21 +32,21 @@ interface WebhookStatus {
     className: string;
 }
 
-function setUpWebhookStatus(status: number): WebhookStatus {
+function setUpWebhookStatus(status: number | string, t: TFunction<'business'>): WebhookStatus {
     if (status && status.toString().startsWith('2')) {
         return {
-            message: `Last delivery was successful. Response: ${status}`,
+            message: t('Last delivery was successful. Response: {{status}}', { status }),
             className: 'cvat-webhook-status-available',
         };
     }
     if (status && status.toString().startsWith('5')) {
         return {
-            message: `Last delivery was not successful. Response: ${status}`,
+            message: t('Last delivery was not successful. Response: {{status}}', { status }),
             className: 'cvat-webhook-status-failed',
         };
     }
     return {
-        message: status ? `Response: ${status}` : undefined,
+        message: status ? t('Response: {{status}}', { status }) : undefined,
         className: 'cvat-webhook-status-unavailable',
     };
 }
@@ -53,17 +56,19 @@ function WebhookItem(props: WebhookItemProps): JSX.Element | null {
     const [pingFetching, setPingFetching] = useState<boolean>(false);
     const history = useHistory();
     const dispatch = useDispatch();
+    const { t, i18n } = useTranslation('business');
     const { webhookInstance } = props;
     const {
         id, description, updatedDate, createdDate, owner, targetURL, events,
     } = webhookInstance;
 
-    const updated = moment(updatedDate).fromNow();
-    const created = moment(createdDate).format('MMMM Do YYYY');
+    const updated = moment(updatedDate).locale(i18n.language.toLowerCase()).fromNow();
+    const created = moment(createdDate).locale(i18n.language.toLowerCase()).format('LL');
     const username = owner ? owner.username : null;
 
     const { lastStatus } = webhookInstance;
-    const [webhookStatus, setWebhookStatus] = useState<WebhookStatus>(setUpWebhookStatus(lastStatus));
+    const [deliveryStatus, setDeliveryStatus] = useState<number | string>(lastStatus);
+    const webhookStatus = setUpWebhookStatus(deliveryStatus, t);
 
     const eventsList = groupEvents(events).join(', ');
     return (
@@ -95,11 +100,11 @@ function WebhookItem(props: WebhookItemProps): JSX.Element | null {
                 </Paragraph>
                 {username && (
                     <>
-                        <Text type='secondary'>{`Created by ${username} on ${created}`}</Text>
+                        <Text type='secondary'>{t('Created by {{owner}} on {{date}}', { owner: username, date: created })}</Text>
                         <br />
                     </>
                 )}
-                <Text type='secondary'>{`Last updated ${updated}`}</Text>
+                <Text type='secondary'>{t('Last updated {{time}}', { time: updated })}</Text>
             </Col>
             <Col span={6} offset={1}>
                 <Paragraph ellipsis={{
@@ -107,7 +112,7 @@ function WebhookItem(props: WebhookItemProps): JSX.Element | null {
                     rows: 3,
                 }}
                 >
-                    <Text type='secondary' className='cvat-webhook-info-text'>URL:</Text>
+                    <Text type='secondary' className='cvat-webhook-info-text'>{`${t('URL')}:`}</Text>
                     {targetURL}
                 </Paragraph>
             </Col>
@@ -117,7 +122,7 @@ function WebhookItem(props: WebhookItemProps): JSX.Element | null {
                     rows: 3,
                 }}
                 >
-                    <Text type='secondary' className='cvat-webhook-info-text'>Events:</Text>
+                    <Text type='secondary' className='cvat-webhook-info-text'>{`${t('Events')}:`}</Text>
                     {eventsList}
                 </Paragraph>
             </Col>
@@ -134,15 +139,15 @@ function WebhookItem(props: WebhookItemProps): JSX.Element | null {
                             onClick={(): void => {
                                 setPingFetching(true);
                                 webhookInstance.ping().then((deliveryInstance: any) => {
-                                    setWebhookStatus(setUpWebhookStatus(
-                                        deliveryInstance.statusCode ? deliveryInstance.statusCode : 'Timeout',
-                                    ));
+                                    setDeliveryStatus(
+                                        deliveryInstance.statusCode ? deliveryInstance.statusCode : t('Timeout'),
+                                    );
                                 }).finally(() => {
                                     setPingFetching(false);
                                 });
                             }}
                         >
-                            Ping
+                            {t('Ping')}
                         </Button>
                     </Col>
                 </Row>
@@ -162,15 +167,15 @@ function WebhookItem(props: WebhookItemProps): JSX.Element | null {
                                                 return false;
                                             }}
                                         >
-                                            Edit
+                                            {t('Edit')}
                                         </a>
                                     </Menu.Item>
                                     <Menu.Item
                                         key='delete'
                                         onClick={() => {
                                             Modal.confirm({
-                                                title: 'Are you sure you want to remove the hook?',
-                                                content: 'It will stop notificating the specified URL about listed events',
+                                                title: t('Are you sure you want to remove the hook?'),
+                                                content: t('It will stop notifying the specified URL about listed events'),
                                                 className: 'cvat-modal-confirm-remove-webhook',
                                                 onOk: () => {
                                                     dispatch(deleteWebhookAsync(webhookInstance)).then(() => {
@@ -180,13 +185,13 @@ function WebhookItem(props: WebhookItemProps): JSX.Element | null {
                                             });
                                         }}
                                     >
-                                        Delete
+                                        {t('Delete')}
                                     </Menu.Item>
                                 </Menu>
                             )}
                         >
                             <div className='cvat-webhooks-page-actions-button'>
-                                <Text className='cvat-text-color'>Actions</Text>
+                                <Text className='cvat-text-color'>{t('Actions')}</Text>
                                 <MoreOutlined className='cvat-menu-icon' />
                             </div>
                         </Dropdown>

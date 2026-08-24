@@ -10,6 +10,7 @@ import Space from 'antd/lib/space';
 import Switch from 'antd/lib/switch';
 import Tooltip from 'antd/lib/tooltip';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { StorageData } from 'cvat-core-wrapper';
 import { StorageLocation } from 'reducers';
@@ -31,6 +32,7 @@ export interface Props {
 }
 
 export default function StorageWithSwitchField(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         instanceId,
         storageName,
@@ -64,9 +66,9 @@ export default function StorageWithSwitchField(props: Props): JSX.Element {
                                 }}
                             />
                         </Form.Item>
-                        <Text strong>{switchDescription}</Text>
+                        <Text strong>{switchDescription ? t(switchDescription) : null}</Text>
                         {(switchHelpMessage) ? (
-                            <Tooltip title={switchHelpMessage}>
+                            <Tooltip title={t(switchHelpMessage)}>
                                 <QuestionCircleOutlined />
                             </Tooltip>
                         ) : null}
@@ -79,7 +81,7 @@ export default function StorageWithSwitchField(props: Props): JSX.Element {
                         label={(
                             <Space>
                                 {storageLabel}
-                                <CVATTooltip title={storageDescription}>
+                                <CVATTooltip title={storageDescription ? t(storageDescription) : null}>
                                     <QuestionCircleOutlined
                                         style={{ opacity: 0.5 }}
                                     />

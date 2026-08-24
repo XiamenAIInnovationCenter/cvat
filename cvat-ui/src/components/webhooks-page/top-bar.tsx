@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import { PlusOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
@@ -28,6 +29,7 @@ interface VisibleTopBarProps {
 }
 
 export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         query, onApplyFilter, onApplySorting, onApplySearch, onCreateWebhook, goBackContent,
     } = props;
@@ -50,7 +52,7 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
                             }}
                             defaultValue={query.search || ''}
                             className='cvat-webhooks-page-search-bar'
-                            placeholder='Search ...'
+                            placeholder={t('Search ...')}
                         />
                         <div>
                             <SortingComponent
@@ -85,7 +87,14 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
                         </div>
                     </div>
                     <div className='cvat-webhooks-add-wrapper'>
-                        <Button onClick={onCreateWebhook} type='primary' className='cvat-create-webhook' icon={<PlusOutlined />} />
+                        <Button
+                            onClick={onCreateWebhook}
+                            type='primary'
+                            className='cvat-create-webhook'
+                            icon={<PlusOutlined />}
+                            aria-label={t('Create webhook')}
+                            title={t('Create webhook')}
+                        />
                     </div>
                 </Col>
             </Row>

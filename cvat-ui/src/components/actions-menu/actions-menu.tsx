@@ -12,6 +12,7 @@ import Menu, { MenuInfo } from 'components/dropdown-menu';
 import { usePlugins } from 'utils/hooks';
 import { CombinedState } from 'reducers';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 type AnnotationFormats = Awaited<ReturnType<CVATCore['server']['formats']>>;
 
@@ -43,6 +44,7 @@ export enum Actions {
 }
 
 function ActionsMenuComponent(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         taskID,
         projectID,
@@ -65,8 +67,8 @@ function ActionsMenuComponent(props: Props): JSX.Element {
 
             if (params.key === Actions.DELETE_TASK) {
                 Modal.confirm({
-                    title: `The task ${taskID} will be deleted`,
-                    content: 'All related data (images, annotations) will be lost. Continue?',
+                    title: t('The task {{id}} will be deleted', { id: taskID }),
+                    content: t('All related data (images, annotations) will be lost. Continue?'),
                     className: 'cvat-modal-confirm-delete-task',
                     onOk: () => {
                         onClickMenu(params);
@@ -75,12 +77,12 @@ function ActionsMenuComponent(props: Props): JSX.Element {
                         type: 'primary',
                         danger: true,
                     },
-                    okText: 'Delete',
+                    okText: t('Delete'),
                 });
             } else if (params.key === Actions.MERGE_CONSENSUS_JOBS) {
                 Modal.confirm({
-                    title: 'The consensus jobs will be merged',
-                    content: 'Existing annotations in parent jobs will be updated. Continue?',
+                    title: t('The consensus jobs will be merged'),
+                    content: t('Existing annotations in parent jobs will be updated. Continue?'),
                     className: 'cvat-modal-confirm-consensus-merge-task',
                     onOk: () => {
                         onClickMenu(params);
@@ -89,7 +91,7 @@ function ActionsMenuComponent(props: Props): JSX.Element {
                         type: 'primary',
                         danger: true,
                     },
-                    okText: 'Merge',
+                    okText: t('Merge'),
                 });
             } else {
                 onClickMenu(params);
@@ -100,22 +102,22 @@ function ActionsMenuComponent(props: Props): JSX.Element {
 
     const menuItems: [JSX.Element, number][] = [];
     menuItems.push([(
-        <Menu.Item key={Actions.LOAD_TASK_ANNO}>Upload annotations</Menu.Item>
+        <Menu.Item key={Actions.LOAD_TASK_ANNO}>{t('Upload annotations')}</Menu.Item>
     ), 0]);
 
     menuItems.push([(
-        <Menu.Item key={Actions.EXPORT_TASK_DATASET}>Export task dataset</Menu.Item>
+        <Menu.Item key={Actions.EXPORT_TASK_DATASET}>{t('Export task dataset')}</Menu.Item>
     ), 10]);
 
     if (bugTracker) {
         menuItems.push([(
-            <Menu.Item key={Actions.OPEN_BUG_TRACKER}>Open bug tracker</Menu.Item>
+            <Menu.Item key={Actions.OPEN_BUG_TRACKER}>{t('Open bug tracker')}</Menu.Item>
         ), 20]);
     }
 
     menuItems.push([(
         <Menu.Item disabled={inferenceIsActive} key={Actions.RUN_AUTO_ANNOTATION}>
-            Automatic annotation
+            {t('Automatic annotation')}
         </Menu.Item>
     ), 30]);
 
@@ -123,7 +125,7 @@ function ActionsMenuComponent(props: Props): JSX.Element {
         <Menu.Item
             key={Actions.BACKUP_TASK}
         >
-            Backup Task
+            {t('Backup Task')}
         </Menu.Item>
     ), 40]);
 
@@ -131,7 +133,7 @@ function ActionsMenuComponent(props: Props): JSX.Element {
         <Menu.Item
             key={Actions.VIEW_ANALYTICS}
         >
-            View analytics
+            {t('View analytics')}
         </Menu.Item>
     ), 50]);
 
@@ -139,7 +141,7 @@ function ActionsMenuComponent(props: Props): JSX.Element {
         <Menu.Item
             key={Actions.QUALITY_CONTROL}
         >
-            Quality control
+            {t('Quality control')}
         </Menu.Item>
     ), 60]);
 
@@ -148,7 +150,7 @@ function ActionsMenuComponent(props: Props): JSX.Element {
             <Menu.Item
                 key={Actions.CONSENSUS_MANAGEMENT}
             >
-                Consensus management
+                {t('Consensus management')}
             </Menu.Item>
         ), 55]);
         menuItems.push([(
@@ -157,21 +159,21 @@ function ActionsMenuComponent(props: Props): JSX.Element {
                 disabled={isTaskInMergingConsensus}
                 icon={isTaskInMergingConsensus && <LoadingOutlined />}
             >
-                Merge consensus jobs
+                {t('Merge consensus jobs')}
             </Menu.Item>
         ), 60]);
     }
 
     if (projectID === null) {
         menuItems.push([(
-            <Menu.Item key={Actions.MOVE_TASK_TO_PROJECT}>Move to project</Menu.Item>
+            <Menu.Item key={Actions.MOVE_TASK_TO_PROJECT}>{t('Move to project')}</Menu.Item>
         ), 70]);
     }
 
     menuItems.push([(
         <React.Fragment key={Actions.DELETE_TASK}>
             <Menu.Divider />
-            <Menu.Item key={Actions.DELETE_TASK}>Delete</Menu.Item>
+            <Menu.Item key={Actions.DELETE_TASK}>{t('Delete')}</Menu.Item>
         </React.Fragment>
     ), 70]);
 

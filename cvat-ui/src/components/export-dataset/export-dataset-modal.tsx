@@ -16,6 +16,7 @@ import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import Switch from 'antd/lib/switch';
 import Space from 'antd/lib/space';
+import { useTranslation } from 'react-i18next';
 import TargetStorageField from 'components/storage/target-storage-field';
 import CVATMarkdown from 'components/common/cvat-markdown';
 import { CombinedState } from 'reducers';
@@ -44,6 +45,7 @@ const initialValues: FormValues = {
 };
 
 function ExportDatasetModal(props: StateToProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         dumpers,
         instance,
@@ -61,6 +63,14 @@ function ExportDatasetModal(props: StateToProps): JSX.Element {
     const [helpMessage, setHelpMessage] = useState('');
     const dispatch = useDispatch();
     const history = useHistory();
+    let localizedInstanceType = instanceType;
+    if (instance instanceof Project) {
+        localizedInstanceType = t('project #{{id}}', { id: instance.id });
+    } else if (instance instanceof Task) {
+        localizedInstanceType = t('task #{{id}}', { id: instance.id });
+    } else if (instance instanceof Job) {
+        localizedInstanceType = t('job #{{id}}', { id: instance.id });
+    }
 
     useEffect(() => {
         if (instance instanceof Project) {
@@ -87,9 +97,10 @@ function ExportDatasetModal(props: StateToProps): JSX.Element {
     }, [instance]);
 
     useEffect(() => {
-        setHelpMessage(`Export to ${(defaultStorageLocation) ? defaultStorageLocation.split('_')[0] : 'local'} ` +
-                        `storage ${(defaultStorageCloudId) ? `№${defaultStorageCloudId}` : ''}`);
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+        const messageKey = defaultStorageLocation === StorageLocation.CLOUD_STORAGE ?
+            'Export to cloud storage #{{id}}' : 'Export to local storage';
+        setHelpMessage(t(messageKey, { id: defaultStorageCloudId }));
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const closeModal = (): void => {
         setUseDefaultTargetStorage(true);
@@ -117,24 +128,26 @@ function ExportDatasetModal(props: StateToProps): JSX.Element {
                 ),
             );
             closeModal();
-            const resource = values.saveImages ? 'Dataset' : 'Annotations';
-            const description = `${resource} export was started for ${instanceType}. ` +
-            'You can check progress and download the file [here](/requests).';
+            const resource = values.saveImages ? t('Dataset') : t('Annotations');
+            const description = t(
+                '{{resource}} export was started for {{instance}}. You can check progress and download the file [here](/requests).',
+                { resource, instance: localizedInstanceType },
+            );
             Notification.info({
-                message: `${resource} export started`,
+                message: t('{{resource}} export started', { resource }),
                 description: (
                     <CVATMarkdown history={history}>{description}</CVATMarkdown>
                 ),
                 className: `cvat-notification-notice-export-${instanceType.split(' ')[0]}-start`,
             });
         },
-        [instance, instanceType, useDefaultTargetStorage,
-            defaultStorageLocation, defaultStorageCloudId, targetStorage],
+        [instance, instanceType, localizedInstanceType, useDefaultTargetStorage,
+            defaultStorageLocation, defaultStorageCloudId, targetStorage, t],
     );
 
     return (
         <Modal
-            title={<Text strong>{`Export ${instanceType} as a dataset`}</Text>}
+            title={<Text strong>{t('Export {{instance}} as a dataset', { instance: localizedInstanceType })}</Text>}
             open={!!instance}
             onCancel={closeModal}
             onOk={() => form.submit()}
@@ -150,10 +163,10 @@ function ExportDatasetModal(props: StateToProps): JSX.Element {
             >
                 <Form.Item
                     name='selectedFormat'
-                    label={<Text strong>Export format</Text>}
-                    rules={[{ required: true, message: 'Format must be selected' }]}
+                    label={<Text strong>{t('Export format')}</Text>}
+                    rules={[{ required: true, message: t('Format must be selected') }]}
                 >
-                    <Select virtual={false} placeholder='Select dataset format' className='cvat-modal-export-select'>
+                    <Select virtual={false} placeholder={t('Select dataset format')} className='cvat-modal-export-select'>
                         {dumpers
                             .sort((a: Dumper, b: Dumper) => a.name.localeCompare(b.name))
                             .filter(
@@ -182,19 +195,19 @@ function ExportDatasetModal(props: StateToProps): JSX.Element {
                     >
                         <Switch className='cvat-modal-export-save-images' />
                     </Form.Item>
-                    <Text strong>Save images</Text>
+                    <Text strong>{t('Save images')}</Text>
                 </Space>
 
-                <Form.Item label={<Text strong>Custom name</Text>} name='customName'>
+                <Form.Item label={<Text strong>{t('Custom name')}</Text>} name='customName'>
                     <Input
-                        placeholder='Custom name for a dataset'
+                        placeholder={t('Custom name for a dataset')}
                         suffix='.zip'
                         className='cvat-modal-export-filename-input'
                     />
                 </Form.Item>
                 <TargetStorageField
                     instanceId={instance ? instance.id : null}
-                    switchDescription='Use default settings'
+                    switchDescription={t('Use default settings')}
                     switchHelpMessage={helpMessage}
                     useDefaultStorage={useDefaultTargetStorage}
                     storageDescription='Specify target storage for export dataset'

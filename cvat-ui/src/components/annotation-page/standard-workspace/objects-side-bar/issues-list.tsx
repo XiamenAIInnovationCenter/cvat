@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon, {
     LeftOutlined, RightOutlined, EyeInvisibleFilled, EyeOutlined,
@@ -25,6 +26,7 @@ import { changeShowGroundTruth } from 'actions/settings-actions';
 import { ShowGroundTruthIcon } from 'icons';
 
 export default function LabelsListComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const frame = useSelector((state: CombinedState): number => state.annotation.player.frame.number);
     const frameIssues = useSelector((state: CombinedState): Issue[] => state.review.frameIssues);
@@ -78,20 +80,20 @@ export default function LabelsListComponent(): JSX.Element {
             <div className='cvat-objects-sidebar-issues-list-header'>
                 <Row justify='start' align='middle'>
                     <Col>
-                        <Text>{`Items: ${frameIssues.length}`}</Text>
+                        <Text>{t('Items: {{count}}', { count: frameIssues.length })}</Text>
                     </Col>
                     <Col offset={1}>
-                        <CVATTooltip title='Find the previous frame with issues'>
+                        <CVATTooltip title={t('Find the previous frame with issues')}>
                             <LeftOutlined className='cvat-issues-sidebar-previous-frame' {...dynamicLeftProps} />
                         </CVATTooltip>
                     </Col>
                     <Col offset={1}>
-                        <CVATTooltip title='Find the next frame with issues'>
+                        <CVATTooltip title={t('Find the next frame with issues')}>
                             <RightOutlined className='cvat-issues-sidebar-next-frame' {...dynamicRightProps} />
                         </CVATTooltip>
                     </Col>
                     <Col offset={2}>
-                        <CVATTooltip title='Show/hide all issues'>
+                        <CVATTooltip title={t('Show/hide all issues')}>
                             {issuesHidden ? (
                                 <EyeInvisibleFilled
                                     className='cvat-issues-sidebar-hidden-issues'
@@ -106,7 +108,7 @@ export default function LabelsListComponent(): JSX.Element {
                         </CVATTooltip>
                     </Col>
                     <Col offset={2}>
-                        <CVATTooltip title='Show/hide resolved issues'>
+                        <CVATTooltip title={t('Show/hide resolved issues')}>
                             { issuesResolvedHidden ? (
                                 <CheckCircleFilled
                                     className='cvat-issues-sidebar-hidden-resolved-status'
@@ -124,7 +126,7 @@ export default function LabelsListComponent(): JSX.Element {
                     {
                         workspace === Workspace.REVIEW ? (
                             <Col offset={2}>
-                                <CVATTooltip title='Show Ground truth annotations and conflicts'>
+                                <CVATTooltip title={t('Show Ground truth annotations and conflicts')}>
                                     <Icon
                                         className={
                                             `cvat-objects-sidebar-show-ground-truth ${showGroundTruth ? 'cvat-objects-sidebar-show-ground-truth-active' : ''}`
@@ -174,7 +176,7 @@ export default function LabelsListComponent(): JSX.Element {
                                 <Row justify='space-between'>
                                     <Col>
                                         <Text strong>
-                                            {`#${frameIssue.id} • Issue`}
+                                            {t('#{{id}} Issue', { id: frameIssue.id })}
                                         </Text>
                                     </Col>
                                     <Col offset={1}>

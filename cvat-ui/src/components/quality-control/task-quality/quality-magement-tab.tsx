@@ -5,6 +5,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Row } from 'antd/es/grid';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 
 import {
     FramesMetaData, QualitySettings, Task, TaskValidationLayout,
@@ -23,6 +24,7 @@ interface Props {
 }
 
 function QualityManagementTab(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         task, gtJobId, gtJobMeta,
         validationLayout, qualitySettings,
@@ -37,9 +39,9 @@ function QualityManagementTab(props: Readonly<Props>): JSX.Element {
     const activeCount = totalCount - excludedCount;
     let validationModeText: string | null = null;
     if (validationLayout.mode === 'gt') {
-        validationModeText = 'Ground truth';
+        validationModeText = t('Ground truth');
     } else if (validationLayout.mode === 'gt_pool') {
-        validationModeText = 'Honeypots';
+        validationModeText = t('Honeypots');
     }
 
     useLayoutEffect(() => {
@@ -62,19 +64,19 @@ function QualityManagementTab(props: Readonly<Props>): JSX.Element {
         <div className='cvat-quality-control-management-tab' ref={tableRef}>
             <Row className='cvat-quality-control-management-tab-summary'>
                 <AnalyticsCard
-                    title='Total validation frames'
+                    title={t('Total validation frames')}
                     className='cvat-allocation-summary-total'
                     value={totalCount}
                     size={{ cardSize: 8 }}
                 />
                 <AnalyticsCard
-                    title='Excluded validation frames'
+                    title={t('Excluded validation frames')}
                     className='cvat-allocation-summary-excluded'
                     value={excludedCount}
                     size={{ cardSize: 8 }}
                 />
                 <AnalyticsCard
-                    title='Active validation frames'
+                    title={t('Active validation frames')}
                     className='cvat-allocation-summary-active'
                     value={activeCount}
                     size={{ cardSize: 8 }}
@@ -83,7 +85,8 @@ function QualityManagementTab(props: Readonly<Props>): JSX.Element {
             { validationModeText ? (
                 <Row className='cvat-quality-control-validation-mode-hint'>
                     <Text type='secondary'>
-                        The task&apos;s validation mode is configured as&nbsp;
+                        {t("The task's validation mode is configured as")}
+                        &nbsp;
                     </Text>
                     <Text type='secondary' strong>{validationModeText}</Text>
                 </Row>

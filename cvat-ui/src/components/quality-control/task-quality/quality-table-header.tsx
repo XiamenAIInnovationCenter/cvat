@@ -8,6 +8,7 @@ import { Col, Row } from 'antd/lib/grid';
 import Input from 'antd/lib/input';
 import Text from 'antd/lib/typography/Text';
 import { DownloadOutlined } from '@ant-design/icons/lib/icons';
+import { useTranslation } from 'react-i18next';
 
 interface TableHeaderProps {
     title: string;
@@ -33,6 +34,7 @@ function downloadCSV(data: Array<{ [key: string]: any }>, filename: string): voi
 }
 
 function QualityTableHeader(props: TableHeaderProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         title, onSearch, onDownload, actions,
     } = props;
@@ -61,7 +63,7 @@ function QualityTableHeader(props: TableHeaderProps): JSX.Element {
                                 enterButton
                                 onSearch={onSearch}
                                 className='cvat-quality-table-search-bar'
-                                placeholder='Search ...'
+                                placeholder={t('Search ...')}
                             />
                         </Col>
                     </Row>

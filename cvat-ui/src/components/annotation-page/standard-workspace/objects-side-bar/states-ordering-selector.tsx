@@ -7,6 +7,7 @@ import React from 'react';
 import { Col } from 'antd/lib/grid';
 import Select from 'antd/lib/select';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 
 import { StatesOrdering } from 'reducers';
 
@@ -16,11 +17,12 @@ interface StatesOrderingSelectorComponentProps {
 }
 
 function StatesOrderingSelectorComponent(props: StatesOrderingSelectorComponentProps): JSX.Element {
+    const { t } = useTranslation('business');
     const { statesOrdering, changeStatesOrdering } = props;
 
     return (
         <Col>
-            <Text>Sort by</Text>
+            <Text>{t('Sort by')}</Text>
             <Select
                 size='small'
                 className='cvat-objects-sidebar-ordering-selector'
@@ -29,16 +31,16 @@ function StatesOrderingSelectorComponent(props: StatesOrderingSelectorComponentP
                 onChange={changeStatesOrdering}
             >
                 <Select.Option key={StatesOrdering.ID_DESCENT} value={StatesOrdering.ID_DESCENT}>
-                    {StatesOrdering.ID_DESCENT}
+                    {t(StatesOrdering.ID_DESCENT)}
                 </Select.Option>
                 <Select.Option key={StatesOrdering.ID_ASCENT} value={StatesOrdering.ID_ASCENT}>
-                    {StatesOrdering.ID_ASCENT}
+                    {t(StatesOrdering.ID_ASCENT)}
                 </Select.Option>
                 <Select.Option key={StatesOrdering.UPDATED} value={StatesOrdering.UPDATED}>
-                    {StatesOrdering.UPDATED}
+                    {t(StatesOrdering.UPDATED)}
                 </Select.Option>
                 <Select.Option key={StatesOrdering.Z_ORDER} value={StatesOrdering.Z_ORDER}>
-                    {StatesOrdering.Z_ORDER}
+                    {t(StatesOrdering.Z_ORDER)}
                 </Select.Option>
             </Select>
         </Col>

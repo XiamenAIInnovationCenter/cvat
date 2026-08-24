@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import Modal from 'antd/lib/modal';
 import InputNumber from 'antd/lib/input-number';
@@ -22,6 +23,7 @@ export enum PropagateDirection {
 }
 
 function PropagateConfirmComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const {
         visible,
@@ -60,14 +62,14 @@ function PropagateConfirmComponent(): JSX.Element {
     return (
         <Modal
             okType='primary'
-            okText='Yes'
-            cancelText='Cancel'
+            okText={t('Yes')}
+            cancelText={t('Cancel')}
             onOk={() => {
                 dispatch(propagateObjectAsync(frameNumber, targetFrame))
                     .then(() => dispatch(switchPropagateVisibility(false)));
             }}
             onCancel={() => dispatch(switchPropagateVisibility(false))}
-            title='Confirm propagation'
+            title={t('Confirm propagation')}
             open={visible}
             destroyOnClose
             okButtonProps={{ disabled: !propagateFrames }}
@@ -75,7 +77,7 @@ function PropagateConfirmComponent(): JSX.Element {
             <div className='cvat-propagate-confirm'>
                 <Row>
                     <Col>
-                        <Text>Please, specify a direction</Text>
+                        <Text>{t('Please, specify a direction')}</Text>
                     </Col>
                     <Col offset={1}>
                         <Radio.Group
@@ -93,7 +95,7 @@ function PropagateConfirmComponent(): JSX.Element {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>How many copies do you want to create?</Col>
+                    <Col>{t('How many copies do you want to create?')}</Col>
                     <Col offset={1}>
                         <InputNumber
                             className='cvat-propagate-confirm-object-on-frames'
@@ -111,7 +113,7 @@ function PropagateConfirmComponent(): JSX.Element {
                 <hr />
                 <Row className='cvat-propagate-up-to-wrapper'>
                     <Col span={24}>
-                        <Text>Or specify a range where copies will be created </Text>
+                        <Text>{t('Or specify a range where copies will be created')}</Text>
                     </Col>
                     <Col className='cvat-propagate-slider-wrapper' span={12} offset={1}>
                         <Slider
@@ -119,8 +121,8 @@ function PropagateConfirmComponent(): JSX.Element {
                             min={startFrame}
                             max={stopFrame}
                             marks={frameNumber !== targetFrame ? {
-                                [frameNumber]: 'FROM',
-                                [targetFrame]: 'TO',
+                                [frameNumber]: t('FROM'),
+                                [targetFrame]: t('TO'),
                             } : undefined}
                             onChange={([value1, value2]: number[]) => {
                                 const value = value1 === frameNumber || value1 === targetFrame ? value2 : value1;

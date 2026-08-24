@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import { MoreOutlined } from '@ant-design/icons';
 import Dropdown from 'antd/lib/dropdown';
@@ -55,6 +56,7 @@ interface Props {
 }
 
 function ItemTopComponent(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         readonly,
         clientID,
@@ -110,7 +112,7 @@ function ItemTopComponent(props: Props): JSX.Element {
                 </Text>
             </Col>
             <Col span={12}>
-                <CVATTooltip title='Change current label'>
+                <CVATTooltip title={t('Change current label')}>
                     <LabelSelector
                         disabled={readonly || shapeType === ShapeType.SKELETON}
                         size='small'

@@ -15,6 +15,7 @@ import Progress from 'antd/lib/progress';
 import Select from 'antd/lib/select';
 import notification from 'antd/lib/notification';
 import Alert from 'antd/lib/alert';
+import i18n from 'i18n';
 
 import { throttle } from 'lodash';
 
@@ -277,7 +278,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
         } catch (error: any) {
             notification.error({
                 description: error.toString(),
-                message: 'OpenCV.js processing error occurred',
+                message: i18n.t('OpenCV.js processing error occurred', { ns: 'business' }),
                 className: 'cvat-notification-notice-opencv-processing-error',
             });
         }
@@ -316,7 +317,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
         } catch (error: any) {
             notification.error({
                 description: error.toString(),
-                message: 'Could not initialize OpenCV library',
+                message: i18n.t('Could not initialize OpenCV library', { ns: 'business' }),
             });
             this.setState({
                 initializationError: true,
@@ -343,7 +344,10 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                 </Row>
                 <Row justify='start' className='cvat-opencv-drawing-tools'>
                     <Col>
-                        <CVATTooltip title='Intelligent scissors' className='cvat-opencv-drawing-tool'>
+                        <CVATTooltip
+                            title={i18n.t('Intelligent scissors', { ns: 'business' })}
+                            className='cvat-opencv-drawing-tool'
+                        >
                             <Button
                                 className='cvat-opencv-scissors-tool-button'
                                 onClick={() => {
@@ -372,7 +376,10 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
         return (
             <Row justify='start'>
                 <Col>
-                    <CVATTooltip title='Histogram equalization' className='cvat-opencv-image-tool'>
+                    <CVATTooltip
+                        title={i18n.t('Histogram equalization', { ns: 'business' })}
+                        className='cvat-opencv-image-tool'
+                    >
                         <Button
                             className={
                                 hasFilter(filters, ImageFilterAlias.HISTOGRAM_EQUALIZATION) ?
@@ -407,7 +414,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                 <Row justify='center' align='middle' className='cvat-opencv-tracker-content'>
                     <Col>
                         <Text type='warning' className='cvat-text-color'>
-                            No available trackers found
+                            {i18n.t('No available trackers found', { ns: 'business' })}
                         </Text>
                     </Col>
                 </Row>
@@ -417,12 +424,15 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
             <>
                 <Row justify='start'>
                     <Col className='cvat-opencv-tracker-help-message'>
-                        <Alert type='info' message='The tracker will be applied to drawn rectangles' />
+                        <Alert
+                            type='info'
+                            message={i18n.t('The tracker will be applied to drawn rectangles', { ns: 'business' })}
+                        />
                     </Col>
                 </Row>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text-color'>Tracker</Text>
+                        <Text className='cvat-text-color'>{i18n.t('Tracker', { ns: 'business' })}</Text>
                     </Col>
                 </Row>
                 <Row align='middle' justify='center'>
@@ -455,7 +465,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                                 }
                             }}
                         >
-                            Track
+                            {i18n.t('Track', { ns: 'business' })}
                         </Button>
                     </Col>
                 </Row>
@@ -480,17 +490,17 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                         tabBarGutter={8}
                         items={[{
                             key: 'drawing',
-                            label: 'Drawing',
+                            label: i18n.t('Drawing', { ns: 'business' }),
                             children: this.renderDrawingContent(),
                             className: 'cvat-opencv-control-tabpane',
                         }, {
                             key: 'image',
-                            label: 'Image',
+                            label: i18n.t('Image', { ns: 'business' }),
                             children: this.renderImageContent(),
                             className: 'cvat-opencv-control-tabpane',
                         }, {
                             key: 'tracking',
-                            label: 'Tracking',
+                            label: i18n.t('Tracking', { ns: 'business' }),
                             children: this.renderTrackingContent(),
                             className: 'cvat-opencv-control-tabpane',
                         }]}
@@ -500,12 +510,12 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                         <Col>
                             {
                                 initializationProgress >= 0 ?
-                                    <Text>OpenCV is loading</Text> : (
+                                    <Text>{i18n.t('OpenCV is loading', { ns: 'business' })}</Text> : (
                                         <Button
                                             className='cvat-opencv-initialization-button'
                                             onClick={() => { this.initializeOpenCV(); }}
                                         >
-                                            Reload OpenCV
+                                            {i18n.t('Reload OpenCV', { ns: 'business' })}
                                         </Button>
                                     )
                             }

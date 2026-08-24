@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Input from 'antd/lib/input';
 import { SortingComponent, ResourceFilterHOC, defaultVisibility } from 'components/resource-sorting-filtering';
@@ -26,6 +27,7 @@ interface VisibleTopBarProps {
 }
 
 export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         query, onApplyFilter, onApplySorting, onApplySearch, disabled,
     } = props;
@@ -52,7 +54,7 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
                         }}
                         defaultValue={query.search || ''}
                         className='cvat-models-page-search-bar'
-                        placeholder='Search ...'
+                        placeholder={t('Search ...')}
                     />
                     <div>
                         <SortingComponent

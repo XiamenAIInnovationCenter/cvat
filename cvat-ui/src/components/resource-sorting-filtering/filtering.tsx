@@ -128,6 +128,33 @@ export default function ResourceFilterHOC(
         const [state, setState] = useState<ImmutableTree>(defaultTree);
         const { t } = useTranslation();
         const { t: tFilter } = useTranslation(undefined, { keyPrefix: 'filter' });
+        const { t: tBusiness, i18n } = useTranslation('business');
+
+        const localizedConfig: Config = React.useMemo(() => ({
+            ...config,
+            fields: Object.entries(config.fields).reduce((localizedFields, [fieldName, fieldConfig]) => ({
+                ...localizedFields,
+                [fieldName]: {
+                    ...fieldConfig,
+                    label: tBusiness(`${fieldConfig.label}`),
+                    fieldSettings: fieldConfig.fieldSettings ? {
+                        ...fieldConfig.fieldSettings,
+                        listValues: Array.isArray(fieldConfig.fieldSettings.listValues) ?
+                            fieldConfig.fieldSettings.listValues.map((option: any) => ({
+                                ...option,
+                                title: tBusiness(`${option.title}`),
+                            })) : fieldConfig.fieldSettings.listValues,
+                    } : fieldConfig.fieldSettings,
+                },
+            }), {}),
+            settings: {
+                ...config.settings,
+                addRuleLabel: tBusiness('Add rule'),
+                addGroupLabel: tBusiness('Add group'),
+                notLabel: tBusiness('Not'),
+                fieldPlaceholder: tBusiness('Select field'),
+            },
+        }), [i18n.language]);
 
         useEffect(() => {
             setRecentFilters(receiveRecentFilters());
@@ -293,7 +320,7 @@ export default function ResourceFilterHOC(
                                                                 }
                                                             }}
                                                         >
-                                                            {QbUtils.queryString(tree, config)}
+                                                            {QbUtils.queryString(tree, localizedConfig)}
                                                         </Menu.Item>
                                                     );
                                                 })}
@@ -316,7 +343,7 @@ export default function ResourceFilterHOC(
                             ) : null}
 
                             <Query
-                                {...config}
+                                {...localizedConfig}
                                 onChange={(tree: ImmutableTree) => {
                                     setState(tree);
                                 }}

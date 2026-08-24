@@ -10,6 +10,7 @@ import Select from 'antd/lib/select';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { FilterIcon, FullscreenIcon, GuideIcon } from 'icons';
 import config from 'config';
@@ -31,6 +32,7 @@ interface Props {
 }
 
 function RightGroup(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         showStatistics,
         changeWorkspace,
@@ -65,7 +67,7 @@ function RightGroup(props: Props): JSX.Element {
             }
         }).catch((error: unknown) => {
             notification.error({
-                message: 'Could not receive annotation guide',
+                message: t('Could not receive annotation guide'),
                 description: error instanceof Error ? error.message : console.error('error'),
             });
         });
@@ -119,7 +121,7 @@ function RightGroup(props: Props): JSX.Element {
                 }}
             >
                 <Icon component={FullscreenIcon} />
-                Fullscreen
+                {t('Fullscreen')}
             </Button>
             { jobInstance.guideId !== null && (
                 <Button
@@ -128,7 +130,7 @@ function RightGroup(props: Props): JSX.Element {
                     onClick={openGuide}
                 >
                     <Icon component={GuideIcon} />
-                    Guide
+                    {t('Guide')}
                 </Button>
             )}
             <Button
@@ -137,7 +139,7 @@ function RightGroup(props: Props): JSX.Element {
                 onClick={showStatistics}
             >
                 <InfoCircleOutlined />
-                Info
+                {t('Info')}
             </Button>
             <Button
                 type='link'
@@ -147,7 +149,7 @@ function RightGroup(props: Props): JSX.Element {
                 onClick={showFilters}
             >
                 <Icon component={FilterIcon} />
-                Filters
+                {t('Filters')}
             </Button>
             <div>
                 <Select
@@ -163,14 +165,14 @@ function RightGroup(props: Props): JSX.Element {
                             }
                             return (
                                 <Select.Option disabled={ws !== Workspace.STANDARD3D} key={ws} value={ws}>
-                                    {ws}
+                                    {t(ws)}
                                 </Select.Option>
                             );
                         }
                         if (ws !== Workspace.STANDARD3D) {
                             return (
                                 <Select.Option key={ws} value={ws}>
-                                    {ws}
+                                    {t(ws)}
                                 </Select.Option>
                             );
                         }

@@ -12,6 +12,7 @@ import { exportActions } from 'actions/export-actions';
 import { importActions } from 'actions/import-actions';
 import { useHistory } from 'react-router';
 import Menu from 'components/dropdown-menu';
+import { useTranslation } from 'react-i18next';
 
 import { usePlugins } from 'utils/hooks';
 
@@ -20,6 +21,7 @@ interface Props {
 }
 
 function ProjectActionsMenuComponent(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { projectInstance } = props;
 
     const history = useHistory();
@@ -28,8 +30,8 @@ function ProjectActionsMenuComponent(props: Props): JSX.Element {
 
     const onDeleteProject = useCallback((): void => {
         Modal.confirm({
-            title: `The project ${projectInstance.id} will be deleted`,
-            content: 'All related data (images, annotations) will be lost. Continue?',
+            title: t('The project {{id}} will be deleted', { id: projectInstance.id }),
+            content: t('All related data (images, annotations) will be lost. Continue?'),
             className: 'cvat-modal-confirm-remove-project',
             onOk: () => {
                 dispatch(deleteProjectAsync(projectInstance));
@@ -38,20 +40,20 @@ function ProjectActionsMenuComponent(props: Props): JSX.Element {
                 type: 'primary',
                 danger: true,
             },
-            okText: 'Delete',
+            okText: t('Delete'),
         });
     }, []);
 
     const menuItems: [JSX.Element, number][] = [];
     menuItems.push([(
         <Menu.Item key='export-dataset' onClick={() => dispatch(exportActions.openExportDatasetModal(projectInstance))}>
-            Export dataset
+            {t('Export dataset')}
         </Menu.Item>
     ), 0]);
 
     menuItems.push([(
         <Menu.Item key='import-dataset' onClick={() => dispatch(importActions.openImportDatasetModal(projectInstance))}>
-            Import dataset
+            {t('Import dataset')}
         </Menu.Item>
     ), 10]);
 
@@ -60,7 +62,7 @@ function ProjectActionsMenuComponent(props: Props): JSX.Element {
             key='backup-project'
             onClick={() => dispatch(exportActions.openExportBackupModal(projectInstance))}
         >
-            Backup Project
+            {t('Backup Project')}
         </Menu.Item>
     ), 20]);
 
@@ -76,7 +78,7 @@ function ProjectActionsMenuComponent(props: Props): JSX.Element {
                     return false;
                 }}
             >
-                View analytics
+                {t('View analytics')}
             </a>
         </Menu.Item>
     ), 30]);
@@ -93,7 +95,7 @@ function ProjectActionsMenuComponent(props: Props): JSX.Element {
                     return false;
                 }}
             >
-                Setup webhooks
+                {t('Setup webhooks')}
             </a>
         </Menu.Item>
     ), 40]);
@@ -102,7 +104,7 @@ function ProjectActionsMenuComponent(props: Props): JSX.Element {
         <React.Fragment key='delete'>
             <Menu.Divider />
             <Menu.Item key='delete' onClick={onDeleteProject}>
-                Delete
+                {t('Delete')}
             </Menu.Item>
         </React.Fragment>
     ), 50]);

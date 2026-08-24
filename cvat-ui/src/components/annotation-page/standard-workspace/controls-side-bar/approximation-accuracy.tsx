@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { CSSProperties } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom';
 import Text from 'antd/lib/typography/Text';
 import Slider from 'antd/lib/slider';
@@ -16,19 +17,21 @@ interface Props {
 
 export const MAX_ACCURACY = 13;
 
-export const marks: Record<number, { style: CSSProperties; label: JSX.Element }> = {};
-marks[0] = {
-    style: {
-        color: '#1890ff',
-    },
-    label: <strong>less</strong>,
-};
-marks[MAX_ACCURACY] = {
-    style: {
-        color: '#61c200',
-    },
-    label: <strong>more</strong>,
-};
+export function makeAccuracyMarks(
+    lessLabel: string,
+    moreLabel: string,
+): Record<number, { style: CSSProperties; label: JSX.Element }> {
+    return {
+        0: {
+            style: { color: '#1890ff' },
+            label: <strong>{lessLabel}</strong>,
+        },
+        [MAX_ACCURACY]: {
+            style: { color: '#61c200' },
+            label: <strong>{moreLabel}</strong>,
+        },
+    };
+}
 
 export function thresholdFromAccuracy(approxPolyAccuracy: number): number {
     const approxPolyMaxDistance = MAX_ACCURACY - approxPolyAccuracy;
@@ -47,6 +50,7 @@ export function thresholdFromAccuracy(approxPolyAccuracy: number): number {
 }
 
 function ApproximationAccuracy(props: Props): React.ReactPortal | null {
+    const { t } = useTranslation('business');
     const { approxPolyAccuracy, onChange } = props;
     const target = window.document.getElementsByClassName('cvat-canvas-container')[0];
 
@@ -54,7 +58,7 @@ function ApproximationAccuracy(props: Props): React.ReactPortal | null {
         ReactDOM.createPortal(
             <Row align='middle' className='cvat-approx-poly-threshold-wrapper'>
                 <Col span={5}>
-                    <Text>Points: </Text>
+                    <Text>{t('Points:')}</Text>
                 </Col>
                 <Col offset={1} span={18}>
                     <Slider
@@ -67,7 +71,7 @@ function ApproximationAccuracy(props: Props): React.ReactPortal | null {
                             open: false,
                         }}
                         onChange={onChange}
-                        marks={marks}
+                        marks={makeAccuracyMarks(t('less'), t('more'))}
                     />
                 </Col>
             </Row>,

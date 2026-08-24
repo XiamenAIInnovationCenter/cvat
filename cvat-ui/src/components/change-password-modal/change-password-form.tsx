@@ -7,6 +7,7 @@ import Form from 'antd/lib/form';
 import { LockOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
+import { useTranslation } from 'react-i18next';
 
 import { validateConfirmation, validatePassword } from 'components/register-page/register-form';
 
@@ -22,6 +23,7 @@ interface Props {
 }
 
 function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element {
+    const { t } = useTranslation('business');
     return (
         <Form onFinish={onSubmit} className='cvat-change-password-form'>
             <Form.Item
@@ -30,14 +32,14 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: 'Please input your current password!',
+                        message: t('Please input your current password!'),
                     },
                 ]}
             >
                 <Input.Password
                     autoComplete='current-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder='Current password'
+                    placeholder={t('Current password')}
                 />
             </Form.Item>
 
@@ -47,7 +49,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: 'Please input new password!',
+                        message: t('Please input new password!'),
                     },
                     validatePassword,
                 ]}
@@ -55,7 +57,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder='New password'
+                    placeholder={t('New password')}
                 />
             </Form.Item>
 
@@ -66,7 +68,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: 'Please confirm your new password!',
+                        message: t('Please confirm your new password!'),
                     },
                     validateConfirmation('newPassword1'),
                 ]}
@@ -74,7 +76,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder='Confirm new password'
+                    placeholder={t('Confirm new password')}
                 />
             </Form.Item>
 
@@ -86,7 +88,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                     loading={fetching}
                     disabled={fetching}
                 >
-                    Submit
+                    {t('Submit')}
                 </Button>
             </Form.Item>
         </Form>

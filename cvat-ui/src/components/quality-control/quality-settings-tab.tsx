@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import Text from 'antd/lib/typography/Text';
 import Form from 'antd/lib/form';
 import { QualitySettings } from 'cvat-core-wrapper';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 function QualitySettingsTab(props: Readonly<Props>): JSX.Element | null {
+    const { t } = useTranslation('business');
     const {
         fetching,
         qualitySettings: settings,
@@ -46,7 +48,7 @@ function QualitySettingsTab(props: Readonly<Props>): JSX.Element | null {
                     settings={settings}
                     onSave={onSave}
                 />
-            ) : <Text>No quality settings found</Text> }
+            ) : <Text>{t('No quality settings found')}</Text> }
         </div>
     );
 }

@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import Text from 'antd/lib/typography/Text';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { getCloudStorageStatusAsync } from 'actions/cloud-storage-actions';
 import { CombinedState, CloudStorage } from 'reducers';
 import { StorageStatuses } from '../../utils/enums';
@@ -16,6 +17,7 @@ interface Props {
 
 export default function Status({ cloudStorage }: Props): JSX.Element {
     const dispatch = useDispatch();
+    const { t } = useTranslation('business');
     const status = useSelector((state: CombinedState) => state.cloudStorages.statuses[cloudStorage.id]);
 
     useEffect(() => {
@@ -26,16 +28,20 @@ export default function Status({ cloudStorage }: Props): JSX.Element {
 
     let message: JSX.Element;
     if (!status || (status && status.fetching)) {
-        message = <Text type='warning'>Loading ...</Text>;
+        message = <Text type='warning'>{t('Loading...')}</Text>;
     } else if (status.initialized && !status.status) {
-        message = <Text type='danger'>Error</Text>;
+        message = <Text type='danger'>{t('Error')}</Text>;
     } else {
-        message = <Text type={status.status === StorageStatuses.AVAILABLE ? 'success' : 'danger'}>{status.status}</Text>;
+        message = (
+            <Text type={status.status === StorageStatuses.AVAILABLE ? 'success' : 'danger'}>
+                {t(status.status)}
+            </Text>
+        );
     }
 
     return (
         <Paragraph>
-            <Text type='secondary'>Status: </Text>
+            <Text type='secondary'>{`${t('Status')}: `}</Text>
             {message}
         </Paragraph>
     );

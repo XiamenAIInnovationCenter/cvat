@@ -5,6 +5,7 @@
 import './styles.scss';
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Col, Row } from 'antd/lib/grid';
 import Card from 'antd/lib/card';
 import Text from 'antd/lib/typography/Text';
@@ -21,6 +22,7 @@ interface Props {
 }
 
 function InvitationItem(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { invitation, onAccept, onDecline } = props;
     const { key, expired } = invitation;
 
@@ -30,18 +32,13 @@ function InvitationItem(props: Props): JSX.Element {
     const owner = invitation.owner?.username;
     const clampOwner = !!owner && owner?.length > 50 && { tooltip: owner };
     const text = (
-        <>
-            <Text
-                strong
-                style={clampOwner ? { width: 250 } : {}}
-                ellipsis={clampOwner}
-            >
-                {owner}
-            </Text>
-            <Text>&nbsp;has invited you to join the&nbsp;</Text>
-            <Text strong>{slug}</Text>
-            <Text>&nbsp;organization&nbsp;</Text>
-        </>
+        <Text
+            strong
+            style={clampOwner ? { width: 250 } : {}}
+            ellipsis={clampOwner}
+        >
+            {t('{{owner}} has invited you to join the {{slug}} organization', { owner, slug })}
+        </Text>
     );
 
     return (
@@ -50,7 +47,7 @@ function InvitationItem(props: Props): JSX.Element {
                 style={{ visibility: expired ? 'visible' : 'hidden' }}
                 className='cvat-invitation-item-ribbon'
                 placement='start'
-                text='Expired'
+                text={t('Expired')}
                 color='gray'
             >
                 <Card className={`cvat-invitation-item ${declined ? 'cvat-invitation-item-declined' : ''}`}>
@@ -66,7 +63,7 @@ function InvitationItem(props: Props): JSX.Element {
                                     onAccept(key);
                                 }}
                             >
-                                Accept
+                                {t('Accept')}
                             </Button>
                             {
                                 expired ? (
@@ -79,7 +76,7 @@ function InvitationItem(props: Props): JSX.Element {
                                             });
                                         }}
                                     >
-                                        Remove
+                                        {t('Remove')}
                                     </Button>
                                 ) : (
                                     <Button
@@ -87,27 +84,21 @@ function InvitationItem(props: Props): JSX.Element {
                                         danger
                                         onClick={() => {
                                             Modal.confirm({
-                                                title: (
-                                                    <>
-                                                        <Text>
-                                                            Would you like to decline the invitation to the&nbsp;
-                                                        </Text>
-                                                        <Text strong>{slug}</Text>
-                                                        <Text>&nbsp;organization&nbsp;</Text>
-                                                    </>
-                                                ),
+                                                title: t('Would you like to decline the invitation to the {{slug}} organization?', {
+                                                    slug,
+                                                }),
                                                 className: 'cvat-invitation-decline-modal',
                                                 onOk: () => {
                                                     onDecline(key).then(() => {
                                                         setDeclined(true);
                                                     });
                                                 },
-                                                okText: 'Decline',
+                                                okText: t('Decline'),
                                                 okButtonProps: { danger: true },
                                             });
                                         }}
                                     >
-                                        Decline
+                                        {t('Decline')}
                                     </Button>
                                 )
                             }

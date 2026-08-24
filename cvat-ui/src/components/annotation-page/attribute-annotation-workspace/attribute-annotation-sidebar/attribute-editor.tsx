@@ -20,6 +20,8 @@ import { isEqual } from 'lodash';
 import { CombinedState } from 'reducers';
 import { useSelector } from 'react-redux';
 import { useResetShortcutsOnUnmount } from 'utils/hooks';
+import { useTranslation } from 'react-i18next';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 
 interface InputElementParameters {
     clientID: number;
@@ -44,9 +46,10 @@ for (const idx of Array.from({ length: 10 }, (_, i) => i)) {
     };
 }
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function renderInputElement(parameters: InputElementParameters): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         inputType, attrID, clientID, values, currentValue, onChange,
     } = parameters;
@@ -80,7 +83,7 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
 
     const renderCheckbox = (): JSX.Element => (
         <>
-            <Text strong>Checkbox: </Text>
+            <Text strong>{t('Checkbox:')}</Text>
             <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                 <Checkbox
                     onChange={(event: CheckboxChangeEvent): void => setAttributeValue(event.target.checked ? 'true' : 'false')}
@@ -92,7 +95,7 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
 
     const renderSelect = (): JSX.Element => (
         <>
-            <Text strong>Values: </Text>
+            <Text strong>{t('Values:')}</Text>
             <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                 <Select
                     value={localAttrValue}
@@ -113,7 +116,7 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
 
     const renderRadio = (): JSX.Element => (
         <>
-            <Text strong>Values: </Text>
+            <Text strong>{t('Values:')}</Text>
             <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                 <Radio.Group
                     value={localAttrValue}
@@ -144,7 +147,7 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
         const [min, max, step] = values;
         return (
             <>
-                <Text strong>Number: </Text>
+                <Text strong>{t('Number:')}</Text>
                 <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                     <InputNumber
                         autoFocus
@@ -167,7 +170,7 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
 
     const renderText = (): JSX.Element => (
         <>
-            <Text strong>Text: </Text>
+            <Text strong>{t('Text:')}</Text>
             <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                 <Input.TextArea
                     autoFocus
@@ -210,6 +213,7 @@ interface ListProps {
 }
 
 function AttrValuesList(props: ListProps): JSX.Element | null {
+    const { t, i18n } = useTranslation('business');
     const { inputType, values, onChange } = props;
 
     const { keyMap } = useSelector((state: CombinedState) => state.shortcuts);
@@ -218,11 +222,12 @@ function AttrValuesList(props: ListProps): JSX.Element | null {
     const sortedValues = ['true', 'false'];
     const filteredValues = values.filter((value: string): boolean => value !== config.UNDEFINED_ATTRIBUTE_VALUE);
     const prevValuesRef = useRef<string[] | null>(null);
+    const prevLanguageRef = useRef<string | null>(null);
 
     useResetShortcutsOnUnmount(componentShortcuts);
 
     useEffect(() => {
-        if (!isEqual(values, prevValuesRef.current)) {
+        if (!isEqual(values, prevValuesRef.current) || i18n.language !== prevLanguageRef.current) {
             const updatedComponentShortcuts = Object.keys(componentShortcuts).reduce((acc: KeyMap, key: string) => {
                 acc[key] = {
                     ...componentShortcuts[key],
@@ -243,15 +248,16 @@ function AttrValuesList(props: ListProps): JSX.Element | null {
                 updatedComponentShortcuts[key] = {
                     ...updatedComponentShortcuts[key],
                     nonActive: false,
-                    name: `Assign attribute value ${value}`,
-                    description: `Change current value for the attribute to ${value}`,
+                    name: t('Assign attribute value {{value}}', { value }),
+                    description: t('Change current value for the attribute to {{value}}', { value }),
                 };
             });
 
             registerComponentShortcuts({ ...updatedComponentShortcuts });
             prevValuesRef.current = values;
+            prevLanguageRef.current = i18n.language;
         }
-    }, [values]);
+    }, [values, i18n.language]);
 
     if (inputType === 'checkbox') {
         const handlers: {
@@ -332,15 +338,15 @@ function AttrValuesList(props: ListProps): JSX.Element | null {
         return (
             <div className='attribute-annotation-sidebar-attr-list-wrapper'>
                 <div>
-                    <Text strong>From:</Text>
+                    <Text strong>{t('From:')}</Text>
                     <Text>{` ${values[0]}`}</Text>
                 </div>
                 <div>
-                    <Text strong>To:</Text>
+                    <Text strong>{t('To:')}</Text>
                     <Text>{` ${values[1]}`}</Text>
                 </div>
                 <div>
-                    <Text strong>Step:</Text>
+                    <Text strong>{t('Step:')}</Text>
                     <Text>{` ${values[2]}`}</Text>
                 </div>
             </div>

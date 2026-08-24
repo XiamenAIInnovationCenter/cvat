@@ -393,15 +393,21 @@ CVATAppState
     }
 
     private showMessages(): void {
-        const { notifications, resetMessages, history } = this.props;
+        const {
+            notifications, resetMessages, history, t,
+        } = this.props;
 
         function showMessage(notificationState: NotificationState): void {
             notification.info({
                 message: (
-                    <CVATMarkdown history={history}>{notificationState.message}</CVATMarkdown>
+                    <CVATMarkdown history={history}>
+                        {t(notificationState.message, { ns: 'business', keySeparator: false })}
+                    </CVATMarkdown>
                 ),
                 description: notificationState?.description && (
-                    <CVATMarkdown history={history}>{notificationState?.description}</CVATMarkdown>
+                    <CVATMarkdown history={history}>
+                        {t(notificationState.description, { ns: 'business', keySeparator: false })}
+                    </CVATMarkdown>
                 ),
                 duration: notificationState.duration || null,
             });
@@ -441,7 +447,9 @@ CVATAppState
             notification.error({
                 ...dynamicProps,
                 message: (
-                    <CVATMarkdown history={history}>{title}</CVATMarkdown>
+                    <CVATMarkdown history={history}>
+                        {t(title, { ns: 'business', keySeparator: false })}
+                    </CVATMarkdown>
                 ),
                 duration: null,
                 description: errorLength > appConfig.MAXIMUM_NOTIFICATION_MESSAGE_LENGTH ?

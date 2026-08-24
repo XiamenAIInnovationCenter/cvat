@@ -10,6 +10,8 @@ import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 import {
     User, getCore, Project, Task,
@@ -63,7 +65,7 @@ interface State {
     consensusEnabled: boolean;
 }
 
-type Props = DispatchToProps & StateToProps & OwnProps;
+type Props = DispatchToProps & StateToProps & OwnProps & WithTranslation<'business'>;
 
 class DetailsComponent extends React.PureComponent<Props, State> {
     constructor(props: Props) {
@@ -116,11 +118,16 @@ class DetailsComponent extends React.PureComponent<Props, State> {
     }
 
     private renderDescription(): JSX.Element {
-        const { task: taskInstance, onUpdateTask } = this.props;
+        const {
+            task: taskInstance, onUpdateTask, t, i18n,
+        } = this.props;
         const { consensusEnabled } = this.state;
         const owner = taskInstance.owner ? taskInstance.owner.username : null;
         const assignee = taskInstance.assignee ? taskInstance.assignee : null;
-        const created = moment(taskInstance.createdDate).format('MMMM Do YYYY');
+        const chinese = i18n.language === 'zh-CN';
+        const created = moment(taskInstance.createdDate)
+            .locale(chinese ? 'zh-cn' : 'en')
+            .format(chinese ? 'YYYY年M月D日' : 'MMMM Do YYYY');
         const assigneeSelect = (
             <UserSelector
                 value={assignee}
@@ -138,14 +145,18 @@ class DetailsComponent extends React.PureComponent<Props, State> {
                     {owner && (
                         <div>
                             <Text type='secondary'>
-                                {`Task #${taskInstance.id} Created by ${owner} on ${created}`}
+                                {t('Task #{{id}} created by {{owner}} on {{date}}', {
+                                    id: taskInstance.id,
+                                    owner,
+                                    date: created,
+                                })}
                             </Text>
                         </div>
                     )}
                     {consensusEnabled && <CVATTag type={TagType.CONSENSUS} />}
                 </Col>
                 <Col>
-                    <Text type='secondary'>Assigned to</Text>
+                    <Text type='secondary'>{t('Assigned to')}</Text>
                     {assigneeSelect}
                 </Col>
             </Row>
@@ -171,13 +182,17 @@ class DetailsComponent extends React.PureComponent<Props, State> {
     }
 
     private renderSubsetField(): JSX.Element {
+        const { t } = this.props;
         const { subset } = this.state;
         const { task: taskInstance, project, onUpdateTask } = this.props;
 
         return (
             <Row>
                 <Col span={24}>
-                    <Text className='cvat-text-color'>Subset:</Text>
+                    <Text className='cvat-text-color'>
+                        {t('Subset')}
+:
+                    </Text>
                 </Col>
                 <Col span={24}>
                     <ProjectSubsetField
@@ -253,4 +268,4 @@ class DetailsComponent extends React.PureComponent<Props, State> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsComponent);
+export default withTranslation('business')(connect(mapStateToProps, mapDispatchToProps)(DetailsComponent));

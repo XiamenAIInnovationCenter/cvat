@@ -9,7 +9,6 @@ import i18n from 'i18n';
 import { localeOptions } from 'i18n/config';
 
 import Modal from 'antd/lib/modal';
-import CVATTooltip from './common/cvat-tooltip';
 
 export default function SwitchLocaleWithToolTip(): JSX.Element {
     const { t } = useTranslation('base');
@@ -20,12 +19,13 @@ export default function SwitchLocaleWithToolTip(): JSX.Element {
     const [show, setShow] = React.useState(false);
 
     return (
-        <CVATTooltip overlay={t('Switch locale')}>
+        <>
             <Button
                 icon={<TranslationOutlined />}
                 size='large'
                 className='cvat-switch-i18n-locale-button cvat-header-button'
                 type='text'
+                title={t('Switch locale')}
                 onClick={(): void => setShow(true)}
             />
             <Modal
@@ -33,7 +33,6 @@ export default function SwitchLocaleWithToolTip(): JSX.Element {
                 mask
                 open={show}
                 onOk={() => {
-                    console.log(i18n.language, locale);
                     if (locale !== i18n.language) {
                         i18n.changeLanguage(locale);
                     }
@@ -49,11 +48,10 @@ export default function SwitchLocaleWithToolTip(): JSX.Element {
                     options={options}
                     style={{ width: '100%' }}
                     onChange={(value) => {
-                        console.log('change', value);
                         setLocale(value);
                     }}
                 />
             </Modal>
-        </CVATTooltip>
+        </>
     );
 }

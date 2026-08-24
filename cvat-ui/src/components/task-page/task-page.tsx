@@ -5,6 +5,7 @@
 
 import './styles.scss';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col } from 'antd/lib/grid';
@@ -26,6 +27,7 @@ import DetailsComponent from './details';
 const core = getCore();
 
 function TaskPageComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const history = useHistory();
     const id = +useParams<{ id: string }>().id;
     const dispatch = useDispatch();
@@ -44,7 +46,7 @@ function TaskPageComponent(): JSX.Element {
                 }
             }).catch((error: Error) => {
                 notification.error({
-                    message: 'Could not receive the requested task from the server',
+                    message: t('Could not receive the requested task from the server'),
                     description: error.toString(),
                 });
             });
@@ -53,8 +55,8 @@ function TaskPageComponent(): JSX.Element {
         }
 
         notification.error({
-            message: 'Could not receive the requested task from the server',
-            description: `Requested task id "${id}" is not valid`,
+            message: t('Could not receive the requested task from the server'),
+            description: t('Requested task id "{{id}}" is not valid', { id }),
         });
 
         return Promise.reject();
@@ -89,7 +91,7 @@ function TaskPageComponent(): JSX.Element {
                 resolve();
             }).catch((error: Error) => {
                 notification.error({
-                    message: 'Could not update the task',
+                    message: t('Could not update the task'),
                     className: 'cvat-notification-notice-update-task-failed',
                     description: error.toString(),
                 });
@@ -110,7 +112,7 @@ function TaskPageComponent(): JSX.Element {
         }).catch((error: Error) => {
             setUpdatingTask(false);
             notification.error({
-                message: 'Could not update the job',
+                message: t('Could not update the job'),
                 description: error.toString(),
             });
         });

@@ -19,6 +19,7 @@ import {
 
 import CVATMarkdown from 'components/common/cvat-markdown';
 import TargetStorageField from 'components/storage/target-storage-field';
+import { useTranslation } from 'react-i18next';
 
 const core = getCore();
 
@@ -38,6 +39,7 @@ const initialValues: FormValues = {
 };
 
 function ExportBackupModal(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const history = useHistory();
     const [form] = Form.useForm();
@@ -55,6 +57,12 @@ function ExportBackupModal(): JSX.Element {
         }
         return state.export[`${instanceT}s` as 'projects' | 'tasks']?.backup?.modalInstance;
     });
+    let localizedInstanceType = instanceType;
+    if (instance instanceof core.classes.Project) {
+        localizedInstanceType = t('project #{{id}}', { id: instance.id });
+    } else if (instance instanceof core.classes.Task) {
+        localizedInstanceType = t('task #{{id}}', { id: instance.id });
+    }
 
     useEffect(() => {
         if (instance instanceof core.classes.Project) {
@@ -72,11 +80,10 @@ function ExportBackupModal(): JSX.Element {
     }, [instance]);
 
     useEffect(() => {
-        // eslint-disable-next-line prefer-template
-        const message = `Export backup to ${(defaultStorageLocation) ? defaultStorageLocation.split('_')[0] : 'local'} ` +
-                        `storage ${(defaultStorageCloudId) ? `№${defaultStorageCloudId}` : ''}`;
-        setHelpMessage(message);
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+        const messageKey = defaultStorageLocation === StorageLocation.CLOUD_STORAGE ?
+            'Export to cloud storage #{{id}}' : 'Export to local storage';
+        setHelpMessage(t(messageKey, { id: defaultStorageCloudId }));
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const closeModal = (): void => {
         setUseDefaultStorage(true);
@@ -104,21 +111,21 @@ function ExportBackupModal(): JSX.Element {
             );
             closeModal();
 
-            const description = 'Backup export was started. You can check progress [here](/requests).';
+            const description = t('Backup export was started. You can check progress [here](/requests).');
             Notification.info({
-                message: 'Backup export started',
+                message: t('Backup export started'),
                 description: (
                     <CVATMarkdown history={history}>{description}</CVATMarkdown>
                 ),
                 className: 'cvat-notification-notice-export-backup-start',
             });
         },
-        [instance, useDefaultStorage, defaultStorageLocation, defaultStorageCloudId],
+        [instance, useDefaultStorage, defaultStorageLocation, defaultStorageCloudId, t],
     );
 
     return (
         <Modal
-            title={<Text strong>{`Export ${instanceType}`}</Text>}
+            title={<Text strong>{t('Export {{instance}}', { instance: localizedInstanceType })}</Text>}
             open={!!instance}
             onCancel={closeModal}
             onOk={() => form.submit()}
@@ -132,16 +139,16 @@ function ExportBackupModal(): JSX.Element {
                 initialValues={initialValues}
                 onFinish={handleExport}
             >
-                <Form.Item label={<Text strong>Custom name</Text>} name='customName'>
+                <Form.Item label={<Text strong>{t('Custom name')}</Text>} name='customName'>
                     <Input
-                        placeholder='Custom name for a backup file'
+                        placeholder={t('Custom name for a backup file')}
                         suffix='.zip'
                         className='cvat-modal-export-filename-input'
                     />
                 </Form.Item>
                 <TargetStorageField
                     instanceId={instance?.id}
-                    switchDescription='Use default settings'
+                    switchDescription={t('Use default settings')}
                     switchHelpMessage={helpMessage}
                     useDefaultStorage={useDefaultStorage}
                     storageDescription={`Specify target storage for export ${instanceType}`}

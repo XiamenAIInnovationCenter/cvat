@@ -4,6 +4,7 @@
 
 import './styles.scss';
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from 'antd/lib/button';
 import { Row, Col } from 'antd/lib/grid';
 import { LeftOutlined } from '@ant-design/icons';
@@ -18,6 +19,7 @@ interface ParamType {
 }
 
 function UpdateWebhookPage(): JSX.Element {
+    const { t } = useTranslation('business');
     const id = +useParams<ParamType>().id;
     const history = useHistory();
     const dispatch = useDispatch();
@@ -36,7 +38,7 @@ function UpdateWebhookPage(): JSX.Element {
                 <Col md={20} lg={16} xl={14} xxl={9}>
                     <Button className='cvat-webhooks-go-back' onClick={() => history.goBack()} type='link' size='large'>
                         <LeftOutlined />
-                        Back to webhooks
+                        {t('Back to webhooks')}
                     </Button>
                 </Col>
             </Row>

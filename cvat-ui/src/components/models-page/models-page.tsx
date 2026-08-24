@@ -5,6 +5,7 @@
 
 import './styles.scss';
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { getModelsAsync } from 'actions/models-actions';
@@ -18,6 +19,7 @@ import EmptyListComponent from './empty-list';
 import TopBar from './top-bar';
 
 function ModelsPageComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const history = useHistory();
     const dispatch = useDispatch();
     const fetching = useSelector((state: CombinedState) => state.models.fetching);
@@ -43,8 +45,8 @@ function ModelsPageComponent(): JSX.Element {
         dispatch(getModelsAsync(updatedQuery));
         if (pageOutOfBounds) {
             notification.error({
-                message: 'Could not fetch models',
-                description: 'Invalid page',
+                message: t('Could not fetch models'),
+                description: t('Invalid page'),
             });
         }
     }, []);

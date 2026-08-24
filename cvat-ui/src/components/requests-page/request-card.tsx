@@ -19,6 +19,9 @@ import { MenuProps } from 'antd/lib/menu';
 import { RQStatus, Request } from 'cvat-core-wrapper';
 
 import moment from 'moment';
+import 'moment/locale/zh-cn';
+import { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { cancelRequestAsync } from 'actions/requests-async-actions';
 import { requestsActions } from 'actions/requests-actions';
 import StatusMessage from './request-status';
@@ -49,28 +52,29 @@ function constructLink(request: Request): string | null {
     return null;
 }
 
-function constructName(operation: typeof Request['operation']): string | null {
+function constructName(operation: typeof Request['operation'], t: TFunction<'business'>): string | null {
     const {
         target, jobID, taskID, projectID,
     } = operation;
 
     if (target === 'project' && projectID) {
-        return `Project #${projectID}`;
+        return t('Project #{{id}}', { id: projectID });
     }
     if (target === 'task' && taskID) {
-        return `Task #${taskID}`;
+        return t('Task #{{id}}', { id: taskID });
     }
     if (target === 'job' && jobID) {
-        return `Job #${jobID}`;
+        return t('Job #{{id}}', { id: jobID });
     }
     return null;
 }
 
-function constructTimestamps(request: Request): JSX.Element {
-    const started = moment(request.startedDate).format('MMM Do YY, H:mm');
-    const finished = moment(request.finishedDate).format('MMM Do YY, H:mm');
-    const created = moment(request.createdDate).format('MMM Do YY, H:mm');
-    const expired = moment(request.expiryDate).format('MMM Do YY, H:mm');
+function constructTimestamps(request: Request, t: TFunction<'business'>, language: string): JSX.Element {
+    const locale = language.toLowerCase();
+    const started = moment(request.startedDate).locale(locale).format('lll');
+    const finished = moment(request.finishedDate).locale(locale).format('lll');
+    const created = moment(request.createdDate).locale(locale).format('lll');
+    const expired = moment(request.expiryDate).locale(locale).format('lll');
     const { operation: { type }, url } = request;
 
     switch (request.status) {
@@ -80,10 +84,10 @@ function constructTimestamps(request: Request): JSX.Element {
                 return (
                     <>
                         <Row>
-                            <Text type='secondary'>{`Started by ${request.owner.username} on ${started}`}</Text>
+                            <Text type='secondary'>{t('Started by {{owner}} on {{date}}', { owner: request.owner.username, date: started })}</Text>
                         </Row>
                         <Row>
-                            <Text type='secondary'>{`Expires on ${expired}`}</Text>
+                            <Text type='secondary'>{t('Expires on {{date}}', { date: expired })}</Text>
                         </Row>
                     </>
                 );
@@ -91,10 +95,10 @@ function constructTimestamps(request: Request): JSX.Element {
             return (
                 <>
                     <Row>
-                        <Text type='secondary'>{`Started by ${request.owner.username} on ${started}`}</Text>
+                        <Text type='secondary'>{t('Started by {{owner}} on {{date}}', { owner: request.owner.username, date: started })}</Text>
                     </Row>
                     <Row>
-                        <Text type='secondary'>{`Finished on ${finished}`}</Text>
+                        <Text type='secondary'>{t('Finished on {{date}}', { date: finished })}</Text>
                     </Row>
                 </>
             );
@@ -102,11 +106,11 @@ function constructTimestamps(request: Request): JSX.Element {
         case RQStatus.FAILED: {
             return (request.startedDate ? (
                 <Row>
-                    <Text type='secondary'>{`Started by ${request.owner.username} on ${started}`}</Text>
+                    <Text type='secondary'>{t('Started by {{owner}} on {{date}}', { owner: request.owner.username, date: started })}</Text>
                 </Row>
             ) : (
                 <Row>
-                    <Text type='secondary'>{`Enqueued by ${request.owner.username} on ${created}`}</Text>
+                    <Text type='secondary'>{t('Enqueued by {{owner}} on {{date}}', { owner: request.owner.username, date: created })}</Text>
                 </Row>
             ));
         }
@@ -114,10 +118,10 @@ function constructTimestamps(request: Request): JSX.Element {
             return (
                 <>
                     <Row>
-                        <Text type='secondary'>{`Enqueued by ${request.owner.username} on ${created}`}</Text>
+                        <Text type='secondary'>{t('Enqueued by {{owner}} on {{date}}', { owner: request.owner.username, date: created })}</Text>
                     </Row>
                     <Row>
-                        <Text type='secondary'>{`Started on ${started}`}</Text>
+                        <Text type='secondary'>{t('Started on {{date}}', { date: started })}</Text>
                     </Row>
                 </>
             );
@@ -125,7 +129,7 @@ function constructTimestamps(request: Request): JSX.Element {
         default: {
             return (
                 <Row>
-                    <Text type='secondary'>{`Enqueued by ${request.owner.username} on ${created}`}</Text>
+                    <Text type='secondary'>{t('Enqueued by {{owner}} on {{date}}', { owner: request.owner.username, date: created })}</Text>
                 </Row>
             );
         }
@@ -142,6 +146,7 @@ const dimensions = {
 };
 
 function RequestCard(props: Props): JSX.Element {
+    const { t, i18n } = useTranslation('business');
     const { request, disabled } = props;
     const { operation } = request;
     const { type } = operation;
@@ -150,9 +155,9 @@ function RequestCard(props: Props): JSX.Element {
 
     const linkToEntity = constructLink(request);
     const percent = request.status === RQStatus.FINISHED ? 100 : (request.progress ?? 0) * 100;
-    const timestamps = constructTimestamps(request);
+    const timestamps = constructTimestamps(request, t, i18n.language);
 
-    const name = constructName(operation);
+    const name = constructName(operation, t);
 
     const percentProgress = (request.status === RQStatus.FAILED || !percent) ? '' : `${percent.toFixed(2)}%`;
 
@@ -166,7 +171,7 @@ function RequestCard(props: Props): JSX.Element {
     if (request?.url) {
         menuItems.push({
             key: 'download',
-            label: 'Download',
+            label: t('Download'),
             onClick: () => {
                 const downloadAnchor = window.document.getElementById('downloadAnchor') as HTMLAnchorElement;
                 downloadAnchor.href = request.url;
@@ -180,7 +185,7 @@ function RequestCard(props: Props): JSX.Element {
     if (request.status === RQStatus.QUEUED) {
         menuItems.push({
             key: 'cancel',
-            label: 'Cancel',
+            label: t('Cancel'),
             onClick: () => {
                 dispatch(cancelRequestAsync(request, () => {
                     dispatch(requestsActions.disableRequest(request));

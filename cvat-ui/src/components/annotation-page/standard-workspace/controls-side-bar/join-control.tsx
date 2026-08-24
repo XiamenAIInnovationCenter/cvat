@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@ant-design/icons';
 
 import { Canvas } from 'cvat-canvas-wrapper';
@@ -10,7 +11,7 @@ import { ActiveControl, CombinedState } from 'reducers';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import GlobalHotKeys from 'utils/mousetrap-react';
 import { JoinIcon } from 'icons';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { ShortcutScope } from 'utils/enums';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { useSelector } from 'react-redux';
@@ -31,9 +32,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function JoinControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         updateActiveControl,
         canvasInstance,
@@ -75,7 +77,10 @@ function JoinControl(props: Props): JSX.Element {
                 keyMap={subKeyMap(componentShortcuts, keyMap)}
                 handlers={handlers}
             />
-            <CVATTooltip title={`Join masks ${normalizedKeyMap.SWITCH_JOIN_MODE_STANDARD_CONTROLS}`} placement='right'>
+            <CVATTooltip
+                title={t('Join masks {{shortcut}}', { shortcut: normalizedKeyMap.SWITCH_JOIN_MODE_STANDARD_CONTROLS })}
+                placement='right'
+            >
                 <Icon {...dynamicIconProps} component={JoinIcon} />
             </CVATTooltip>
         </>

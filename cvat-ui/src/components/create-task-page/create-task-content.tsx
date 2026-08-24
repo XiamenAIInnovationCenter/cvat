@@ -12,6 +12,7 @@ import Collapse from 'antd/lib/collapse';
 import notification from 'antd/lib/notification';
 import Text from 'antd/lib/typography/Text';
 import Alert from 'antd/lib/alert';
+import { withTranslation, WithTranslation } from 'react-i18next';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { getCore, Storage, StorageLocation } from 'cvat-core-wrapper';
@@ -49,7 +50,7 @@ enum SupportedShareTypes {
     VIDEO = 'video',
 }
 
-interface Props {
+interface Props extends WithTranslation<'business'> {
     onCreate: (data: CreateTaskData, onProgress?: (status: string, progress?: number) => void) => Promise<any>;
     projectId: number | null;
     many: boolean;
@@ -440,11 +441,12 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     };
 
     private validateBlocks = (): Promise<any> => new Promise((resolve, reject) => {
+        const { t } = this.props;
         const { projectId } = this.state;
         if (!this.validateLabelsOrProject()) {
             notification.error({
-                message: 'Could not create a task',
-                description: 'A task must contain at least one label or belong to some project',
+                message: t('Could not create a task'),
+                description: t('A task must contain at least one label or belong to some project'),
                 className: 'cvat-notification-create-task-fail',
             });
             reject();
@@ -453,8 +455,8 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
 
         if (!this.validateFiles()) {
             notification.error({
-                message: 'Could not create a task',
-                description: 'A task must contain at least one file',
+                message: t('Could not create a task'),
+                description: t('A task must contain at least one file'),
                 className: 'cvat-notification-create-task-fail',
             });
             reject();
@@ -494,9 +496,8 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                             }, () => {
                                 _resolve();
                                 notification.info({
-                                    message: 'Task parameters were automatically updated',
-                                    description: 'Sorting method has been updated as Honeypots' +
-                                        ' quality method only supports RANDOM sorting',
+                                    message: t('Task parameters were automatically updated'),
+                                    description: t('Sorting method was changed because Honeypots quality only supports random sorting'),
                                 });
                             });
                         } else {
@@ -529,7 +530,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             }).then(resolve)
             .catch((error: Error | ValidateErrorEntity): void => {
                 notification.error({
-                    message: 'Could not create a task',
+                    message: t('Could not create a task'),
                     description: (error as ValidateErrorEntity).errorFields ?
                         (error as ValidateErrorEntity).errorFields
                             .map((field) => `${field.name} : ${field.errors.join(';')}`)
@@ -554,11 +555,12 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     };
 
     private handleSubmitAndContinue = (): void => {
+        const { t } = this.props;
         this.validateBlocks()
             .then(this.createOneTask)
             .then(() => {
                 notification.info({
-                    message: 'The task has been created',
+                    message: t('The task has been created'),
                     className: 'cvat-notification-create-task-success',
                 });
             })
@@ -667,6 +669,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     });
 
     private handleSubmitMultiTasks = (): void => {
+        const { t } = this.props;
         this.validateBlocks()
             .then(this.addMultiTasks)
             .then(this.createMultiTasks)
@@ -678,17 +681,20 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                 const countAll = multiTasks.length;
 
                 notification.info({
-                    message: 'The tasks have been created',
-                    description:
-                        `Completed: ${countCompleted}, failed: ${countFailed},${countCancelled ?
-                            ` cancelled: ${countCancelled},` :
-                            ''} total: ${countAll}, `,
+                    message: t('The tasks have been created'),
+                    description: t('Completed: {{completed}}, failed: {{failed}}, cancelled: {{cancelled}}, total: {{total}}', {
+                        completed: countCompleted,
+                        failed: countFailed,
+                        cancelled: countCancelled,
+                        total: countAll,
+                    }),
                     className: 'cvat-notification-create-task-success',
                 });
             });
     };
 
     private handleCancelMultiTasks = (): void => {
+        const { t } = this.props;
         const { multiTasks } = this.state;
         let count = 0;
         const newMultiTasks: any = multiTasks.map((it) => {
@@ -705,7 +711,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             multiTasks: newMultiTasks,
         }, () => {
             notification.info({
-                message: `Creation of ${count} tasks have been canceled`,
+                message: t('Creation of {{count}} tasks has been canceled', { count }),
                 className: 'cvat-notification-create-task-success',
             });
         });
@@ -790,13 +796,14 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     };
 
     private renderBasicBlock(): JSX.Element {
-        const { many } = this.props;
+        const { many, t } = this.props;
         const exampleMultiTaskName = many ? this.getTaskName(0, 'local', 'fileName.mp4') : '';
 
         return (
             <Col span={24}>
                 <BasicConfigurationForm
                     ref={this.basicConfigurationComponent}
+                    t={t}
                     many={many}
                     exampleMultiTaskName={exampleMultiTaskName}
                     onChange={this.handleChangeBasicConfiguration}
@@ -806,12 +813,13 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderProjectBlock(): JSX.Element {
+        const { t } = this.props;
         const { projectId } = this.state;
 
         return (
             <>
                 <Col span={24}>
-                    <Text className='cvat-text-color'>Project</Text>
+                    <Text className='cvat-text-color'>{t('Project')}</Text>
                 </Col>
                 <Col span={24}>
                     <ProjectSearchField onSelect={this.handleProjectIdChange} value={projectId} />
@@ -821,13 +829,14 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderSubsetBlock(): JSX.Element | null {
+        const { t } = this.props;
         const { projectId, subset } = this.state;
 
         if (projectId !== null) {
             return (
                 <>
                     <Col span={24}>
-                        <Text className='cvat-text-color'>Subset</Text>
+                        <Text className='cvat-text-color'>{t('Subset')}</Text>
                     </Col>
                     <Col span={24}>
                         <ProjectSubsetField
@@ -845,16 +854,17 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderLabelsBlock(): JSX.Element {
+        const { t } = this.props;
         const { projectId, labels } = this.state;
 
         if (projectId) {
             return (
                 <>
                     <Col span={24}>
-                        <Text className='cvat-text-color'>Labels</Text>
+                        <Text className='cvat-text-color'>{t('Labels')}</Text>
                     </Col>
                     <Col span={24}>
-                        <Text type='secondary'>Project labels will be used</Text>
+                        <Text type='secondary'>{t('Project labels will be used')}</Text>
                     </Col>
                 </>
             );
@@ -863,7 +873,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         return (
             <Col span={24}>
                 <Text type='danger'>* </Text>
-                <Text className='cvat-text-color'>Labels</Text>
+                <Text className='cvat-text-color'>{t('Labels')}</Text>
                 <LabelsEditor
                     labels={labels}
                     onSubmit={(newLabels): void => {
@@ -877,15 +887,16 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderFilesBlock(): JSX.Element {
-        const { many } = this.props;
+        const { many, t } = this.props;
         const { uploadFileErrorMessage } = this.state;
 
         return (
             <>
                 <Col span={24}>
                     <Text type='danger'>* </Text>
-                    <Text className='cvat-text-color'>Select files</Text>
+                    <Text className='cvat-text-color'>{t('Select files')}</Text>
                     <FileManagerComponent
+                        t={t}
                         many={many}
                         onChangeActiveKey={this.changeFileManagerTab}
                         onUploadLocalFiles={this.handleUploadLocalFiles}
@@ -912,6 +923,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderAdvancedBlock(): JSX.Element {
+        const { t } = this.props;
         const { activeFileManagerTab, projectId } = this.state;
 
         const {
@@ -932,10 +944,11 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                     className='cvat-advanced-configuration-wrapper'
                     items={[{
                         key: '1',
-                        label: <Text className='cvat-title'>Advanced configuration</Text>,
+                        label: <Text className='cvat-title'>{t('Advanced configuration')}</Text>,
                         children: (
                             <AdvancedConfigurationForm
                                 activeFileManagerTab={activeFileManagerTab}
+                                t={t}
                                 ref={this.advancedConfigurationComponent}
                                 onSubmit={this.handleSubmitAdvancedConfiguration}
                                 projectId={projectId}
@@ -961,6 +974,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderQualityBlock(): JSX.Element {
+        const { t } = this.props;
         const { quality: { frameSelectionMethod, validationMode } } = this.state;
 
         return (
@@ -969,10 +983,11 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                     className='cvat-quality-configuration-wrapper'
                     items={[{
                         key: '1',
-                        label: <Text className='cvat-title'>Quality</Text>,
+                        label: <Text className='cvat-title'>{t('Quality')}</Text>,
                         children: (
                             <QualityConfigurationForm
                                 ref={this.qualityConfigurationComponent}
+                                t={t}
                                 initialValues={defaultState.quality}
                                 onSubmit={this.handleSubmitQualityConfiguration}
                                 frameSelectionMethod={frameSelectionMethod}
@@ -988,6 +1003,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderFooterSingleTask(): JSX.Element {
+        const { t } = this.props;
         const { uploadFileErrorMessage, loading, statusInProgressTask: status } = this.state;
 
         if (status === 'FAILED' || loading) {
@@ -1002,7 +1018,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                         onClick={this.handleSubmitAndOpen}
                         disabled={!!uploadFileErrorMessage}
                     >
-                        Submit & Open
+                        {t('Submit & Open')}
                     </Button>
                 </Col>
                 <Col>
@@ -1012,7 +1028,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                         onClick={this.handleSubmitAndContinue}
                         disabled={!!uploadFileErrorMessage}
                     >
-                        Submit & Continue
+                        {t('Submit & Continue')}
                     </Button>
                 </Col>
             </Row>
@@ -1020,6 +1036,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderFooterMultiTasks(): JSX.Element {
+        const { t } = this.props;
         const {
             multiTasks: items,
             uploadFileErrorMessage,
@@ -1053,9 +1070,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                         onClick={this.handleSubmitMultiTasks}
                         disabled={!!uploadFileErrorMessage}
                     >
-                        Submit&nbsp;
-                        {currentFiles.length}
-                        &nbsp;tasks
+                        {t('Submit {{count}} tasks', { count: currentFiles.length })}
                     </Button>
                 </Col>
             </Row>
@@ -1063,12 +1078,12 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     public render(): JSX.Element {
-        const { many } = this.props;
+        const { many, t } = this.props;
 
         return (
             <Row justify='start' align='middle' className='cvat-create-task-content'>
                 <Col span={24}>
-                    <Text className='cvat-title'>Basic configuration</Text>
+                    <Text className='cvat-title'>{t('Basic configuration')}</Text>
                 </Col>
 
                 {this.renderBasicBlock()}
@@ -1087,4 +1102,4 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 }
 
-export default withRouter(CreateTaskContent);
+export default withTranslation('business')(withRouter(CreateTaskContent));

@@ -18,6 +18,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import Empty from 'antd/lib/empty';
 import Input from 'antd/lib/input';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { getCore, Project, Task } from 'cvat-core-wrapper';
 import { CombinedState, Indexable } from 'reducers';
@@ -50,6 +51,7 @@ interface ParamType {
 }
 
 export default function ProjectPageComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const id = +useParams<ParamType>().id;
     const dispatch = useDispatch();
     const history = useHistory();
@@ -86,7 +88,7 @@ export default function ProjectPageComponent(): JSX.Element {
                 }).catch((error: Error) => {
                     if (mounted.current) {
                         notification.error({
-                            message: 'Could not receive the requested project from the server',
+                            message: t('Could not receive the requested project from the server'),
                             description: error.toString(),
                         });
                     }
@@ -97,8 +99,8 @@ export default function ProjectPageComponent(): JSX.Element {
                 });
         } else {
             notification.error({
-                message: 'Could not receive the requested project from the server',
-                description: `Requested project id "${id}" is not valid`,
+                message: t('Could not receive the requested project from the server'),
+                description: t('Requested project id "{{id}}" is not valid', { id }),
             });
             setFetchingProject(false);
         }
@@ -169,7 +171,7 @@ export default function ProjectPageComponent(): JSX.Element {
             </Row>
         </>
     ) : (
-        <Empty description='No tasks found' />
+        <Empty description={t('No tasks found')} />
     );
 
     return (
@@ -197,7 +199,7 @@ export default function ProjectPageComponent(): JSX.Element {
                         }).catch((error: Error) => {
                             if (mounted.current) {
                                 notification.error({
-                                    message: 'Could not update the project',
+                                    message: t('Could not update the project'),
                                     description: error.toString(),
                                 });
                             }
@@ -224,7 +226,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                 }}
                                 defaultValue={tasksQuery.search || ''}
                                 className='cvat-project-page-tasks-search-bar'
-                                placeholder='Search ...'
+                                placeholder={t('Search ...')}
                             />
                             <div>
                                 <SortingComponent
@@ -284,7 +286,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-task-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}`)}
                                     >
-                                        Create a new task
+                                        {t('Create a new task')}
                                     </Button>
                                     <Button
                                         type='primary'
@@ -292,7 +294,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-multi-tasks-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}&many=true`)}
                                     >
-                                        Create multi tasks
+                                        {t('Create multi tasks')}
                                     </Button>
                                 </CvatDropdownMenuPaper>
                             )}

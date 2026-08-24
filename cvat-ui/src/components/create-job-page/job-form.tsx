@@ -14,6 +14,7 @@ import Select from 'antd/lib/select';
 import InputNumber from 'antd/lib/input-number';
 import Space from 'antd/lib/space';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import CVATTooltip from 'components/common/cvat-tooltip';
 
 import { JobType } from 'cvat-core/src/enums';
@@ -49,6 +50,7 @@ interface Props {
 const defaultQuantity = 5;
 
 function JobForm(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { task } = props;
     const { size: taskSize, segmentSize } = task;
     const [form] = Form.useForm();
@@ -123,7 +125,7 @@ function JobForm(props: Props): JSX.Element {
         onQuantityChange(currentQuantity);
     }, [form, frameSelectionMethod]);
 
-    const description = 'A representative set, 5-15% of randomly chosen frames is recommended';
+    const description = t('A representative set, 5-15% of randomly chosen frames is recommended');
 
     return (
         <Row className='cvat-create-job-form-wrapper'>
@@ -141,22 +143,22 @@ function JobForm(props: Props): JSX.Element {
                     <Col>
                         <Form.Item
                             name='type'
-                            label='Job type'
-                            rules={[{ required: true, message: 'Please, specify Job type' }]}
+                            label={t('Job type')}
+                            rules={[{ required: true, message: t('Please, specify Job type') }]}
                         >
                             <Select
                                 virtual={false}
                                 className='cvat-select-job-type'
                             >
                                 <Select.Option value={JobType.GROUND_TRUTH}>
-                                    Ground truth
+                                    {t('Ground truth')}
                                 </Select.Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
                             name='frameSelectionMethod'
-                            label='Frame selection method'
-                            rules={[{ required: true, message: 'Please, specify frame selection method' }]}
+                            label={t('Frame selection method')}
+                            rules={[{ required: true, message: t('Please, specify frame selection method') }]}
                         >
                             <Select
                                 virtual={false}
@@ -164,10 +166,10 @@ function JobForm(props: Props): JSX.Element {
                                 onChange={setFrameSelectionMethod}
                             >
                                 <Select.Option value={FrameSelectionMethod.RANDOM}>
-                                    Random
+                                    {t('Random')}
                                 </Select.Option>
                                 <Select.Option value={FrameSelectionMethod.RANDOM_PER_JOB}>
-                                    Random per job
+                                    {t('Random per job')}
                                 </Select.Option>
                             </Select>
                         </Form.Item>
@@ -180,7 +182,7 @@ function JobForm(props: Props): JSX.Element {
                                     label={(
                                         <Space>
                                             {frameSelectionMethod === FrameSelectionMethod.RANDOM ?
-                                                'Quantity' : 'Quantity per job'}
+                                                t('Quantity') : t('Quantity per job')}
                                             <CVATTooltip title={description}>
                                                 <QuestionCircleOutlined
                                                     style={{ opacity: 0.5 }}
@@ -188,7 +190,7 @@ function JobForm(props: Props): JSX.Element {
                                             </CVATTooltip>
                                         </Space>
                                     )}
-                                    rules={[{ required: true, message: 'Please, specify quantity' }]}
+                                    rules={[{ required: true, message: t('Please, specify quantity') }]}
                                 >
                                     <InputNumber
                                         className='cvat-input-frame-quantity'
@@ -207,7 +209,7 @@ function JobForm(props: Props): JSX.Element {
                                             name='frameCount'
                                             label={(
                                                 <Space>
-                                                    Frame count
+                                                    {t('Frame count')}
                                                     <CVATTooltip title={description}>
                                                         <QuestionCircleOutlined
                                                             style={{ opacity: 0.5 }}
@@ -215,7 +217,7 @@ function JobForm(props: Props): JSX.Element {
                                                     </CVATTooltip>
                                                 </Space>
                                             )}
-                                            rules={[{ required: true, message: 'Please, specify frame count' }]}
+                                            rules={[{ required: true, message: t('Please, specify frame count') }]}
                                         >
                                             <InputNumber
                                                 className='cvat-input-frame-count'
@@ -231,7 +233,7 @@ function JobForm(props: Props): JSX.Element {
                             <Col>
                                 <Form.Item
                                     name='seed'
-                                    label='Seed'
+                                    label={t('Seed')}
                                 >
                                     <InputNumber
                                         className='cvat-input-seed'
@@ -253,7 +255,7 @@ function JobForm(props: Props): JSX.Element {
                             loading={fetching}
                             disabled={fetching}
                         >
-                            Submit
+                            {t('Submit')}
                         </Button>
                     </Col>
                 </Row>

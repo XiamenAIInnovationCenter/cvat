@@ -5,6 +5,7 @@
 import './styles.scss';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Row, Col } from 'antd/lib/grid';
@@ -76,6 +77,7 @@ function readInstanceId(type: InstanceType): number {
 type InstanceType = 'project' | 'task' | 'job';
 
 function AnalyticsPage(): JSX.Element {
+    const { t } = useTranslation('business');
     const location = useLocation();
 
     const requestedInstanceType: InstanceType = readInstanceType(location);
@@ -117,7 +119,7 @@ function AnalyticsPage(): JSX.Element {
             }
         } catch (error: unknown) {
             notification.error({
-                message: `Could not receive requested ${type}`,
+                message: t('Could not receive requested {{type}}', { type: t(type) }),
                 description: `${error instanceof Error ? error.message : ''}`,
             });
         }
@@ -151,7 +153,7 @@ function AnalyticsPage(): JSX.Element {
             }
         } catch (error: unknown) {
             notification.error({
-                message: 'Could not receive requested report',
+                message: t('Could not receive requested report'),
                 description: `${error instanceof Error ? error.message : ''}`,
             });
         }
@@ -170,8 +172,10 @@ function AnalyticsPage(): JSX.Element {
             });
         } else {
             notification.error({
-                message: 'Could not load this page',
-                description: `Not valid resource ${requestedInstanceType} #${requestedInstanceID}`,
+                message: t('Could not load this page'),
+                description: t('Not valid resource {{type}} #{{id}}', {
+                    type: t(requestedInstanceType), id: requestedInstanceID,
+                }),
             });
         }
 
@@ -212,7 +216,7 @@ function AnalyticsPage(): JSX.Element {
         }).catch((error: unknown) => {
             if (isMounted()) {
                 notification.error({
-                    message: 'Error occurred during requesting performance report',
+                    message: t('Error occurred during requesting performance report'),
                     description: error instanceof Error ? error.message : '',
                 });
             }
@@ -235,16 +239,22 @@ function AnalyticsPage(): JSX.Element {
             </Row>
         );
 
-        let analyticsFor: JSX.Element | null = <Link to={`/projects/${instance.id}`}>{`Project #${instance.id}`}</Link>;
+        let analyticsFor: JSX.Element | null = (
+            <Link to={`/projects/${instance.id}`}>{t('project #{{id}}', { id: instance.id })}</Link>
+        );
         if (instanceType === 'task') {
-            analyticsFor = <Link to={`/tasks/${instance.id}`}>{`Task #${instance.id}`}</Link>;
+            analyticsFor = <Link to={`/tasks/${instance.id}`}>{t('task #{{id}}', { id: instance.id })}</Link>;
         } else if (instanceType === 'job') {
-            analyticsFor = <Link to={`/tasks/${instance.taskId}/jobs/${instance.id}`}>{`Job #${instance.id}`}</Link>;
+            analyticsFor = (
+                <Link to={`/tasks/${instance.taskId}/jobs/${instance.id}`}>
+                    {t('job #{{id}}', { id: instance.id })}
+                </Link>
+            );
         }
         title = (
             <Col>
                 <Title level={4} className='cvat-text-color'>
-                    Analytics for
+                    {t('Analytics for')}
                     {' '}
                     {analyticsFor}
                 </Title>
@@ -260,7 +270,7 @@ function AnalyticsPage(): JSX.Element {
                 className='cvat-task-analytics-tabs'
                 items={[{
                     key: AnalyticsTabs.OVERVIEW,
-                    label: 'Performance',
+                    label: t('Performance'),
                     children: (
                         <AnalyticsOverview
                             report={analyticsReport}

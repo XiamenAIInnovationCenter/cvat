@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { PictureOutlined } from '@ant-design/icons';
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export default function Preview(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
 
     const {
@@ -98,7 +100,7 @@ export default function Preview(props: Props): JSX.Element {
                 className={previewClassName || ''}
                 src={preview.preview}
                 onClick={onClick}
-                alt='Preview image'
+                alt={t('Preview image')}
                 aria-hidden
             />
         </div>

@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Layout, { SiderProps } from 'antd/lib/layout';
@@ -22,7 +23,7 @@ import { ThunkDispatch } from 'utils/redux';
 import AppearanceBlock from 'components/annotation-page/appearance-block';
 import ObjectButtonsContainer from 'containers/annotation-page/standard-workspace/objects-side-bar/object-buttons';
 import { CombinedState } from 'reducers';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { ShortcutScope } from 'utils/enums';
 import { subKeyMap } from 'utils/component-subkeymap';
 import AttributeEditor from './attribute-editor';
@@ -108,7 +109,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function mapStateToProps(state: CombinedState): StateToProps {
     const {
@@ -152,6 +153,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch): DispatchToProps {
 }
 
 function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         labels,
         states,
@@ -341,7 +343,7 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.
                     className='cvat-objects-sidebar-sider'
                     onClick={collapse}
                 >
-                    {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                    {sidebarCollapsed ? <MenuFoldOutlined title={t('Show')} /> : <MenuUnfoldOutlined title={t('Hide')} />}
                 </span>
                 <GlobalHotKeys keyMap={subKeyMap(componentShortcuts, keyMap)} handlers={handlers} />
                 <div className='cvat-sidebar-collapse-button-spacer' />
@@ -392,7 +394,7 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.
                     </>
                 ) : (
                     <div className='attribute-annotations-sidebar-not-found-wrapper'>
-                        <Text strong>No attributes found</Text>
+                        <Text strong>{t('No attributes found')}</Text>
                     </div>
                 )}
 
@@ -408,11 +410,11 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.
                 className='cvat-objects-sidebar-sider'
                 onClick={collapse}
             >
-                {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                {sidebarCollapsed ? <MenuFoldOutlined title={t('Show')} /> : <MenuUnfoldOutlined title={t('Hide')} />}
             </span>
             <div className='cvat-sidebar-collapse-button-spacer' />
             <div className='attribute-annotations-sidebar-not-found-wrapper'>
-                <Text strong>No objects found</Text>
+                <Text strong>{t('No objects found')}</Text>
             </div>
         </Layout.Sider>
     );

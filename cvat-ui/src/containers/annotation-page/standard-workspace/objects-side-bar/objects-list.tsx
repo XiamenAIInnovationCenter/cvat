@@ -31,7 +31,7 @@ import {
 } from 'reducers';
 import { ObjectState, ObjectType, ShapeType } from 'cvat-core-wrapper';
 import { filterAnnotations } from 'utils/filter-annotations';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { ShortcutScope } from 'utils/enums';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { openAnnotationsActionModal } from 'components/annotation-page/annotations-actions/annotations-actions-modal';
@@ -181,7 +181,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function mapStateToProps(state: CombinedState): StateToProps {
     const {

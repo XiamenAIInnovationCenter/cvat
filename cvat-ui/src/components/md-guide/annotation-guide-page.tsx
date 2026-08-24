@@ -7,6 +7,7 @@ import './styles.scss';
 import React, {
     useState, useEffect, useRef, useCallback,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import notification from 'antd/lib/notification';
@@ -22,6 +23,7 @@ import dimensions from 'utils/dimensions';
 const core = getCore();
 
 function AnnotationGuidePage(): JSX.Element {
+    const { t } = useTranslation('business');
     const mdEditorRef = useRef<typeof MDEditor & { commandOrchestrator: commands.TextAreaCommandOrchestrator }>(null);
     const location = useLocation();
     const [value, setValue] = useState('');
@@ -48,7 +50,10 @@ function AnnotationGuidePage(): JSX.Element {
                 setGuide(guideInstance);
             }).catch((error: unknown) => {
                 notification.error({
-                    message: `Could not receive guide for the ${instanceType} ${id}`,
+                    message: t('Could not receive guide for the {{instance}} {{id}}', {
+                        instance: t(instanceType),
+                        id,
+                    }),
                     description: error instanceof Error ? error.message : '',
                 });
             }).finally(() => {
@@ -65,7 +70,7 @@ function AnnotationGuidePage(): JSX.Element {
                 setGuide(result);
             }).catch((error: unknown) => {
                 notification.error({
-                    message: 'Could not save guide on the server',
+                    message: t('Could not save guide on the server'),
                     description: error instanceof Error ? error.message : '',
                 });
             }).finally(() => {
@@ -112,7 +117,7 @@ function AnnotationGuidePage(): JSX.Element {
                         setValue(computeNewValue());
                     } catch (error: any) {
                         notification.error({
-                            message: 'Could not create a server asset',
+                            message: t('Could not create a server asset'),
                             description: error.toString(),
                         });
                     } finally {
@@ -173,7 +178,7 @@ function AnnotationGuidePage(): JSX.Element {
                         disabled={fetching || !guide?.id}
                         onClick={() => submit(value)}
                     >
-                        Submit
+                        {t('Submit')}
                     </Button>
                 </Space>
             </Col>

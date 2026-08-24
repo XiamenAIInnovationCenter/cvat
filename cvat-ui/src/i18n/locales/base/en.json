@@ -113,6 +113,8 @@
         "or try to": " or try to ",
         "create_from_backup": "Create from backup"
     },
+    "Back": "Back",
+    "CVAT Logo": "CVAT Logo",
     "modal": {
         "cannot-connect-server": {
             "title": "Cannot connect to the server",

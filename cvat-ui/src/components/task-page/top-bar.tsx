@@ -10,6 +10,7 @@ import { LeftOutlined, MoreOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
 import Dropdown from 'antd/lib/dropdown';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 
 import ActionsMenuContainer from 'containers/actions-menu/actions-menu';
 
@@ -18,6 +19,7 @@ interface DetailsComponentProps {
 }
 
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
+    const { t } = useTranslation('business');
     const { taskInstance } = props;
 
     const history = useHistory();
@@ -44,7 +46,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                         size='large'
                     >
                         <LeftOutlined />
-                        Back to project
+                        {t('Back to project')}
                     </Button>
                 ) : (
                     <Button
@@ -54,7 +56,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                         size='large'
                     >
                         <LeftOutlined />
-                        Back to tasks
+                        {t('Back to tasks')}
                     </Button>
                 )}
             </Col>
@@ -72,7 +74,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                     )}
                 >
                     <Button size='middle' className='cvat-task-page-actions-button'>
-                        <Text className='cvat-text-color'>Actions</Text>
+                        <Text className='cvat-text-color'>{t('Actions')}</Text>
                         <MoreOutlined className='cvat-menu-icon' />
                     </Button>
                 </Dropdown>

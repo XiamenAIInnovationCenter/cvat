@@ -89,8 +89,9 @@ init();
  * @return {OffFunction} stopListenFunction
  */
 export function onLanguageChanged(callback: (lng: string, i18n: I18next) => void): OffFunction {
-    i18n.on('languageChanged', (lng) => callback(lng, i18n));
-    return () => i18n.off('languageChanged', callback);
+    const listener = (lng: string): void => callback(lng, i18n);
+    i18n.on('languageChanged', listener);
+    return () => i18n.off('languageChanged', listener);
 }
 
 function patch(
@@ -206,7 +207,27 @@ export function patchPathForLocaleOn(
  * @param target
  */
 export function patchShortcutsForLocaleOn(target: Record<string, Record<'name' | 'description', string>>) {
-    return patchPathForLocaleOn(target, { 0: 'name', 1: 'description' }, 'settings.Shortcuts', 'header');
+    const applyLocale = (lng: string, i18next: I18next): void => {
+        const info: Record<string, [string, string]> | undefined = i18next.getResource(
+            lng, 'header', 'settings.Shortcuts',
+        );
+        if (!info) {
+            return;
+        }
+
+        Object.entries(info).forEach(([shortcutID, translation]) => {
+            if (shortcutID in target && Array.isArray(translation)) {
+                [target[shortcutID].name, target[shortcutID].description] = translation;
+            }
+        });
+        registerComponentShortcuts(target);
+    };
+
+    const currentLanguage = i18n.resolvedLanguage || i18n.language;
+    if (i18n.isInitialized && currentLanguage) {
+        applyLocale(currentLanguage, i18n);
+    }
+    return onLanguageChanged(applyLocale);
 }
 
 /**

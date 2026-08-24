@@ -9,6 +9,8 @@ import React, {
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
 import Modal from 'antd/lib/modal';
@@ -58,6 +60,7 @@ const FilteringComponent = ResourceFilterHOC(
 );
 
 function OrganizationTopBar(props: Props): JSX.Element {
+    const { t, i18n } = useTranslation('business');
     const {
         organizationInstance, userInstance, fetchMembers, query,
         onApplyFilter, onApplySearch, onApplySorting,
@@ -103,10 +106,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
             },
             content: (
                 <div className='cvat-remove-organization-submit'>
-                    <Text type='warning'>
-                        To remove the organization,
-                        enter its short name below
-                    </Text>
+                    <Text type='warning'>{t('To remove the organization, enter its short name below')}</Text>
                     <Input
                         onChange={
                             (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +125,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                 disabled: true,
                 danger: true,
             },
-            okText: 'Remove',
+            okText: t('Remove'),
         });
     };
 
@@ -142,7 +142,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                         <Row justify='space-between'>
                             <Col>
                                 <Text>
-                                    <Text className='cvat-title'>{`Organization: ${slug} `}</Text>
+                                    <Text className='cvat-title'>{`${t('Organization')}: ${slug} `}</Text>
                                 </Text>
                             </Col>
                             <Col>
@@ -163,7 +163,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                                                         return false;
                                                     }}
                                                 >
-                                                    Setup webhooks
+                                                    {t('Setup webhooks')}
                                                 </a>
                                             </Menu.Item>
                                             {owner && userID === owner.id ? (
@@ -171,14 +171,14 @@ function OrganizationTopBar(props: Props): JSX.Element {
                                                     key={MenuActions.REMOVE_ORGANIZATION}
                                                     onClick={onRemove}
                                                 >
-                                                    Remove organization
+                                                    {t('Remove organization')}
                                                 </Menu.Item>
                                             ) : null}
                                         </Menu>
                                     )}
                                 >
                                     <Button size='middle' className='cvat-organization-page-actions-button'>
-                                        <Text className='cvat-text-color'>Actions</Text>
+                                        <Text className='cvat-text-color'>{t('Actions')}</Text>
                                         <MoreOutlined className='cvat-menu-icon' />
                                     </Button>
                                 </Popover>
@@ -202,7 +202,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                         </Text>
                         {!editingDescription ? (
                             <span style={{ display: 'grid' }}>
-                                {(description || 'Add description').split('\n').map((val: string, idx: number) => (
+                                {(description || t('Add description')).split('\n').map((val: string, idx: number) => (
                                     <Text key={idx} type='secondary'>
                                         {val}
                                         {idx === 0 ? <EditTwoTone onClick={() => setEditingDescription(true)} /> : null}
@@ -229,7 +229,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                                         setEditingDescription(false);
                                     }}
                                 >
-                                    Submit
+                                    {t('Submit')}
                                 </Button>
                             </div>
                         )}
@@ -239,7 +239,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                     <div className='cvat-organization-top-bar-contacts'>
                         <div>
                             <PhoneOutlined />
-                            { !contact.phoneNumber ? <Text type='secondary'>Add phone number</Text> : null }
+                            { !contact.phoneNumber ? <Text type='secondary'>{t('Add phone number')}</Text> : null }
                             <Text
                                 type='secondary'
                                 editable={{
@@ -259,7 +259,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                         </div>
                         <div>
                             <MailOutlined />
-                            { !contact.email ? <Text type='secondary'>Add email</Text> : null }
+                            { !contact.email ? <Text type='secondary'>{t('Add email')}</Text> : null }
                             <Text
                                 type='secondary'
                                 editable={{
@@ -279,7 +279,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                         </div>
                         <div>
                             <EnvironmentOutlined />
-                            { !contact.location ? <Text type='secondary'>Add location</Text> : null }
+                            { !contact.location ? <Text type='secondary'>{t('Add location')}</Text> : null }
                             <Text
                                 type='secondary'
                                 editable={{
@@ -297,8 +297,16 @@ function OrganizationTopBar(props: Props): JSX.Element {
                                 {contact.location}
                             </Text>
                         </div>
-                        <Text type='secondary'>{`Created ${moment(createdDate).format('MMMM Do YYYY')}`}</Text>
-                        <Text type='secondary'>{`Updated ${moment(updatedDate).fromNow()}`}</Text>
+                        <Text type='secondary'>
+                            {t('Created on {{date}}', {
+                                date: moment(createdDate).locale(i18n.language.toLowerCase()).format('LL'),
+                            })}
+                        </Text>
+                        <Text type='secondary'>
+                            {t('Updated {{time}}', {
+                                time: moment(updatedDate).locale(i18n.language.toLowerCase()).fromNow(),
+                            })}
+                        </Text>
                     </div>
                 </Col>
                 <Col span={12} className='cvat-organization-top-bar-buttons-block'>
@@ -319,19 +327,19 @@ function OrganizationTopBar(props: Props): JSX.Element {
                                         className: 'cvat-modal-organization-leave-confirm',
                                         content: (
                                             <>
-                                                <Text>Please, confirm leaving the organization</Text>
+                                                <Text>{t('Please, confirm leaving the organization')}</Text>
                                                 <Text strong>{` ${organizationInstance.slug}`}</Text>
-                                                <Text>. You will not have access to the organization data anymore</Text>
+                                                <Text>{t('. You will not have access to the organization data anymore')}</Text>
                                             </>
                                         ),
-                                        okText: 'Leave',
+                                        okText: t('Leave'),
                                         okButtonProps: {
                                             danger: true,
                                         },
                                     });
                                 }}
                             >
-                                Leave organization
+                                {t('Leave organization')}
                             </Button>
                         ) : null}
                         <Button
@@ -340,7 +348,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                             onClick={() => setVisibleInviteModal(true)}
                             icon={<PlusCircleOutlined />}
                         >
-                            Invite members
+                            {t('Invite members')}
                         </Button>
                     </Space>
                 </Col>
@@ -354,7 +362,7 @@ function OrganizationTopBar(props: Props): JSX.Element {
                         }}
                         defaultValue={query.search || ''}
                         className='cvat-oranization-page-search-bar'
-                        placeholder='Search ...'
+                        placeholder={t('Search ...')}
                     />
                 </Col>
                 <Col>

@@ -7,6 +7,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import ConfigProvider from 'antd/lib/config-provider';
+import enUS from 'antd/lib/locale/en_US';
+import zhCN from 'antd/lib/locale/zh_CN';
+import { useTranslation } from 'react-i18next';
 
 import './i18n';
 import { getAboutAsync } from 'actions/about-actions';
@@ -133,14 +137,23 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 
 const ReduxAppWrapper = connect(mapStateToProps, mapDispatchToProps)(CVATApplication);
 
+function AntDesignLocaleProvider({ children }: React.PropsWithChildren): JSX.Element {
+    const { i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage?.toLowerCase().startsWith('zh') ? zhCN : enUS;
+
+    return <ConfigProvider locale={locale}>{children}</ConfigProvider>;
+}
+
 const root = createRoot(document.getElementById('root') as HTMLDivElement);
 root.render((
     <Provider store={cvatStore}>
-        <BrowserRouter>
-            <PluginsEntrypoint />
-            <ReduxAppWrapper />
-        </BrowserRouter>
-        <LayoutGrid />
+        <AntDesignLocaleProvider>
+            <BrowserRouter>
+                <PluginsEntrypoint />
+                <ReduxAppWrapper />
+            </BrowserRouter>
+            <LayoutGrid />
+        </AntDesignLocaleProvider>
     </Provider>
 ));
 

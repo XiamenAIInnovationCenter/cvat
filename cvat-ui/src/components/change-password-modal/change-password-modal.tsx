@@ -7,6 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'antd/lib/modal';
 import Title from 'antd/lib/typography/Title';
+import { useTranslation } from 'react-i18next';
 
 import { changePasswordAsync } from 'actions/auth-actions';
 import { CombinedState } from 'reducers';
@@ -44,6 +45,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 }
 
 function ChangePasswordComponent(props: ChangePasswordPageComponentProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         fetching, onChangePassword, visible, onClose,
     } = props;
@@ -51,9 +53,9 @@ function ChangePasswordComponent(props: ChangePasswordPageComponentProps): JSX.E
     return (
         <Modal
             className='cvat-modal-change-password'
-            title={<Title level={3}>Change password</Title>}
+            title={<Title level={3}>{t('Change password')}</Title>}
             okType='primary'
-            okText='Submit'
+            okText={t('Submit')}
             footer={null}
             open={visible}
             destroyOnClose

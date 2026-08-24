@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { Row, Col } from 'antd/lib/grid';
 import Tag from 'antd/lib/tag';
@@ -28,6 +29,7 @@ interface Props {
 }
 
 export default function DeployedModelItem(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { model } = props;
     const [isModalShown, setIsModalShown] = useState(false);
 
@@ -40,8 +42,8 @@ export default function DeployedModelItem(props: Props): JSX.Element {
 
     const created = moment(model.createdDate).fromNow();
     const modelDescription = model.provider !== ModelProviders.CVAT ?
-        <Text type='secondary'>{`Added ${created}`}</Text> :
-        <Text type='secondary'>System model</Text>;
+        <Text type='secondary'>{t('Added {{time}}', { time: created })}</Text> :
+        <Text type='secondary'>{t('System model')}</Text>;
 
     const menuItems: [NonNullable<MenuProps['items']>[0], number][] = [];
     const topBarItems: [JSX.Element, number][] = [];
@@ -73,7 +75,7 @@ export default function DeployedModelItem(props: Props): JSX.Element {
         <>
             <Modal
                 className='cvat-model-info-modal'
-                title='Model'
+                title={t('Model')}
                 open={isModalShown}
                 onCancel={onCloseModel}
                 footer={null}
@@ -98,7 +100,7 @@ export default function DeployedModelItem(props: Props): JSX.Element {
                     model.labels?.length ? (
                         <>
                             <div className='cvat-model-info-container'>
-                                <Text className='cvat-model-info-modal-labels-title'>Labels:</Text>
+                                <Text className='cvat-model-info-modal-labels-title'>{`${t('Labels')}:`}</Text>
                             </div>
                             <div className='cvat-model-info-container cvat-model-info-modal-labels-list'>
                                 {model.labels.map((label) => <Tag key={label.name}>{label.name}</Tag>)}
@@ -111,10 +113,10 @@ export default function DeployedModelItem(props: Props): JSX.Element {
                     <Col span={15}>
                         <Row>
                             <Col span={8}>
-                                <Text strong>Provider</Text>
+                                <Text strong>{t('Provider')}</Text>
                             </Col>
                             <Col>
-                                <Text strong>Type</Text>
+                                <Text strong>{t('Type')}</Text>
                             </Col>
                         </Row>
                         <Row>
@@ -130,7 +132,7 @@ export default function DeployedModelItem(props: Props): JSX.Element {
                         <Col>
                             <Row>
                                 <Col>
-                                    <Text strong>Owner</Text>
+                                    <Text strong>{t('Owner')}</Text>
                                 </Col>
                             </Row>
                             <Row>

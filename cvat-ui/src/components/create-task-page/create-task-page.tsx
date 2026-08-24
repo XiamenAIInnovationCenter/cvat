@@ -8,6 +8,7 @@ import React from 'react';
 import { useLocation } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 
 import CreateTaskContent, { CreateTaskData } from './create-task-content';
 
@@ -17,6 +18,7 @@ interface Props {
 
 export default function CreateTaskPage(props: Props): JSX.Element {
     const { onCreate } = props;
+    const { t } = useTranslation('business');
 
     const location = useLocation();
 
@@ -31,7 +33,7 @@ export default function CreateTaskPage(props: Props): JSX.Element {
     return (
         <Row justify='center' align='top' className='cvat-create-work-form-wrapper'>
             <Col md={20} lg={16} xl={14} xxl={9}>
-                <Text className='cvat-title'>Create a new task</Text>
+                <Text className='cvat-title'>{t('Create a new task')}</Text>
                 <CreateTaskContent projectId={projectId} onCreate={handleCreate} many={many} />
             </Col>
         </Row>

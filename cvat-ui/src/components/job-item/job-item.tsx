@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
 import { Col, Row } from 'antd/lib/grid';
 import Card from 'antd/lib/card';
 import Text from 'antd/lib/typography/Text';
@@ -29,10 +30,12 @@ import CVATTooltip from 'components/common/cvat-tooltip';
 import { CombinedState } from 'reducers';
 import Collapse from 'antd/lib/collapse';
 import CVATTag, { TagType } from 'components/common/cvat-tag';
+import { useTranslation } from 'react-i18next';
 import JobActionsMenu from './job-actions-menu';
 
-function formatDate(value: moment.Moment): string {
-    return value.format('MMM Do YYYY HH:mm');
+function formatDate(value: moment.Moment, language: string): string {
+    const chinese = language === 'zh-CN';
+    return value.locale(chinese ? 'zh-cn' : 'en').format(chinese ? 'YYYY年M月D日 HH:mm' : 'MMM Do YYYY HH:mm');
 }
 
 interface Props {
@@ -45,6 +48,7 @@ interface Props {
 }
 
 function ReviewSummaryComponent({ jobInstance }: { jobInstance: any }): JSX.Element {
+    const { t } = useTranslation('business');
     const [summary, setSummary] = useState<Record<string, any> | null>(null);
     const [error, setError] = useState<any>(null);
     const isMounted = useIsMounted();
@@ -73,15 +77,15 @@ function ReviewSummaryComponent({ jobInstance }: { jobInstance: any }): JSX.Elem
     if (!summary) {
         if (error) {
             if (error.toString().includes('403')) {
-                return <p>You do not have permissions</p>;
+                return <p>{t('You do not have permissions')}</p>;
             }
 
-            return <p>Could not fetch, check console output</p>;
+            return <p>{t('Could not fetch, check console output')}</p>;
         }
 
         return (
             <>
-                <p>Loading.. </p>
+                <p>{t('Loading...')}</p>
                 <LoadingOutlined />
             </>
         );
@@ -92,13 +96,13 @@ function ReviewSummaryComponent({ jobInstance }: { jobInstance: any }): JSX.Elem
             <tbody>
                 <tr>
                     <td>
-                        <Text strong>Unsolved issues</Text>
+                        <Text strong>{t('Unsolved issues')}</Text>
                     </td>
                     <td>{summary.issues_unsolved}</td>
                 </tr>
                 <tr>
                     <td>
-                        <Text strong>Resolved issues</Text>
+                        <Text strong>{t('Resolved issues')}</Text>
                     </td>
                     <td>{summary.issues_resolved}</td>
                 </tr>
@@ -108,6 +112,7 @@ function ReviewSummaryComponent({ jobInstance }: { jobInstance: any }): JSX.Elem
 }
 
 function JobItem(props: Props): JSX.Element {
+    const { t, i18n } = useTranslation('business');
     const {
         job, task, onJobUpdate, childJobs, defaultCollapsed, onCollapseChange,
     } = props;
@@ -175,14 +180,22 @@ function JobItem(props: Props): JSX.Element {
                         </Row>
                         <Row className='cvat-job-item-dates-info'>
                             <Col>
-                                <Text>Created: </Text>
-                                <Text type='secondary'>{`${formatDate(created)}`}</Text>
+                                <Text>
+                                    {t('Created')}
+:
+                                    {' '}
+                                </Text>
+                                <Text type='secondary'>{formatDate(created, i18n.language)}</Text>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <Text>Updated: </Text>
-                                <Text type='secondary'>{`${formatDate(updated)}`}</Text>
+                                <Text>
+                                    {t('Updated')}
+:
+                                    {' '}
+                                </Text>
+                                <Text type='secondary'>{formatDate(updated, i18n.language)}</Text>
                             </Col>
                         </Row>
                     </Col>
@@ -192,7 +205,10 @@ function JobItem(props: Props): JSX.Element {
                                 <Row>
                                     <Col className='cvat-job-item-select'>
                                         <Row>
-                                            <Text>Assignee:</Text>
+                                            <Text>
+                                                {t('Assignee')}
+:
+                                            </Text>
                                         </Row>
                                         <UserSelector
                                             className='cvat-job-assignee-selector'
@@ -206,7 +222,10 @@ function JobItem(props: Props): JSX.Element {
                                     <Col className='cvat-job-item-select'>
                                         <Row justify='space-between' align='middle'>
                                             <Col>
-                                                <Text>Stage:</Text>
+                                                <Text>
+                                                    {t('Stage')}
+:
+                                                </Text>
                                             </Col>
                                         </Row>
                                         <Select
@@ -218,20 +237,23 @@ function JobItem(props: Props): JSX.Element {
                                             }}
                                         >
                                             <Select.Option value={JobStage.ANNOTATION}>
-                                                {JobStage.ANNOTATION}
+                                                {t(JobStage.ANNOTATION)}
                                             </Select.Option>
                                             <Select.Option value={JobStage.VALIDATION}>
-                                                {JobStage.VALIDATION}
+                                                {t(JobStage.VALIDATION)}
                                             </Select.Option>
                                             <Select.Option value={JobStage.ACCEPTANCE}>
-                                                {JobStage.ACCEPTANCE}
+                                                {t(JobStage.ACCEPTANCE)}
                                             </Select.Option>
                                         </Select>
                                     </Col>
                                     <Col className='cvat-job-item-select'>
                                         <Row justify='space-between' align='middle'>
                                             <Col>
-                                                <Text>State:</Text>
+                                                <Text>
+                                                    {t('State')}
+:
+                                                </Text>
                                             </Col>
                                         </Row>
                                         <Select
@@ -242,13 +264,15 @@ function JobItem(props: Props): JSX.Element {
                                                 onJobUpdate(job, { state: newValue });
                                             }}
                                         >
-                                            <Select.Option value={JobState.NEW}>{JobState.NEW}</Select.Option>
+                                            <Select.Option value={JobState.NEW}>{t(JobState.NEW)}</Select.Option>
                                             <Select.Option value={JobState.IN_PROGRESS}>
-                                                {JobState.IN_PROGRESS}
+                                                {t(JobState.IN_PROGRESS)}
                                             </Select.Option>
-                                            <Select.Option value={JobState.REJECTED}>{JobState.REJECTED}</Select.Option>
+                                            <Select.Option value={JobState.REJECTED}>
+                                                {t(JobState.REJECTED)}
+                                            </Select.Option>
                                             <Select.Option value={JobState.COMPLETED}>
-                                                {JobState.COMPLETED}
+                                                {t(JobState.COMPLETED)}
                                             </Select.Option>
                                         </Select>
                                     </Col>
@@ -262,7 +286,11 @@ function JobItem(props: Props): JSX.Element {
                                 <Row>
                                     <Col>
                                         <Icon component={DurationIcon} />
-                                        <Text>Duration: </Text>
+                                        <Text>
+                                            {t('Duration')}
+:
+                                            {' '}
+                                        </Text>
                                         <Text type='secondary'>
                                             {`${moment
                                                 .duration(now.diff(created))
@@ -273,7 +301,11 @@ function JobItem(props: Props): JSX.Element {
                                 <Row>
                                     <Col>
                                         <BorderOutlined />
-                                        <Text>Frame count: </Text>
+                                        <Text>
+                                            {t('Frame count')}
+:
+                                            {' '}
+                                        </Text>
                                         <Text type='secondary' className='cvat-job-item-frames'>
                                             {`${job.frameCount} (${frameCountPercentRepresentation}%)`}
                                         </Text>
@@ -283,7 +315,11 @@ function JobItem(props: Props): JSX.Element {
                                     <Row>
                                         <Col>
                                             <Icon component={FramesIcon} />
-                                            <Text>Frame range: </Text>
+                                            <Text>
+                                                {t('Frame range')}
+:
+                                                {' '}
+                                            </Text>
                                             <Text type='secondary' className='cvat-job-item-frame-range'>
                                                 {`${job.startFrame}-${job.stopFrame}`}
                                             </Text>
@@ -315,7 +351,7 @@ function JobItem(props: Props): JSX.Element {
                         items={[
                             {
                                 key: '1',
-                                label: <Text>{`${childJobViews.length} Replicas`}</Text>,
+                                label: <Text>{t('{{count}} replicas', { count: childJobViews.length })}</Text>,
                                 children: childJobViews,
                             },
                         ]}

@@ -358,8 +358,8 @@ export default function (state = defaultState, action: AnyAction): Notifications
                     auth: {
                         ...state.messages.auth,
                         requestPasswordResetDone: {
-                            message: `Check your email for a link to reset your password.
-                            If it doesn't appear within a few minutes, check your spam folder.`,
+                            message: 'Check your email for a link to reset your password. ' +
+                                'If it doesn\'t appear within a few minutes, check your spam folder.',
                         },
                     },
                 },

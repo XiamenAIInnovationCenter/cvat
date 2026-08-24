@@ -10,6 +10,7 @@ import Tabs, { TabsProps } from 'antd/lib/tabs';
 import Input from 'antd/lib/input';
 import { RcFile } from 'antd/lib/upload';
 import { FormInstance } from 'antd/lib/form';
+import { TFunction } from 'i18next';
 
 import { CloudStorage } from 'reducers';
 import CloudStorageTab from './cloud-storages-tab';
@@ -31,6 +32,7 @@ interface State {
 }
 
 interface Props {
+    t: TFunction<'business'>;
     many: boolean;
     onChangeActiveKey(key: string): void;
     onUploadLocalFiles(files: File[]): void;
@@ -121,12 +123,12 @@ export class FileManager extends React.PureComponent<Props, State> {
     }
 
     private renderLocalSelector(): NonNullable<TabsProps['items']>[0] {
-        const { many, onUploadLocalFiles } = this.props;
+        const { many, onUploadLocalFiles, t } = this.props;
         const { files } = this.state;
 
         return {
             key: 'local',
-            label: 'My computer',
+            label: t('My computer'),
             className: 'cvat-file-manager-local-tab',
             children: (
                 <LocalFiles
@@ -148,9 +150,10 @@ export class FileManager extends React.PureComponent<Props, State> {
     }
 
     private renderShareSelector(): NonNullable<TabsProps['items']>[0] {
+        const { t } = this.props;
         return {
             key: 'share',
-            label: 'Connected file share',
+            label: t('Connected file share'),
             className: 'cvat-file-manager-share-tab',
             children: (
                 <RemoteBrowser
@@ -162,17 +165,17 @@ export class FileManager extends React.PureComponent<Props, State> {
     }
 
     private renderRemoteSelector(): NonNullable<TabsProps['items']>[0] {
-        const { onUploadRemoteFiles } = this.props;
+        const { onUploadRemoteFiles, t } = this.props;
         const { files } = this.state;
 
         return {
             key: 'remote',
-            label: 'Remote sources',
+            label: t('Remote sources'),
             className: 'cvat-file-manager-remote-tab',
             children: (
                 <Input.TextArea
                     className='cvat-file-selector-remote'
-                    placeholder='Enter one URL per line'
+                    placeholder={t('Enter one URL per line')}
                     rows={6}
                     value={[...files.remote].join('\n')}
                     onChange={(event: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -191,11 +194,12 @@ export class FileManager extends React.PureComponent<Props, State> {
     }
 
     private renderCloudStorageSelector(): NonNullable<TabsProps['items']>[0] {
+        const { t } = this.props;
         const { cloudStorage, potentialCloudStorage } = this.state;
 
         return {
             key: 'cloudStorage',
-            label: 'Cloud Storage',
+            label: t('Cloud Storage'),
             className: 'cvat-create-task-page-cloud-storage-tab',
             children: (
                 <CloudStorageTab

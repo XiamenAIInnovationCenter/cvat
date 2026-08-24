@@ -7,6 +7,7 @@ import './styles.scss';
 import React, {
     useCallback, useEffect, useReducer, useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Row, Col } from 'antd/lib/grid';
@@ -160,6 +161,7 @@ const reducer = (state: State, action: ActionUnion<typeof reducerActions>): Stat
 };
 
 function QualityControlPage(): JSX.Element {
+    const { t } = useTranslation('business');
     const supportedTabs = ['overview', 'settings', 'management'];
     const [state, dispatch] = useReducer(reducer, {
         fetching: true,
@@ -239,10 +241,10 @@ function QualityControlPage(): JSX.Element {
                     dispatch(reducerActions.setQualitySettingsFetching(true));
                     const responseSettings = await settings.save();
                     dispatch(reducerActions.setQualitySettings(responseSettings));
-                    notification.info({ message: 'Settings have been updated' });
+                    notification.info({ message: t('Settings have been updated') });
                 } catch (error: unknown) {
                     notification.error({
-                        message: 'Could not save quality settings',
+                        message: t('Could not save quality settings'),
                         description: typeof Error === 'object' ? (error as object).toString() : '',
                     });
                     throw error;
@@ -335,7 +337,7 @@ function QualityControlPage(): JSX.Element {
                 <div className='cvat-quality-control-page-error'>
                     <Result
                         status='error'
-                        title='Could not open the page'
+                        title={t('Could not open the page')}
                         subTitle={error.message}
                         extra={backNavigation}
                     />
@@ -358,8 +360,9 @@ function QualityControlPage(): JSX.Element {
         title = (
             <Col className='cvat-quality-page-header'>
                 <Title level={4} className='cvat-text-color'>
-                    Quality control for
-                    <Link to={`/tasks/${instance.id}`}>{` Task #${instance.id}`}</Link>
+                    {t('Quality control for')}
+                    {' '}
+                    <Link to={`/tasks/${instance.id}`}>{t('task #{{id}}', { id: instance.id })}</Link>
                 </Title>
             </Col>
         );
@@ -369,7 +372,7 @@ function QualityControlPage(): JSX.Element {
         if (qualitySettings) {
             tabsItems.push({
                 key: 'overview',
-                label: 'Overview',
+                label: t('Overview'),
                 children: (
                     <QualityOverviewTab task={instance} qualitySettings={qualitySettings} />
                 ),
@@ -380,7 +383,7 @@ function QualityControlPage(): JSX.Element {
             if (validationLayout && qualitySettings) {
                 tabsItems.push({
                     key: 'management',
-                    label: 'Management',
+                    label: t('Management'),
                     children: (
                         <QualityManagementTab
                             task={instance}
@@ -399,7 +402,7 @@ function QualityControlPage(): JSX.Element {
         if (qualitySettings) {
             tabsItems.push({
                 key: 'settings',
-                label: 'Settings',
+                label: t('Settings'),
                 children: (
                     <QualitySettingsTab
                         fetching={qualitySettingsFetching}

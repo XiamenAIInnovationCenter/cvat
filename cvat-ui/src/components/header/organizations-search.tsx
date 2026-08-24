@@ -7,6 +7,7 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import AutoComplete from 'antd/lib/auto-complete';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { Organization } from 'cvat-core-wrapper';
 
@@ -16,6 +17,7 @@ function OrganizationsSearch(props: {
     resetOrganization: (search?: string) => void;
     setNewOrganization: (org: Organization) => void;
 }): JSX.Element {
+    const { t } = useTranslation('header');
     const {
         defaultOrganizationList, searchOrganizations, resetOrganization, setNewOrganization,
     } = props;
@@ -29,7 +31,7 @@ function OrganizationsSearch(props: {
             }).catch((error: unknown) => {
                 setSearchResults([]);
                 notification.error({
-                    message: 'Could not receive a list of organizations',
+                    message: t('Could not receive a list of organizations'),
                     description: error instanceof Error ? error.message : '',
                 });
             });
@@ -40,12 +42,12 @@ function OrganizationsSearch(props: {
     return (
         <AutoComplete
             defaultValue={searchPhrase}
-            placeholder='Type to search'
+            placeholder={t('Type to search')}
             showSearch
             onSearch={_.debounce(setSearchPhrase, 500)}
             options={[{
                 value: '',
-                label: 'Personal workspace',
+                label: t('Personal workspace'),
             }, ...organizationsList.map((organization) => ({
                 value: organization.slug,
                 label: `${organization.slug}${organization.name === organization.slug ? '' : ` (${organization.name})`}`,

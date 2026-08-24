@@ -26,6 +26,13 @@
         "Please specify an email address": "Please specify an email address",
         "We will send link to your email": "We will send link to your email"
     },
+    "Your email is confirmed": "Your email is confirmed",
+    "Redirecting to login page after...": "Redirecting to login page after...",
+    "Or click this link": "Or click this link",
+    "Please, confirm your email": "Please, confirm your email",
+    "Go to login page": "Go to login page",
+    "This e-mail confirmation link expired or is invalid.": "This e-mail confirmation link expired or is invalid.",
+    "Please issue a new e-mail confirmation request.": "Please issue a new e-mail confirmation request.",
     "passwordResetConfirm": {
         "Change password": "Change password",
         "New password": "New password",
