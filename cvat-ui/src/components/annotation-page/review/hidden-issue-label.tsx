@@ -6,6 +6,7 @@
 import React, {
     ReactPortal, useEffect, useRef,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom';
 import Tag from 'antd/lib/tag';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export default function HiddenIssueLabel(props: Props): ReactPortal {
+    const { t } = useTranslation('business');
     const {
         issue, top, left, angle, scale, resolved, onClick, highlight, blur,
     } = props;
@@ -63,7 +65,7 @@ export default function HiddenIssueLabel(props: Props): ReactPortal {
 
     const elementID = `cvat-hidden-issue-label-${id}`;
     return ReactDOM.createPortal(
-        <CVATTooltip title={comments[0]?.message || 'No comments found'}>
+        <CVATTooltip title={comments[0]?.message || t('No comments found')}>
             <Tag
                 ref={ref}
                 id={elementID}

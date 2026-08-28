@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from 'antd/lib/button';
 import { MenuProps } from 'antd/lib/menu';
 import Icon, {
@@ -24,6 +25,7 @@ interface Props {
 }
 
 function CreateURLItem({ onCreateURL, serverID }: Pick<Props, 'onCreateURL' | 'serverID'>): JSX.Element {
+    const { t } = useTranslation('business');
     return (
         <Button
             className='cvat-audio-region-menu-create-url'
@@ -32,12 +34,13 @@ function CreateURLItem({ onCreateURL, serverID }: Pick<Props, 'onCreateURL' | 's
             icon={<LinkOutlined />}
             onClick={onCreateURL}
         >
-            Copy interval URL
+            {t('Copy interval URL')}
         </Button>
     );
 }
 
 function MakeCopyItem({ onCopy }: Pick<Props, 'onCopy'>): JSX.Element {
+    const { t } = useTranslation('business');
     return (
         <Button
             className='cvat-audio-region-menu-make-copy'
@@ -45,12 +48,13 @@ function MakeCopyItem({ onCopy }: Pick<Props, 'onCopy'>): JSX.Element {
             icon={<CopyOutlined />}
             onClick={onCopy}
         >
-            Duplicate interval
+            {t('Duplicate interval')}
         </Button>
     );
 }
 
 function RemoveItem({ onRemove, locked }: Pick<Props, 'onRemove' | 'locked'>): JSX.Element {
+    const { t } = useTranslation('business');
     return (
         <Button
             type='link'
@@ -59,7 +63,7 @@ function RemoveItem({ onRemove, locked }: Pick<Props, 'onRemove' | 'locked'>): J
             onClick={onRemove}
             className='cvat-audio-region-menu-remove'
         >
-            Delete interval
+            {t('Delete interval')}
         </Button>
     );
 }
@@ -67,6 +71,7 @@ function RemoveItem({ onRemove, locked }: Pick<Props, 'onRemove' | 'locked'>): J
 function ChangeColorItem({
     colorBy, onChangeColorClick,
 }: Pick<Props, 'colorBy' | 'onChangeColorClick'>): JSX.Element {
+    const { t } = useTranslation('business');
     return (
         <Button
             type='link'
@@ -74,7 +79,7 @@ function ChangeColorItem({
             onClick={onChangeColorClick}
             className='cvat-audio-region-menu-change-color'
         >
-            {`Change ${colorBy.toLowerCase()} color`}
+            {t('Change {{colorBy}} color', { colorBy: t(colorBy.toLowerCase()) })}
         </Button>
     );
 }
@@ -89,13 +94,18 @@ enum MenuKeys {
 
 export default function AudioRegionItemMenu(props: Props): MenuProps {
     const { locked, colorBy } = props;
+    const { t } = useTranslation('business');
 
     const items: NonNullable<MenuProps['items']> = [];
 
     items.push(
         {
             key: MenuKeys.FIT_INTERVAL,
-            label: <Button type='link' icon={<ArrowsAltOutlined />} onClick={props.onFitInterval}>Fit interval</Button>,
+            label: (
+                <Button type='link' icon={<ArrowsAltOutlined />} onClick={props.onFitInterval}>
+                    {t('Fit interval')}
+                </Button>
+            ),
         },
         { type: 'divider' },
         {

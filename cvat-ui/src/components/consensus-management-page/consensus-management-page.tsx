@@ -7,6 +7,7 @@ import './styles.scss';
 import React, {
     useCallback, useEffect, useState, useReducer,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
@@ -105,6 +106,7 @@ const reducer = (state: State, action: ActionUnion<typeof reducerActions>): Stat
 
 const supportedTabs = Object.values(TabName);
 function ConsensusManagementPage(): JSX.Element {
+    const { t } = useTranslation('business');
     const [state, dispatch] = useReducer(reducer, {
         fetching: true,
         reportRefreshingStatus: null,
@@ -149,10 +151,10 @@ function ConsensusManagementPage(): JSX.Element {
                     dispatch(reducerActions.setConsensusSettingsFetching(true));
                     const responseSettings = await settings.save();
                     dispatch(reducerActions.setConsensusSettings(responseSettings));
-                    notification.info({ message: 'Settings have been updated' });
+                    notification.info({ message: t('Settings have been updated') });
                 } catch (error: unknown) {
                     notification.error({
-                        message: 'Could not save consensus settings',
+                        message: t('Could not save consensus settings'),
                         description: typeof Error === 'object' ? (error as object).toString() : '',
                     });
                     throw error;
@@ -164,14 +166,14 @@ function ConsensusManagementPage(): JSX.Element {
         } catch (_e) {
             return false;
         }
-    }, [state.consensusSettings.settings]);
+    }, [state.consensusSettings.settings, t]);
 
     useEffect(() => {
         initializeData(requestedInstanceID);
     }, [requestedInstanceID]);
 
     useEffect(() => {
-        const onHashChange = () => setActiveTab(getTabFromHash(supportedTabs));
+        const onHashChange = (): void => setActiveTab(getTabFromHash(supportedTabs));
         window.addEventListener('hashchange', onHashChange);
         return () => window.removeEventListener('hashchange', onHashChange);
     }, []);
@@ -209,7 +211,7 @@ function ConsensusManagementPage(): JSX.Element {
                 <div className='cvat-consensus-management-page-error'>
                     <Result
                         status='error'
-                        title='Could not open the page'
+                        title={t('Could not open the page')}
                         subTitle={error.message}
                         extra={backNavigation}
                     />
@@ -232,7 +234,7 @@ function ConsensusManagementPage(): JSX.Element {
         title = (
             <Col className='cvat-consensus-management-header'>
                 <Title level={4} className='cvat-text-color'>
-                    {'Consensus management for '}
+                    {t('Consensus management for')}{' '}
                     <ResourceLink resource={instance} />
                 </Title>
             </Col>
@@ -243,7 +245,7 @@ function ConsensusManagementPage(): JSX.Element {
         if (consensusSettings) {
             tabsItems.push({
                 key: TabName.settings,
-                label: 'Settings',
+                label: t('Settings'),
                 children: (
                     <ConsensusSettingsTab
                         fetching={fetching}

@@ -8,6 +8,7 @@ import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
 import { DownloadOutlined } from '@ant-design/icons';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState } from 'reducers';
 import IncrementalCSVWriter, { CSVColumn, downloadCSV } from 'utils/csv-writer';
@@ -36,6 +37,7 @@ function createCSVExportButton<T, Q>(
     config: CSVExportButtonConfig<T, Q>,
 ): React.MemoExoticComponent<(props: CSVExportButtonProps<T, Q>) => JSX.Element> {
     function CSVExportButton(props: CSVExportButtonProps<T, Q>): JSX.Element {
+        const { t } = useTranslation('business');
         const { query, predefinedData } = props;
         const dispatch = useDispatch();
         const isExporting = useSelector((state: CombinedState) => state.bulkActions.fetching);
@@ -76,23 +78,25 @@ function createCSVExportButton<T, Q>(
                 resourceName: config.resourceName,
                 onSuccess: (totalCount: number, exportedFilename: string) => {
                     notification.success({
-                        message: 'Export completed',
-                        description: (
-                            `Successfully exported ${totalCount} ${config.resourceName} to ${exportedFilename}`
-                        ),
+                        message: t('Export completed'),
+                        description: t('Successfully exported {{count}} {{resource}} to {{filename}}', {
+                            count: totalCount,
+                            resource: t(config.resourceName),
+                            filename: exportedFilename,
+                        }),
                     });
                 },
                 onError: (error: Error) => {
                     notification.error({
-                        message: 'CSV export failed',
-                        description: error.message || 'An unknown error occurred during export',
+                        message: t('CSV export failed'),
+                        description: error.message || t('An unknown error occurred during export'),
                     });
                 },
             }));
-        }, [dispatch, columns, query, predefinedData]);
+        }, [dispatch, columns, query, predefinedData, t]);
 
         return (
-            <Tooltip title={config.tooltipTitle}>
+            <Tooltip title={t(config.tooltipTitle)}>
                 <Button
                     className={config.className}
                     type='link'

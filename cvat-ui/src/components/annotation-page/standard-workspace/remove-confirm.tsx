@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { shallowEqual } from 'utils/redux';
 import { CombinedState } from 'reducers';
@@ -15,6 +16,7 @@ import { removeObjectAsync, removeObject as removeObjectAction } from 'actions/a
 import { ObjectType } from 'cvat-core-wrapper';
 
 export default function RemoveConfirmComponent(): JSX.Element | null {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const [visible, setVisible] = useState(false);
     const [title, setTitle] = useState('');
@@ -35,18 +37,15 @@ export default function RemoveConfirmComponent(): JSX.Element | null {
     useEffect(() => {
         const newVisible = (!!objectState && !force && objectState.lock) ||
             (objectState?.objectType === ObjectType.TRACK && !force);
-        setTitle(objectState?.lock ? 'Object is locked' : 'Remove object');
-        let descriptionMessage: string | JSX.Element = 'Are you sure you want to remove it?';
+        setTitle(objectState?.lock ? t('Object is locked') : t('Remove object'));
+        let descriptionMessage: string | JSX.Element = t('Are you sure you want to remove it?');
 
         if (objectState?.objectType === ObjectType.TRACK && !force) {
             descriptionMessage = (
                 <>
                     <Text>
                         {
-                            `The object you are trying to remove is a track.
-                            If you continue, it removes many drawn objects on different frames.
-                            If you want to hide it only on this frame, use the outside feature instead.
-                            ${descriptionMessage}`
+                            t('The object you are trying to remove is a track. If you continue, it removes many drawn objects on different frames. If you want to hide it only on this frame, use the outside feature instead. Are you sure you want to remove it?')
                         }
                     </Text>
                     <div className='cvat-remove-object-confirm-wrapper'>
@@ -62,13 +61,13 @@ export default function RemoveConfirmComponent(): JSX.Element | null {
         if (!newVisible && objectState) {
             dispatch(removeObjectAsync(objectState, true));
         }
-    }, [objectState, force]);
+    }, [objectState, force, t]);
 
     return (
         <Modal
             okType='primary'
-            okText='Yes'
-            cancelText='Cancel'
+            okText={t('Yes')}
+            cancelText={t('Cancel')}
             title={title}
             open={visible}
             cancelButtonProps={{

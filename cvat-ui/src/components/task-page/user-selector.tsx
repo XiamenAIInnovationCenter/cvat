@@ -13,6 +13,7 @@ import { User, getCore, ServerError } from 'cvat-core-wrapper';
 import { getCVATStore } from 'cvat-store';
 import { handleDropdownKeyDown } from 'utils/dropdown-utils';
 import { useUpdateEffect } from 'utils/hooks';
+import { useTranslation } from 'react-i18next';
 
 const core = getCore();
 
@@ -77,6 +78,7 @@ const initialUsersStorage: {
 };
 
 export default function UserSelector(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         value, className, username, onSelect,
     } = props;
@@ -160,7 +162,7 @@ export default function UserSelector(props: Readonly<Props>): JSX.Element {
         <Autocomplete
             ref={autocompleteRef}
             value={searchPhrase}
-            placeholder='Select a user'
+            placeholder={t('Select a user')}
             onSearch={setSearchPhrase}
             onSelect={handleSelect}
             onBlur={onBlur}
@@ -170,7 +172,7 @@ export default function UserSelector(props: Readonly<Props>): JSX.Element {
             options={[
                 ...(!searchPhrase || 'reset assignee'.includes(searchPhrase.toLowerCase()) ? [{
                     value: 'RESET_ASSIGNEE',
-                    label: 'Reset assignee',
+                    label: t('Reset assignee'),
                 }] : []),
                 ...users.map((user) => ({
                     value: user.id.toString(),

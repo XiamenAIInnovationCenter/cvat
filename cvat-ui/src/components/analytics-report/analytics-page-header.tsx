@@ -8,6 +8,7 @@ import Button from 'antd/lib/button';
 import DatePicker from 'antd/lib/date-picker';
 import { Row, Col } from 'antd/lib/grid';
 import { DownloadOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { Project, Task, Job } from 'cvat-core-wrapper';
 import ResourceLink from 'components/common/resource-link';
@@ -21,6 +22,7 @@ interface Props {
 }
 
 function AnaylyticsPageHeader(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         onUpdateTimePeriod,
         onExportEvents,
@@ -33,13 +35,14 @@ function AnaylyticsPageHeader(props: Props): JSX.Element {
         <Row justify='space-between' align='middle'>
             <Col className='cvat-analytics-header'>
                 <Title level={4} className='cvat-text-color'>
-                    {'Analytics for '}
+                    {t('Analytics for')}
+                    {' '}
                     <ResourceLink resource={resource} />
                 </Title>
             </Col>
             <Col>
                 <DatePicker.RangePicker
-                    placeholder={['UTC start date', 'UTC end date']}
+                    placeholder={[t('UTC start date'), t('UTC end date')]}
                     className='cvat-analytics-date-picker'
                     onChange={(value) => {
                         if (value) {
@@ -60,7 +63,7 @@ function AnaylyticsPageHeader(props: Props): JSX.Element {
                     icon={<DownloadOutlined />}
                     onClick={onExportEvents}
                 >
-                    Export events
+                    {t('Export events')}
                 </Button>
             </Col>
         </Row>

@@ -9,6 +9,7 @@ import { shallowEqual } from 'utils/redux';
 import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
 import { MenuProps } from 'antd/lib/menu';
+import { useTranslation } from 'react-i18next';
 
 import { Webhook } from 'cvat-core-wrapper';
 import { CombinedState } from 'reducers';
@@ -22,6 +23,7 @@ interface WebhookActionsMenuProps {
 }
 
 export default function WebhookActionsMenu(props: Readonly<WebhookActionsMenuProps>): JSX.Element | null {
+    const { t } = useTranslation('business');
     const { webhookInstance, triggerElement, dropdownTrigger } = props;
 
     const history = useHistory();
@@ -47,31 +49,37 @@ export default function WebhookActionsMenu(props: Readonly<WebhookActionsMenuPro
             async (webhook) => {
                 await dispatch(deleteWebhookAsync(webhook));
             },
-            (webhook, idx, total) => `Deleting webhook #${webhook.id} (${idx + 1}/${total})`,
+            (webhook, idx, total) => t('Deleting webhook #{{id}} ({{current}}/{{total}})', {
+                id: webhook.id,
+                current: idx + 1,
+                total,
+            }),
         ));
     }, [dispatch, webhookInstance]);
 
     const menuItems: MenuProps['items'] = [
         {
             key: 'edit',
-            label: 'Edit',
+            label: t('Edit'),
             onClick: onEdit,
             disabled: isBulk,
         },
         {
             key: 'delete',
-            label: isBulk ? `Delete (${selectedIds.length})` : 'Delete',
+            label: isBulk ? t('Delete ({{count}})', { count: selectedIds.length }) : t('Delete'),
             onClick: isBulk ? () => {
                 Modal.confirm({
-                    title: `Are you sure you want to remove ${selectedIds.length} webhooks?`,
-                    content: 'They will stop notifying the specified URLs about listed events',
+                    title: t('Are you sure you want to remove {{count}} webhooks?', {
+                        count: selectedIds.length,
+                    }),
+                    content: t('They will stop notifying the specified URLs about listed events'),
                     className: 'cvat-modal-confirm-remove-webhook',
                     onOk: () => onDelete(),
                 });
             } : () => {
                 Modal.confirm({
-                    title: 'Are you sure you want to remove the hook?',
-                    content: 'It will stop notificating the specified URL about listed events',
+                    title: t('Are you sure you want to remove the webhook?'),
+                    content: t('It will stop notifying the specified URL about listed events'),
                     className: 'cvat-modal-confirm-remove-webhook',
                     onOk: onDelete,
                 });

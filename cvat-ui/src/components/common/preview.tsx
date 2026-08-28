@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PictureOutlined } from '@ant-design/icons';
 import { useInView } from 'react-intersection-observer';
+import { useTranslation } from 'react-i18next';
 import Spin from 'antd/lib/spin';
 import { CombinedState } from 'reducers';
 import { Job, Task, Project } from 'cvat-core-wrapper';
@@ -28,6 +29,7 @@ interface Props {
 
 export default function Preview(props: Readonly<Props>): JSX.Element {
     const dispatch = useDispatch();
+    const { t } = useTranslation('business');
     const {
         job,
         task,
@@ -113,7 +115,7 @@ export default function Preview(props: Readonly<Props>): JSX.Element {
                 className={previewClassName || ''}
                 src={imgSrc}
                 onClick={onClick}
-                alt='Preview image'
+                alt={t('Preview image')}
                 aria-hidden
             />
         </div>

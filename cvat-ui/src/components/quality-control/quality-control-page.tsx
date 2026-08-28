@@ -7,6 +7,7 @@ import './styles.scss';
 import React, {
     useCallback, useEffect, useReducer, useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Tabs, { TabsProps } from 'antd/lib/tabs';
 import Title from 'antd/lib/typography/Title';
@@ -199,6 +200,7 @@ function getQualityTabFromHash(): string {
 }
 
 function QualityControlPage(): JSX.Element {
+    const { t } = useTranslation('business');
     const reduxDispatch = useDispatch();
     const [state, dispatch] = useReducer(reducer, {
         instance: null,
@@ -256,7 +258,7 @@ function QualityControlPage(): JSX.Element {
             dispatch(reducerActions.setInstanceType(type));
         } catch (error: unknown) {
             notification.error({
-                message: `Could not receive requested ${type}`,
+                message: t('Could not receive requested {{type}}', { type: t(type) }),
                 description: `${error instanceof Error ? error.message : ''}`,
             });
             throw error;
@@ -296,7 +298,7 @@ function QualityControlPage(): JSX.Element {
             dispatch(reducerActions.setQualitySettings(settings, childrenSettings, parentSettings));
         } catch (error: unknown) {
             notification.error({
-                message: 'Could not receive quality settings',
+                message: t('Could not receive quality settings'),
                 description: `${error instanceof Error ? error.message : ''}`,
             });
             throw error;
@@ -345,11 +347,11 @@ function QualityControlPage(): JSX.Element {
             dispatch(reducerActions.setQualitySettings(
                 updatedInstanceSettings, updatedChildrenSettings, state.qualitySettings.parentSettings,
             ));
-            notification.info({ message: 'Settings have been updated' });
+            notification.info({ message: t('Settings have been updated') });
         } catch (error: unknown) {
             notification.error({
-                message: 'Could not save quality settings',
-                description: error instanceof Error ? error.message : 'Unknown error',
+                message: t('Could not save quality settings'),
+                description: error instanceof Error ? error.message : t('Unknown error'),
             });
             throw error;
         } finally {
@@ -359,6 +361,7 @@ function QualityControlPage(): JSX.Element {
         state.qualitySettings.settings,
         state.qualitySettings.childrenSettings,
         state.qualitySettings.parentSettings,
+        t,
     ]);
 
     const refreshQualitySettings = useCallback(async (): Promise<void> => {
@@ -402,13 +405,13 @@ function QualityControlPage(): JSX.Element {
             .then(() => receiveInstance(requestedInstanceType, requestedInstanceID).catch(() => undefined))
             .catch((error: unknown) => {
                 notification.error({
-                    message: 'Could not update job',
+                    message: t('Could not update job'),
                     description: error instanceof Error ? error.message : '',
                 });
             }).finally(() => {
                 dispatch(reducerActions.setFetching(false));
             });
-    }, [reduxDispatch, requestedInstanceType, requestedInstanceID]);
+    }, [reduxDispatch, requestedInstanceType, requestedInstanceID, t]);
 
     useEffect(() => {
         initializeData();
@@ -459,7 +462,7 @@ function QualityControlPage(): JSX.Element {
                 <div className='cvat-quality-control-page-error'>
                     <Result
                         status='error'
-                        title='Could not open the page'
+                        title={t('Could not open the page')}
                         subTitle={error.message}
                         extra={backNavigation}
                     />
@@ -482,7 +485,8 @@ function QualityControlPage(): JSX.Element {
         title = (
             <Col className='cvat-quality-page-header'>
                 <Title level={4} className='cvat-text-color'>
-                    {'Quality control for '}
+                    {t('Quality control for')}
+                    {' '}
                     <ResourceLink resource={instance} />
                 </Title>
             </Col>
@@ -510,7 +514,7 @@ function QualityControlPage(): JSX.Element {
         if (!pluginTabs.length && qualitySettings) {
             tabsItems.push({
                 key: 'requirements',
-                label: 'Requirements',
+                label: t('Requirements'),
                 children: (
                     <QualityRequirementsTab
                         instance={instance}
@@ -523,7 +527,7 @@ function QualityControlPage(): JSX.Element {
         if (isTaskWithGT && validationLayout && qualitySettings) {
             tabsItems.push({
                 key: 'management',
-                label: 'Management',
+                label: t('Management'),
                 children: (
                     <QualityManagementTab
                         task={instance}
@@ -543,7 +547,7 @@ function QualityControlPage(): JSX.Element {
         if ((isTaskWithGT || isProject) && qualitySettings) {
             tabsItems.push({
                 key: 'settings',
-                label: 'Settings',
+                label: t('Settings'),
                 children: (
                     <QualitySettingsTab
                         instance={instance}

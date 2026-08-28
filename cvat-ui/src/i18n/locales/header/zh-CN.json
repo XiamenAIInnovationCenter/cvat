@@ -1,0 +1,709 @@
+{
+  "Could not receive a list of organizations": "无法获取组织列表",
+  "about": {
+    "description": "计算机视觉标注工具",
+    "What's new": "新内容",
+    "MIT License": "MIT 协议",
+    "Find us on Discord": "去 Discord 上找我们",
+    "Server version": "服务器版本",
+    "UI version": "UI 版本"
+  },
+  "Admin page": "管理页",
+  "Switch organization": "切换组织",
+  "Personal workspace": "个人空间",
+  "Type to search": "输入内容搜索",
+  "Click to open": "点击打开",
+  "Press {{shortcut}} to switch": "按 {{shortcut}} 切换",
+  "settings": {
+    "Failed to load settings from local storage": "无法从本地存储加载设置",
+    "title": "设置",
+    "Player": {
+      "label": "播放器",
+      "step": "播放步长",
+      "step-tips": "当使用<1/>或<3/>时跳过的关键帧数",
+      "speed": "播放速度",
+      "speeds": {
+        "Fastest": "最快",
+        "Fast": "更快",
+        "Usual": "正常",
+        "Slow": "慢",
+        "Slower": "更慢",
+        "Slowest": "最慢"
+      },
+      "Select canvas background color": "选择画布背景色",
+      "Reset zoom": "重置缩放",
+      "Fit image after changing frame": "切换帧后适应图片",
+      "Rotate all images": "旋转所有图片",
+      "Rotate all images simultaneously": "同时旋转所有图片",
+      "Smooth image": "平滑图片",
+      "Smooth image when zoom-in it": "放大时平滑图像",
+      "Show deleted frames": "显示已删除的帧",
+      "You will be able to navigate and restore deleted frames": "你可以浏览恢复删除的帧"
+    },
+    "Workspace": {
+      "label": "工作区",
+      "Enable auto save": "开启自动保存",
+      "auto-save-tips": [
+        "自动保存每 ",
+        " 分钟"
+      ],
+      "show-interpolated": "显示所有插补轨道",
+      "show-interpolated-tips": "在边栏显示隐藏的插补对象",
+      "show-text-always": "总显示对象详情",
+      "show-text-always-tips": "不止在画布中显示激活对象的文本",
+      "text-settings-content": "文本内容",
+      "text-settings-contents": {
+        "ID": "ID",
+        "Label": "标签",
+        "Attributes": "属性",
+        "Source": "来源",
+        "Descriptions": "描述",
+        "Dimensions": "维度",
+        "Layer": "图层"
+      },
+      "text-settings-text-position": "文本位置",
+      "text-settings-text-positions": {
+        "Auto": "自动",
+        "Center": "居中"
+      },
+      "text-settings-font-size": "文本字号",
+      "auto-borders": "自动边缘",
+      "auto-borders-tips": "绘制或编辑多边形和折线时，启用自动边缘",
+      "intelligent-polygon-cropping": "智能多边形裁剪",
+      "intelligent-polygon-cropping-tips": "尝试在编辑时自动裁剪多边形",
+      "adaptive-zoom": "自适应缩放算法",
+      "adaptive-zoom-tips": "启用更平滑的缩放方式，兼容触控板和双指缩放手势",
+      "Show tags on frame": "在画面上显示标签",
+      "Show frame tags in the corner of the workspace": "在工作区角落显示画面标签",
+      "aam-zoom-margin": "属性注释模式 (AAM) 缩放余量",
+      "control-points-size": "控制点大小",
+      "focused-object-padding": "聚焦对象边距",
+      "focused-object-padding-tips": "聚焦对象时，在对象周围额外保留指定像素的空间",
+      "approx-poly-threshold": "默认多边形简化阈值",
+      "approx-poly-threshold-tips": "数值越高，保留的多边形细节越多。适用于无服务器交互工具、OpenCV 剪刀和多边形简化",
+      "less": "较少",
+      "more": "较多"
+    },
+    "Shortcuts": {
+      "label": "快捷键",
+      "Name": "名称",
+      "Shortcut": "快捷键",
+      "Description": "说明",
+      "Active list of shortcuts": "当前可用快捷键列表",
+      "restore-modal-title": "确认恢复默认设置",
+      "restore-button": "恢复默认设置",
+      "scope": {
+        "GENERAL": "通用",
+        "ANNOTATION_PAGE": "标注页面",
+        "OBJECTS_SIDEBAR": "对象侧栏",
+        "STANDARD_WORKSPACE": "标准工作区",
+        "STANDARD_WORKSPACE_CONTROLS": "标准工作区工具",
+        "ATTRIBUTE_ANNOTATION_WORKSPACE": "属性标注工作区",
+        "SINGLE_SHAPE_ANNOTATION_WORKSPACE": "单形状标注工作区",
+        "TAG_ANNOTATION_WORKSPACE": "标签标注工作区",
+        "REVIEW_WORKSPACE_CONTROLS": "审查工作区工具",
+        "3D_ANNOTATION_WORKSPACE": "三维标注工作区",
+        "3D_ANNOTATION_WORKSPACE_CONTROLS": "三维标注工作区工具",
+        "LABELS_EDITOR": "标签编辑器",
+        "AUDIO_WORKSPACE_CONTROLS": "音频工作区工具"
+      },
+      "search-placeholder": "在这里查快捷键...",
+      "warning": "快捷键可由任意修饰键（Alt、Ctrl 或 Shift）和一个普通按键组合。部分组合可能被浏览器占用，无法在 CVAT 中覆盖",
+      "Conflicting shortcuts detected": "检测到快捷键冲突",
+      "Added sequence conflicts with the following shortcuts:": "新增组合与以下快捷键冲突：",
+      "in the scope": "所在范围",
+      "Would you like to unset the conflicting shortcuts?": "是否清除发生冲突的快捷键？",
+      "Invalid key combination": "无效的按键组合",
+      "Only one non-modifier key can be used in a combination": "一个组合中只能使用一个非修饰键",
+      "Register shortcut...": "录入快捷键...",
+      "SWITCH_SHORTCUTS": [
+        "显示快捷键",
+        "显示/隐藏可用快捷键列表"
+      ],
+      "SWITCH_SETTINGS": [
+        "显示设置",
+        "显示/隐藏设置弹窗"
+      ],
+      "TOGGLE_ANNOTATION_PAGE": [
+        "显示布局网格",
+        "网格用于 UI 开发"
+      ],
+      "SAVE_JOB": [
+        "保存作业",
+        "将尚未保存的标注更改提交到服务器"
+      ],
+      "UNDO": [
+        "撤销操作",
+        "撤销最近一次与对象相关的操作"
+      ],
+      "REDO": [
+        "重做操作",
+        "恢复刚刚撤销的操作"
+      ],
+      "SWITCH_TOOLS_BLOCKER_STATE": [
+        "切换算法阻止状态",
+        "推迟运行交互工具所使用的算法"
+      ],
+      "AAM_SET_ATTR_VALUE_0": [
+        "将当前属性设为第 1 个值",
+        "将当前属性值更改为列表中的第 1 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_1": [
+        "将当前属性设为第 2 个值",
+        "将当前属性值更改为列表中的第 2 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_2": [
+        "将当前属性设为第 3 个值",
+        "将当前属性值更改为列表中的第 3 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_3": [
+        "将当前属性设为第 4 个值",
+        "将当前属性值更改为列表中的第 4 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_4": [
+        "将当前属性设为第 5 个值",
+        "将当前属性值更改为列表中的第 5 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_5": [
+        "将当前属性设为第 6 个值",
+        "将当前属性值更改为列表中的第 6 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_6": [
+        "将当前属性设为第 7 个值",
+        "将当前属性值更改为列表中的第 7 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_7": [
+        "将当前属性设为第 8 个值",
+        "将当前属性值更改为列表中的第 8 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_8": [
+        "将当前属性设为第 9 个值",
+        "将当前属性值更改为列表中的第 9 个值"
+      ],
+      "AAM_SET_ATTR_VALUE_9": [
+        "将当前属性设为第 10 个值",
+        "将当前属性值更改为列表中的第 10 个值"
+      ],
+      "SETUP_0_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_1_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_2_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_3_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_4_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_5_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_6_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_7_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_8_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "SETUP_9_TAG": [
+        "创建新标签",
+        "使用标签标注侧栏中设置的对应类别创建新标签"
+      ],
+      "NEXT_FRAME": [
+        "下一帧",
+        "转到下一帧"
+      ],
+      "PREV_FRAME": [
+        "上一帧",
+        "转到上一帧"
+      ],
+      "FORWARD_FRAME": [
+        "向前跳帧",
+        "按照播放步长向前跳转"
+      ],
+      "BACKWARD_FRAME": [
+        "向后跳帧",
+        "按照播放步长向后跳转"
+      ],
+      "SEARCH_FORWARD": [
+        "向前搜索",
+        "查找下一个满足筛选条件的帧"
+      ],
+      "SEARCH_BACKWARD": [
+        "向后搜索",
+        "查找上一个满足筛选条件的帧"
+      ],
+      "PLAY_PAUSE": [
+        "播放/暂停",
+        "开始或停止自动播放帧"
+      ],
+      "DELETE_FRAME": [
+        "删除帧",
+        "删除当前帧"
+      ],
+      "FOCUS_INPUT_FRAME": [
+        "聚焦帧输入框",
+        "聚焦用于更改当前帧的输入框"
+      ],
+      "NEXT_ATTRIBUTE": [
+        "下一个属性",
+        "转到下一个属性"
+      ],
+      "PREVIOUS_ATTRIBUTE": [
+        "上一个属性",
+        "转到上一个属性"
+      ],
+      "NEXT_OBJECT": [
+        "下一个对象",
+        "转到下一个对象"
+      ],
+      "PREVIOUS_OBJECT": [
+        "上一个对象",
+        "转到上一个对象"
+      ],
+      "SWITCH_ALL_LOCK": [
+        "锁定/解锁全部对象",
+        "更改侧栏中全部对象的锁定状态"
+      ],
+      "SWITCH_LOCK": [
+        "锁定/解锁对象",
+        "更改当前对象的锁定状态"
+      ],
+      "SWITCH_ALL_HIDDEN": [
+        "隐藏/显示全部对象",
+        "更改侧栏中全部对象的隐藏状态"
+      ],
+      "SWITCH_HIDDEN": [
+        "隐藏/显示对象",
+        "更改当前对象的隐藏状态"
+      ],
+      "SWITCH_OCCLUDED": [
+        "切换遮挡状态",
+        "更改当前对象的遮挡属性"
+      ],
+      "SWITCH_PINNED": [
+        "切换固定状态",
+        "更改当前对象的固定属性"
+      ],
+      "SWITCH_KEYFRAME": [
+        "切换关键帧状态",
+        "更改当前轨迹的关键帧属性"
+      ],
+      "SWITCH_OUTSIDE": [
+        "切换画外状态",
+        "更改当前轨迹的画外属性"
+      ],
+      "NEXT_KEY_FRAME": [
+        "下一个关键帧",
+        "转到当前轨迹的下一个关键帧"
+      ],
+      "PREV_KEY_FRAME": [
+        "上一个关键帧",
+        "转到当前轨迹的上一个关键帧"
+      ],
+      "DELETE_OBJECT_STANDARD_WORKSPACE": [
+        "删除对象",
+        "删除当前对象；按住 Shift 可强制删除已锁定对象"
+      ],
+      "TO_BACKGROUND": [
+        "移至底层",
+        "减小 Z 轴值，将当前对象移到更远处"
+      ],
+      "TO_FOREGROUND": [
+        "移至顶层",
+        "增大 Z 轴值，将当前对象移到更近处"
+      ],
+      "TO_ONE_LAYER_BACKWARD": [
+        "后移一层",
+        "减小 Z 轴顺序值，将当前对象向后移动一层"
+      ],
+      "TO_ONE_LAYER_FORWARD": [
+        "前移一层",
+        "增大 Z 轴顺序值，将当前对象向前移动一层"
+      ],
+      "COPY_SHAPE": [
+        "复制形状",
+        "将形状复制到 CVAT 内部剪贴板"
+      ],
+      "PASTE_SHAPE": [
+        "粘贴形状",
+        "从 CVAT 内部剪贴板粘贴形状"
+      ],
+      "RUN_ANNOTATIONS_ACTION": [
+        "运行标注操作",
+        "打开标注操作对话框"
+      ],
+      "PROPAGATE_OBJECT": [
+        "传播对象",
+        "将对象复制到后续帧"
+      ],
+      "CHANGE_OBJECT_COLOR": [
+        "更改颜色",
+        "为当前形状切换到下一个颜色"
+      ],
+      "SWITCH_LABEL_0": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_1": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_2": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_3": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_4": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_5": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_6": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_7": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_8": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "SWITCH_LABEL_9": [
+        "切换标签",
+        "更改当前对象的标签，或设置下一个对象的默认标签"
+      ],
+      "CLOCKWISE_ROTATION_STANDARD_CONTROLS": [
+        "顺时针旋转",
+        "将图像角度增加 90 度"
+      ],
+      "ANTICLOCKWISE_ROTATION_STANDARD_CONTROLS": [
+        "逆时针旋转",
+        "将图像角度减少 90 度"
+      ],
+      "SWITCH_DRAW_MODE_STANDARD_CONTROLS": [
+        "绘制模式",
+        "使用相同参数重复最近一次绘制操作"
+      ],
+      "SWITCH_REDRAW_MODE_STANDARD_CONTROLS": [
+        "重新绘制形状",
+        "删除选中的形状并从头重新绘制"
+      ],
+      "SWITCH_GROUP_MODE_STANDARD_CONTROLS": [
+        "编组模式",
+        "启用或停用形状编组模式"
+      ],
+      "RESET_GROUP_STANDARD_CONTROLS": [
+        "重置组",
+        "在编组模式中重置选中形状的分组"
+      ],
+      "SWITCH_MERGE_MODE_STANDARD_CONTROLS": [
+        "合并模式",
+        "启用或停用形状合并模式"
+      ],
+      "SWITCH_SPLIT_MODE_STANDARD_CONTROLS": [
+        "拆分模式",
+        "启用或停用形状拆分模式"
+      ],
+      "SWITCH_JOIN_MODE_STANDARD_CONTROLS": [
+        "连接模式",
+        "启用或停用掩码连接模式"
+      ],
+      "SWITCH_SLICE_MODE_STANDARD_CONTROLS": [
+        "切割模式",
+        "启用或停用多边形或掩码切割模式"
+      ],
+      "CANCEL": [
+        "取消",
+        "取消当前活动的画布模式"
+      ],
+      "SWITCH_AUTOMATIC_BORDERING": [
+        "切换自动描边",
+        "绘制或编辑多边形和折线时切换自动描边功能"
+      ],
+      "ACTIVATE_BRUSH_TOOL_STANDARD_CONTROLS": [
+        "画笔工具",
+        "启用掩码绘制工具箱中的画笔工具"
+      ],
+      "ACTIVATE_ERASER_TOOL_STANDARD_CONTROLS": [
+        "橡皮擦工具",
+        "启用掩码绘制工具箱中的橡皮擦工具"
+      ],
+      "ACTIVATE_POLYGON_TOOL_STANDARD_CONTROLS": [
+        "多边形工具",
+        "启用掩码绘制工具箱中的多边形工具"
+      ],
+      "ACTIVATE_POLYGON_REMOVE_TOOL_STANDARD_CONTROLS": [
+        "多边形移除工具",
+        "启用掩码绘制工具箱中的多边形移除工具"
+      ],
+      "SWITCH_DRAW_MODE_STANDARD_3D_CONTROLS": [
+        "绘制模式",
+        "使用相同参数重复最近一次绘制操作"
+      ],
+      "SWITCH_REDRAW_MODE_STANDARD_3D_CONTROLS": [
+        "重新绘制形状",
+        "删除选中的形状并从头重新绘制"
+      ],
+      "SWITCH_GROUP_MODE_STANDARD_3D_CONTROLS": [
+        "编组模式",
+        "启用或停用形状编组模式"
+      ],
+      "RESET_GROUP_STANDARD_3D_CONTROLS": [
+        "重置组",
+        "在编组模式中重置选中形状的分组"
+      ],
+      "SWITCH_MERGE_MODE_STANDARD_3D_CONTROLS": [
+        "合并模式",
+        "启用或停用形状合并模式"
+      ],
+      "SWITCH_SPLIT_MODE_STANDARD_3D_CONTROLS": [
+        "拆分模式",
+        "启用或停用形状拆分模式"
+      ],
+      "TILT_UP": [
+        "增大相机翻滚角",
+        "增大相机翻滚角度"
+      ],
+      "TILT_DOWN": [
+        "减小相机翻滚角",
+        "减小相机翻滚角度"
+      ],
+      "ROTATE_LEFT": [
+        "相机向左俯仰",
+        "减小相机俯仰角度"
+      ],
+      "ROTATE_RIGHT": [
+        "相机向右俯仰",
+        "增大相机俯仰角度"
+      ],
+      "MOVE_UP": [
+        "相机上移",
+        "向上移动相机"
+      ],
+      "MOVE_DOWN": [
+        "相机下移",
+        "向下移动相机"
+      ],
+      "MOVE_LEFT": [
+        "相机左移",
+        "向左移动相机"
+      ],
+      "MOVE_RIGHT": [
+        "相机右移",
+        "向右移动相机"
+      ],
+      "ZOOM_IN": [
+        "相机放大",
+        "放大相机视图"
+      ],
+      "ZOOM_OUT": [
+        "相机缩小",
+        "缩小相机视图"
+      ],
+      "SWITCH_DRAW_MODE_SINGLE_SHAPE": [
+        "绘制模式",
+        "使用相同参数重复最近一次绘制操作"
+      ],
+      "CANCEL_SINGLE_SHAPE": [
+        "取消",
+        "取消当前活动的画布模式"
+      ],
+      "DELETE_OBJECT_SINGLE_SHAPE": [
+        "删除对象",
+        "删除当前对象；按住 Shift 可强制删除已锁定对象"
+      ],
+      "HIDE_MASK_SINGLE_SHAPE": [
+        "隐藏掩码",
+        "隐藏当前正在编辑的掩码"
+      ],
+      "SWITCH_DRAW_MODE_TAG_ANNOTATION": [
+        "绘制模式",
+        "使用相同参数重复最近一次绘制操作"
+      ],
+      "SWITCH_REDRAW_MODE_TAG_ANNOTATION": [
+        "重新绘制形状",
+        "删除选中的形状并从头重新绘制"
+      ],
+      "OPEN_REVIEW_ISSUE": [
+        "新建问题",
+        "在审查工作区中新建问题"
+      ],
+      "CANCEL_SKELETON_EDGE": [
+        "取消骨架绘制",
+        "停止绘制新的骨架边"
+      ],
+      "AUDIO_SWITCH_ALL_LOCK": [
+        "锁定/解锁全部音频区间",
+        "更改侧边栏中全部音频区间的锁定状态"
+      ],
+      "AUDIO_SWITCH_LOCK": [
+        "锁定/解锁音频区间",
+        "更改当前音频区间的锁定状态"
+      ],
+      "AUDIO_SWITCH_ALL_PINNED": [
+        "固定/取消固定全部音频区间",
+        "更改侧边栏中全部未锁定音频区间的固定状态"
+      ],
+      "AUDIO_SWITCH_PINNED": [
+        "固定/取消固定音频区间",
+        "更改当前音频区间的固定状态"
+      ],
+      "AUDIO_SWITCH_ALL_HIDDEN": [
+        "隐藏/显示全部音频区间",
+        "更改侧边栏中全部音频区间的显示状态"
+      ],
+      "AUDIO_SWITCH_HIDDEN": [
+        "隐藏/显示音频区间",
+        "更改当前音频区间的显示状态"
+      ],
+      "AUDIO_DELETE_REGION": [
+        "删除音频区间",
+        "删除当前音频区间；按住 Shift 可强制删除已锁定区间"
+      ],
+      "CREATE_AUDIO_REGION": [
+        "创建音频区间",
+        "启用音频区间创建模式；在波形上拖动即可创建区间"
+      ],
+      "RECORD_AUDIO_REGION": [
+        "录制音频区间",
+        "在当前播放位置开始或结束实时音频区间录制"
+      ],
+      "EXTEND_AUDIO_REGION_FROM_LAST": [
+        "从上一区间延伸",
+        "从上一个区间末尾到当前播放位置创建音频区间"
+      ],
+      "TOGGLE_AUDIO_LOOP": [
+        "切换区间循环播放",
+        "开启或关闭当前音频区间的循环播放"
+      ],
+      "CANCEL_AUDIO": [
+        "取消",
+        "取消当前启用的音频操作模式"
+      ],
+      "PLAY_PAUSE_AUDIO": [
+        "播放/暂停音频",
+        "播放或暂停音频"
+      ],
+      "AUDIO_BACKWARD": [
+        "音频后退",
+        "将音频向后跳转一小段"
+      ],
+      "AUDIO_FORWARD": [
+        "音频前进",
+        "将音频向前跳转一小段"
+      ],
+      "AUDIO_FAST_BACKWARD": [
+        "音频快速后退",
+        "将音频向后跳转一大段"
+      ],
+      "AUDIO_FAST_FORWARD": [
+        "音频快速前进",
+        "将音频向前跳转一大段"
+      ],
+      "AUDIO_UNDO": [
+        "撤销音频操作",
+        "撤销最近一次与音频区间相关的操作"
+      ],
+      "AUDIO_REDO": [
+        "重做音频操作",
+        "恢复被撤销的音频操作"
+      ],
+      "CHAPTER_BACKWARD": [
+        "上一章节",
+        "前往上一个章节"
+      ],
+      "CHAPTER_FORWARD": [
+        "下一章节",
+        "前往下一个章节"
+      ],
+      "SEARCH_FRAME_BY_NAME": [
+        "按名称搜索帧",
+        "打开按名称搜索帧的对话框"
+      ],
+      "SIMPLIFY_POLYGON": [
+        "简化多边形",
+        "为选中的多边形或折线启用简化模式"
+      ],
+      "SWITCH_COLOR_BY_APPEARANCE": [
+        "切换对象外观的着色方式",
+        "对象可按实例、标签或分组着色"
+      ],
+      "SWITCH_COLOR_BY_APPEARANCE_AUDIO": [
+        "切换音频对象的着色方式",
+        "音频区间可按标签或实例着色"
+      ],
+      "SWITCH_SNAP_TO_POINT": [
+        "切换吸附到点",
+        "开启或关闭自动吸附到附近点"
+      ],
+      "TOGGLE_SHOW_BITMAP_APPEARANCE": [
+        "切换位图显示",
+        "在画布上显示或隐藏位图图层"
+      ],
+      "SWITCH_LABEL_AUDIO_0": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_1": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_2": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_3": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_4": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_5": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_6": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_7": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_8": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ],
+      "SWITCH_LABEL_AUDIO_9": [
+        "切换音频标签",
+        "更改所选音频区间的标签，或下一新区间的默认标签"
+      ]
+    }
+  }
+}

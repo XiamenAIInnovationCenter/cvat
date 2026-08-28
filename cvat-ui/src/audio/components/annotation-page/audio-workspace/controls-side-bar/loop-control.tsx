@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RetweetOutlined } from '@ant-design/icons';
 
@@ -10,7 +11,7 @@ import { CombinedState } from 'reducers';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import GlobalHotKeys from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 
 export interface Props {
@@ -28,9 +29,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function LoopControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { loop, loopShortcut, onLoopChange } = props;
     const { keyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
@@ -51,7 +53,10 @@ function LoopControl(props: Props): JSX.Element {
                 keyMap={subKeyMap(componentShortcuts, keyMap)}
                 handlers={handlers}
             />
-            <CVATTooltip title={`Loop interval playback${loop ? ' (on)' : ''} ${loopShortcut}`} placement='right'>
+            <CVATTooltip title={t('Loop interval playback{{state}} {{shortcut}}', {
+                state: loop ? t(' (on)') : '',
+                shortcut: `(${loopShortcut})`,
+            })} placement='right'>
                 <RetweetOutlined
                     className={
                         loop ?

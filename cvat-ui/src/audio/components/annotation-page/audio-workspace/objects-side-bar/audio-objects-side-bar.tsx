@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { Dispatch, TransitionEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
@@ -44,6 +45,7 @@ function mapDispatchToProps(dispatch: Dispatch<AnyAction>): DispatchToProps {
 }
 
 function AudioObjectsSideBar(props: StateToProps & DispatchToProps & OwnProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         sidebarCollapsed, collapseSidebar, objectsList, appearanceHidden,
     } = props;
@@ -80,7 +82,7 @@ function AudioObjectsSideBar(props: StateToProps & DispatchToProps & OwnProps): 
                 className='cvat-objects-sidebar-sider'
                 onClick={collapse}
             >
-                {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                {sidebarCollapsed ? <MenuFoldOutlined title={t('Show')} /> : <MenuUnfoldOutlined title={t('Hide')} />}
             </span>
 
             <Tabs
@@ -89,11 +91,11 @@ function AudioObjectsSideBar(props: StateToProps & DispatchToProps & OwnProps): 
                 className='cvat-objects-sidebar-tabs'
                 items={[{
                     key: 'objects',
-                    label: 'Objects',
+                    label: t('Objects'),
                     children: objectsList,
                 }, {
                     key: 'labels',
-                    label: 'Labels',
+                    label: t('Labels'),
                     forceRender: true,
                     children: <AudioLabelsList />,
                 }]}

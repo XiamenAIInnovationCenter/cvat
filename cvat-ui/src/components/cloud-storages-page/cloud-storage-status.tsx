@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import Text from 'antd/lib/typography/Text';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function Status({ cloudStorage }: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const status = useSelector((state: CombinedState) => state.cloudStorages.statuses[cloudStorage.id]);
 
@@ -27,16 +29,16 @@ export default function Status({ cloudStorage }: Props): JSX.Element {
 
     let message: JSX.Element;
     if (!status || (status && status.fetching)) {
-        message = <Text type='warning'>Loading ...</Text>;
+        message = <Text type='warning'>{t('Loading ...')}</Text>;
     } else if (status.initialized && !status.status) {
-        message = <Text type='danger'>Error</Text>;
+        message = <Text type='danger'>{t('Error')}</Text>;
     } else {
         message = <Text type={status.status === StorageStatuses.AVAILABLE ? 'success' : 'danger'}>{status.status}</Text>;
     }
 
     return (
         <Paragraph>
-            <Text type='secondary'>Status: </Text>
+            <Text type='secondary'>{t('Status:')} </Text>
             {message}
         </Paragraph>
     );

@@ -7,6 +7,7 @@ import React from 'react';
 
 import Text from 'antd/lib/typography/Text';
 import Upload, { RcFile } from 'antd/lib/upload';
+import { useTranslation } from 'react-i18next';
 import { InboxOutlined } from '@ant-design/icons';
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function LocalFiles(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         files, onUpload, hint,
     } = props;
@@ -36,7 +38,7 @@ export default function LocalFiles(props: Props): JSX.Element {
                 <p className='ant-upload-drag-icon'>
                     <InboxOutlined />
                 </p>
-                <p className='ant-upload-text'>Click or drag files to this area</p>
+                <p className='ant-upload-text'>{t('Click or drag files to this area')}</p>
                 <p className='ant-upload-hint'>{ hint }</p>
             </Upload.Dragger>
             {files.length >= 5 && (

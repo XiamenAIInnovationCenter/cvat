@@ -16,6 +16,7 @@ import Space from 'antd/lib/space';
 import Switch from 'antd/lib/switch';
 import Tooltip from 'antd/lib/tooltip';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import { CombinedState } from 'reducers';
 import { exportActions, exportBackupAsync } from 'actions/export-actions';
 import { makeBulkOperationAsync } from 'actions/bulk-actions';
@@ -48,6 +49,7 @@ const initialValues: FormValues = {
 };
 
 function ExportBackupModal(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const history = useHistory();
     const [form] = Form.useForm();
@@ -93,7 +95,7 @@ function ExportBackupModal(): JSX.Element {
         if (isBulkMode) {
             let filtered: Exclude<ProjectOrTaskOrJob, Job>[] = [];
             if (instanceType === 'task') {
-                filtered = allTasks.filter((t) => selectedIds.includes(t.id));
+                filtered = allTasks.filter((task) => selectedIds.includes(task.id));
             } else if (instanceType === 'project') {
                 filtered = allProjects.filter((p) => selectedIds.includes(p.id));
             }
@@ -124,10 +126,10 @@ function ExportBackupModal(): JSX.Element {
     }, [instance]);
 
     useEffect(() => {
-        const loc = defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local';
-        const cloudId = defaultStorageCloudId !== undefined && defaultStorageCloudId !== null ? `№${defaultStorageCloudId}` : '';
-        setHelpMessage(`Export backup to ${loc} storage ${cloudId}`);
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+        const messageKey = defaultStorageLocation === StorageLocation.CLOUD_STORAGE ?
+            'Export to cloud storage #{{id}}' : 'Export to local storage';
+        setHelpMessage(t(messageKey, { id: defaultStorageCloudId }));
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const closeModal = (): void => {
         setUseDefaultStorage(true);
@@ -171,7 +173,7 @@ function ExportBackupModal(): JSX.Element {
                 const description =
                     'Bulk backup export was started. You can check progress [here](/requests).';
                 Notification.info({
-                    message: 'Bulk backup export started',
+                    message: t('Bulk backup export started'),
                     description: (
                         <CVATMarkdown history={history}>{description}</CVATMarkdown>
                     ),
@@ -203,7 +205,7 @@ function ExportBackupModal(): JSX.Element {
                     'Bulk backup export was started. You can check progress [here](/requests).' :
                     'Backup export was started. You can check progress [here](/requests).';
                 Notification.info({
-                    message: isBulkMode ? 'Bulk backup export started' : 'Backup export started',
+                    message: isBulkMode ? t('Bulk backup export started') : t('Backup export started'),
                     description: (
                         <CVATMarkdown history={history}>{description}</CVATMarkdown>
                     ),
@@ -235,10 +237,15 @@ function ExportBackupModal(): JSX.Element {
             title={
                 isBulkMode ? (
                     <Text strong>
-                        {`Export ${selectedInstances.length} ${instanceType}s`}
+                        {t('Export {{count}} {{type}} backups', {
+                            count: selectedInstances.length,
+                            type: t(instanceType),
+                        })}
                     </Text>
                 ) : (
-                    <Text strong>{`Export ${instanceType} #${instance?.id}`}</Text>
+                    <Text strong>{t('Export {{instance}}', {
+                        instance: t(`${instanceType} #{{id}}`, { id: instance?.id }),
+                    })}</Text>
                 )
             }
             open={!!instance}
@@ -254,7 +261,7 @@ function ExportBackupModal(): JSX.Element {
                 onFinish={handleExport}
             >
                 {isBulkMode ? (
-                    <Form.Item label={<Text strong>Name template</Text>} required>
+                    <Form.Item label={<Text strong>{t('Name template')}</Text>} required>
                         <Input
                             value={nameTemplate}
                             onChange={(e) => setNameTemplate(e.target.value)}
@@ -270,16 +277,16 @@ function ExportBackupModal(): JSX.Element {
                                     />
                                 )}
                             >
-                                When forming the backup name, a template is used.
+                                {t('When forming the backup name, a template is used.')}
                                 {' '}
                                 <QuestionCircleOutlined />
                             </Tooltip>
                         </Text>
                     </Form.Item>
                 ) : (
-                    <Form.Item label={<Text strong>Custom name</Text>} name='customName'>
+                    <Form.Item label={<Text strong>{t('Custom name')}</Text>} name='customName'>
                         <Input
-                            placeholder='Custom name for a backup file'
+                            placeholder={t('Custom name for a backup file')}
                             suffix='.zip'
                             className='cvat-modal-export-filename-input'
                         />
@@ -287,10 +294,10 @@ function ExportBackupModal(): JSX.Element {
                 )}
                 <TargetStorageField
                     instanceId={instance ? instance.id : null}
-                    switchDescription='Use default settings'
+                    switchDescription={t('Use default settings')}
                     switchHelpMessage={helpMessage}
                     useDefaultStorage={isBulkMode ? false : useDefaultStorage}
-                    storageDescription={`Specify target storage for export ${instanceType}`}
+                    storageDescription={t('Specify target storage for export resources like annotation, backups')}
                     locationValue={storageLocation}
                     onChangeUseDefaultStorage={isBulkMode ? undefined : (value: boolean) => setUseDefaultStorage(value)}
                     onChangeLocationValue={(value: StorageLocation) => setStorageLocation(value)}
@@ -304,8 +311,8 @@ function ExportBackupModal(): JSX.Element {
                             checked={lightweight}
                             onChange={setLightweight}
                         />
-                        <Text strong>Use lightweight backup whenever possible</Text>
-                        <Tooltip title='If a task uses media from a cloud storage, its possible to make a backup without including media. The task restored from a lightweight backup has to be manually connected to the cloud storage.'>
+                        <Text strong>{t('Use lightweight backup whenever possible')}</Text>
+                        <Tooltip title={t('Lightweight backup help')}>
                             <QuestionCircleOutlined />
                         </Tooltip>
                     </Space>

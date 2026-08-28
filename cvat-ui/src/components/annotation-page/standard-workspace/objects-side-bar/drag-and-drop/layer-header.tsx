@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useDraggable } from '@dnd-kit/core';
 import {
@@ -27,6 +28,7 @@ interface LayerHeaderProps {
 
 // Renders layer controls and exposes the layer itself as a draggable handle target.
 function LayerHeader(props: LayerHeaderProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         zOrder, selected, visible, collapsed, selectLayer, toggleLayerCollapsed, toggleLayerVisibility,
     } = props;
@@ -43,8 +45,10 @@ function LayerHeader(props: LayerHeaderProps): JSX.Element {
         ...(!visible ? ['cvat-objects-sidebar-z-layer-mark-invisible'] : []),
     ].join(' ');
 
-    const visibilityTooltip = `${visible ? 'Hide' : 'Show'} layer. Hold Shift when clicking to apply for lower layers`;
-    const selectLayerTooltip = selected ? 'Current layer' : 'Set as current layer';
+    const visibilityTooltip = t('{{action}} layer. Hold Shift when clicking to apply for lower layers', {
+        action: t(visible ? 'Hide' : 'Show'),
+    });
+    const selectLayerTooltip = t(selected ? 'Current layer' : 'Set as current layer');
     return (
         <div
             ref={setNodeRef}
@@ -52,7 +56,7 @@ function LayerHeader(props: LayerHeaderProps): JSX.Element {
             style={style}
         >
             <div>
-                <CVATTooltip title={collapsed ? 'Expand layer' : 'Collapse layer'}>
+                <CVATTooltip title={t(collapsed ? 'Expand layer' : 'Collapse layer')}>
                     <Button
                         className='cvat-objects-sidebar-z-layer-collapse-button'
                         type='text'
@@ -72,7 +76,7 @@ function LayerHeader(props: LayerHeaderProps): JSX.Element {
                         onClick={(): void => selectLayer(zOrder)}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Drag layer'>
+                <CVATTooltip title={t('Drag layer')}>
                     <Button
                         {...attributes}
                         {...listeners}

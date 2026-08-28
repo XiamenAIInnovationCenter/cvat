@@ -16,13 +16,14 @@ import GlobalHotKeys, { KeyMapItem } from 'utils/mousetrap-react';
 import Text from 'antd/lib/typography/Text';
 import { ShortcutScope } from 'utils/enums';
 import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import i18n, { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { useResetShortcutsOnUnmount } from 'utils/hooks';
 import { getCVATStore } from 'cvat-store';
 
 const componentShortcuts: Record<string, KeyMapItem> = {};
 
-const makeKey = (index: number) => `SWITCH_LABEL_${index}`;
+const makeKey = (index: number): string => `SWITCH_LABEL_${index}`;
 
 for (const index of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]) {
     componentShortcuts[makeKey(index)] = {
@@ -34,7 +35,7 @@ for (const index of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]) {
     };
 }
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function LabelsListComponent(): JSX.Element {
     const dispatch = useDispatch();
@@ -70,9 +71,11 @@ function LabelsListComponent(): JSX.Element {
                 updatedComponentShortcuts[key] = {
                     ...updatedComponentShortcuts[key],
                     nonActive: false,
-                    name: `Switch label to ${labelName}`,
-                    description: `Changes the label to ${labelName} for the activated
-                        object or for the next drawn object if no objects are activated`,
+                    name: i18n.t('Switch label to {{label}}', { label: labelName, ns: 'business' }),
+                    description: i18n.t(
+                        'Change the activated object label to {{label}}, or use it for the next drawn object',
+                        { label: labelName, ns: 'business' },
+                    ),
                 };
             }
         }
@@ -118,7 +121,9 @@ function LabelsListComponent(): JSX.Element {
                 }
 
                 message.destroy();
-                message.success(`Default label has been changed to "${label.name}"`);
+                message.success(i18n.t('Default label has been changed to "{{label}}"', {
+                    ns: 'business', label: label.name,
+                }));
             }
         }
     };

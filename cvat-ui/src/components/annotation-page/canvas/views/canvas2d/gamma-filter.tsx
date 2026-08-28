@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col } from 'antd/lib/grid';
 import { CombinedState } from 'reducers';
@@ -17,6 +18,7 @@ import GammaCorrection from 'utils/fabric-wrapper/gamma-correction';
 import { ImageFilterAlias, hasFilter } from 'utils/image-processing';
 
 export default function GammaFilter(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const [gamma, setGamma] = useState<number>(1);
     const filters = useSelector((state: CombinedState) => state.settings.imageFilters);
@@ -55,7 +57,7 @@ export default function GammaFilter(): JSX.Element {
                 <Col span={24}>
                     <Row className='cvat-image-setups-gamma'>
                         <Col span={6}>
-                            <Text className='cvat-text-color'> Gamma </Text>
+                            <Text className='cvat-text-color'>{t('Gamma')}</Text>
                         </Col>
                         <Col span={12}>
                             <Slider
