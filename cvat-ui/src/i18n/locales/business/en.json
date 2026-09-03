@@ -1598,5 +1598,10 @@
   "Match unspecified attributes exactly": "Match unspecified attributes exactly",
   "Attributes without a custom rule will be matched using Exact comparator.": "Attributes without a custom rule will be matched using Exact comparator.",
   "Unknown attribute #{{id}}": "Unknown attribute #{{id}}",
-  "Exact": "Exact"
+  "Exact": "Exact",
+  "Copy interval URL": "Copy interval URL",
+  "Duplicate interval": "Duplicate interval",
+  "Delete interval": "Delete interval",
+  "Fit interval": "Fit interval",
+  "Loop interval playback{{state}} {{shortcut}}": "Loop interval playback{{state}} {{shortcut}}"
 }

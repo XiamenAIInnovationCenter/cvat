@@ -1598,5 +1598,10 @@
   "Match unspecified attributes exactly": "精确匹配未指定的属性",
   "Attributes without a custom rule will be matched using Exact comparator.": "未设置自定义规则的属性将使用精确比较方式进行匹配。",
   "Unknown attribute #{{id}}": "未知属性 #{{id}}",
-  "Exact": "精确"
+  "Exact": "精确",
+  "Copy interval URL": "复制区间 URL",
+  "Duplicate interval": "复制区间",
+  "Delete interval": "删除区间",
+  "Fit interval": "适配区间",
+  "Loop interval playback{{state}} {{shortcut}}": "循环播放区间{{state}} {{shortcut}}"
 }

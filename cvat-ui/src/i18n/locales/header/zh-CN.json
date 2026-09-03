@@ -584,6 +584,26 @@
         "删除音频区间",
         "删除当前音频区间；按住 Shift 可强制删除已锁定区间"
       ],
+      "AUDIO_SET_PLAYBACK_TO_INTERVAL_START": [
+        "将播放位置设为区间起点",
+        "将播放位置设为所选区间的起点，但不开始或停止播放"
+      ],
+      "AUDIO_SET_PLAYBACK_TO_INTERVAL_END": [
+        "将播放位置设为区间终点",
+        "将播放位置设为所选区间的终点，但不开始或停止播放"
+      ],
+      "AUDIO_PLAY_INTERVAL_ONCE": [
+        "播放区间范围",
+        "播放当前音频区间一次"
+      ],
+      "AUDIO_FIT_INTERVAL": [
+        "适配区间",
+        "将当前音频区间完整显示在波形视图中"
+      ],
+      "SPLIT_AUDIO_INTERVAL_AT_PLAYBACK_POSITION": [
+        "在播放位置拆分音频区间",
+        "在当前播放位置拆分音频区间"
+      ],
       "CREATE_AUDIO_REGION": [
         "创建音频区间",
         "启用音频区间创建模式；在波形上拖动即可创建区间"

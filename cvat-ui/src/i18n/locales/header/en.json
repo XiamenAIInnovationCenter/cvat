@@ -584,6 +584,26 @@
         "Delete interval",
         "Delete the active audio interval. Use Shift to force deletion of locked intervals"
       ],
+      "AUDIO_SET_PLAYBACK_TO_INTERVAL_START": [
+        "Set playback to interval start",
+        "Set the playback position to the selected interval start without starting or stopping playback"
+      ],
+      "AUDIO_SET_PLAYBACK_TO_INTERVAL_END": [
+        "Set playback to interval end",
+        "Set the playback position to the selected interval end without starting or stopping playback"
+      ],
+      "AUDIO_PLAY_INTERVAL_ONCE": [
+        "Play interval as range",
+        "Play the active audio interval once"
+      ],
+      "AUDIO_FIT_INTERVAL": [
+        "Fit interval",
+        "Fit the active audio interval into the waveform viewport"
+      ],
+      "SPLIT_AUDIO_INTERVAL_AT_PLAYBACK_POSITION": [
+        "Split audio interval at playback position",
+        "Split the interval at the current playback position"
+      ],
       "CREATE_AUDIO_REGION": [
         "Create audio interval",
         "Enable audio interval creation mode; drag on the waveform to create an interval"
