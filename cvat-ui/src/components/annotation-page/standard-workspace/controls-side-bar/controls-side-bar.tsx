@@ -14,7 +14,7 @@ import { Canvas, CanvasMode } from 'cvat-canvas-wrapper';
 import { LabelType } from 'cvat-core-wrapper';
 
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import ControlVisibilityObserver, {
     ExtraControlsControl, ContainerHeightContext,
@@ -118,7 +118,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 // We use the observer to see if these controls are in the scopeport
 // They automatically put to extra if not

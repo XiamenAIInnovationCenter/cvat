@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import AudioRegionDetailsWrapper from 'audio/containers/annotation-page/audio-workspace/audio-region-details';
 import { getCachedAudioData } from 'audio/utils/audio-data-cache';
@@ -66,6 +67,7 @@ function AudioCanvas({
 }
 
 function AudioCanvasWrapper(): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         audioDataToken, audioLoading, audioError, waveformReady,
     } = useSelector((state: CombinedState) => ({
@@ -88,7 +90,7 @@ function AudioCanvasWrapper(): JSX.Element {
             <div className='cvat-audio-canvas-wrapper'>
                 <div className='cvat-audio-placeholder'>
                     <p className='cvat-audio-placeholder-text'>
-                        {`Failed to load audio: ${audioError}`}
+                        {t('Failed to load audio: {{error}}', { error: audioError })}
                     </p>
                 </div>
             </div>
@@ -103,7 +105,7 @@ function AudioCanvasWrapper(): JSX.Element {
             <div className='cvat-audio-canvas-wrapper'>
                 <div className='cvat-audio-placeholder'>
                     <p className='cvat-audio-placeholder-text'>
-                        No audio data available for this job.
+                        {t('No audio data available for this job.')}
                     </p>
                 </div>
             </div>

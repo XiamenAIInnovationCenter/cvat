@@ -7,7 +7,7 @@ import React, { useCallback, useRef } from 'react';
 
 import LabelForm from './label-form';
 import { LabelOptColor, SkeletonConfiguration } from './common';
-import SkeletonConfigurator from './skeleton-configurator';
+import SkeletonConfiguratorComponent, { SkeletonConfigurator } from './skeleton-configurator';
 import PickFromModelComponent from './pick-from-model';
 
 interface Props {
@@ -69,7 +69,7 @@ function ConstructorCreator(props: Props): JSX.Element {
                         showLabelType={showLabelType}
                     />
                     {creatorType === 'skeleton' && (
-                        <SkeletonConfigurator label={null} ref={skeletonConfiguratorRef} />
+                        <SkeletonConfiguratorComponent label={null} ref={skeletonConfiguratorRef} />
                     )}
                 </>
             )}

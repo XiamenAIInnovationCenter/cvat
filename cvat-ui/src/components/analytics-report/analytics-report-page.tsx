@@ -8,6 +8,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import notification from 'antd/lib/notification';
 import { Row, Col } from 'antd/lib/grid';
+import { useTranslation } from 'react-i18next';
 
 import {
     Project, Task, Job, getCore, MembershipRole, AnalyticsEventsFilter,
@@ -24,6 +25,7 @@ import { TimePeriod } from '.';
 const core = getCore();
 
 function AnalyticsReportPage(): JSX.Element {
+    const { t } = useTranslation('business');
     const requestedInstanceType: InstanceType = useInstanceType();
     const requestedInstanceId = useInstanceId(requestedInstanceType);
     const [timePeriod, setTimePeriod] = useState<TimePeriod | null>(null);
@@ -89,13 +91,13 @@ function AnalyticsReportPage(): JSX.Element {
             }
         } catch (error: unknown) {
             notification.error({
-                message: 'Could not export events for the target resource',
+                message: t('Could not export events for the target resource'),
                 description: error instanceof Error ? error.message : '',
             });
         } finally {
             setExporting(false);
         }
-    }, [user, org, resource, timePeriod]);
+    }, [user, org, resource, timePeriod, t]);
 
     useEffect(() => {
         if (
@@ -122,14 +124,14 @@ function AnalyticsReportPage(): JSX.Element {
                 setResource(_resource[0]);
             }).catch((error: unknown) => {
                 notification.error({
-                    message: 'Could not receive the target resource from the server',
+                    message: t('Could not receive the target resource from the server'),
                     description: error instanceof Error ? error.message : '',
                 });
             }).finally(() => {
                 setFetching(false);
             });
         }
-    }, []);
+    }, [t]);
 
     return (
         <div className='cvat-analytics-page'>

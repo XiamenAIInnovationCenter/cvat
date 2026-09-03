@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
@@ -39,6 +40,7 @@ interface Props {
 }
 
 export default function StoragesTopBar(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         query, onApplyFilter, onApplySorting, onApplySearch, selectedCount, onSelectAll,
     } = props;
@@ -57,7 +59,7 @@ export default function StoragesTopBar(props: Readonly<Props>): JSX.Element {
                             }}
                             defaultValue={query.search ?? ''}
                             className='cvat-cloudstorages-page-tasks-search-bar'
-                            placeholder='Search ...'
+                            placeholder={t('Search ...')}
                         />
                         <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                     </div>

@@ -8,6 +8,8 @@ import {
 import React, {
     useCallback, useEffect, useReducer, useRef,
 } from 'react';
+import { TFunction } from 'i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import Layout, { SiderProps } from 'antd/lib/layout';
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
@@ -35,7 +37,7 @@ import {
 import LabelSelector from 'components/label-selector/label-selector';
 import GlobalHotKeys from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { finishDraw, finishDrawAvailable } from 'utils/drawing';
 
@@ -55,23 +57,28 @@ function cancelCurrentCanvasOp(state: CombinedState): void {
     }
 }
 
-function makeMessage(label: Label, labelType: State['labelType'], pointsCount: number): JSX.Element {
+function makeMessage(
+    label: Label,
+    labelType: State['labelType'],
+    pointsCount: number,
+    t: TFunction<'business'>,
+): JSX.Element {
     let readableShape = '';
     if (labelType === LabelType.POINTS) {
-        readableShape = pointsCount === 1 ? 'one point' : `${pointsCount} points`;
+        readableShape = pointsCount === 1 ? t('one point') : t('{{count}} points', { count: pointsCount });
     } else if (labelType === LabelType.ELLIPSE) {
-        readableShape = 'an ellipse';
+        readableShape = t('an ellipse');
     } else {
-        readableShape = `a ${labelType}`;
+        readableShape = t('a {{shape}}', { shape: t(labelType) });
     }
 
     return (
-        <>
-            <Text>Annotate</Text>
-            <Text strong>{` ${label.name} `}</Text>
-            <Text>on the image, using</Text>
-            <Text strong>{` ${readableShape} `}</Text>
-        </>
+        <Trans
+            t={t}
+            i18nKey='Annotate <label>{{label}}</label> on the image, using <shape>{{shape}}</shape>'
+            values={{ label: label.name, shape: readableShape }}
+            components={{ label: <Text strong />, shape: <Text strong /> }}
+        />
     );
 }
 
@@ -200,9 +207,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function SingleShapeSidebar(): JSX.Element {
+    const { t } = useTranslation('business');
     const appDispatch = useDispatch();
     const store = useStore<CombinedState>();
     const {
@@ -308,7 +316,7 @@ function SingleShapeSidebar(): JSX.Element {
                 message.open({
                     duration: 1,
                     type: 'success',
-                    content: 'You tagged the job as completed',
+                    content: t('You tagged the job as completed'),
                     className: 'cvat-annotation-job-finished-success',
                 });
             })).finally(() => {
@@ -351,7 +359,7 @@ function SingleShapeSidebar(): JSX.Element {
         const onDrawDone = (): void => {
             drawDoneEffectApplied = true;
             if (!unmountedRef.current && state.autoNextFrame) {
-                setTimeout(finishOnThisFrame, 30);
+                setTimeout(() => finishOnThisFrame(), 30);
             }
         };
 
@@ -430,7 +438,7 @@ function SingleShapeSidebar(): JSX.Element {
         return (
             <Layout.Sider {...siderProps}>
                 <div className='cvat-single-shape-annotation-sidebar-not-found-wrapper'>
-                    <Text strong>No available labels found</Text>
+                    <Text strong>{t('No available labels found')}</Text>
                 </div>
             </Layout.Sider>
         );
@@ -449,17 +457,17 @@ function SingleShapeSidebar(): JSX.Element {
                         <Alert
                             className='cvat-single-shape-annotation-sidebar-hint'
                             type='info'
-                            message={makeMessage(state.label, state.labelType, state.pointsCount)}
+                            message={makeMessage(state.label, state.labelType, state.pointsCount, t)}
                         />
                         <Row justify='start' className='cvat-single-shape-annotation-sidebar-finish-frame-wrapper'>
                             <Col>
                                 {typeof state.nextFrame === 'number' ? (
                                     <Button size='large' onClick={() => finishOnThisFrame(false)}>
-                                        Skip
+                                        {t('Skip')}
                                     </Button>
                                 ) : (
                                     <Button size='large' type='primary' onClick={() => finishOnThisFrame(true)}>
-                                        Submit Results
+                                        {t('Submit Results')}
                                     </Button>
                                 )}
                             </Col>
@@ -472,44 +480,52 @@ function SingleShapeSidebar(): JSX.Element {
                                     { typeof state.nextFrame === 'number' ? (
                                         <li>
                                             <Text>
-                                                Click
-                                                <Text strong>{' Skip '}</Text>
-                                                if there is nothing to annotate
+                                                <Trans
+                                                    t={t}
+                                                    i18nKey='Click <strong>Skip</strong> if there is nothing to annotate'
+                                                    components={{ strong: <Text strong /> }}
+                                                />
                                             </Text>
                                         </li>
                                     ) : (
                                         <li>
                                             <Text>
-                                                Click
-                                                <Text strong>{' Submit Results '}</Text>
-                                                to finish the job
+                                                <Trans
+                                                    t={t}
+                                                    i18nKey='Click <strong>Submit Results</strong> to finish the job'
+                                                    components={{ strong: <Text strong /> }}
+                                                />
                                             </Text>
                                         </li>
                                     )}
                                     <li>
                                         <Text>
-                                            Hold
-                                            <Text strong>{' [Alt] '}</Text>
-                                            button to avoid drag the image and avoid drawing
+                                            <Trans
+                                                t={t}
+                                                i18nKey='Hold <strong>[Alt]</strong> to avoid dragging the image while drawing'
+                                                components={{ strong: <Text strong /> }}
+                                            />
                                         </Text>
                                     </li>
                                     <li>
                                         <Text>
-                                            Press
-                                            <Text strong>{` ${normalizedKeyMap.UNDO} `}</Text>
-                                            to undo a created object
+                                            <Trans
+                                                t={t}
+                                                i18nKey='Press <strong>{{shortcut}}</strong> to undo a created object'
+                                                values={{ shortcut: normalizedKeyMap.UNDO }}
+                                                components={{ strong: <Text strong /> }}
+                                            />
                                         </Text>
                                     </li>
                                     { (!isPolylabel || !state.pointsCountIsPredefined || state.pointsCount > 1) && (
                                         <li>
                                             <Text>
-                                                Press
-                                                <Text strong>
-                                                    {` ${
-                                                        normalizedKeyMap.CANCEL_SINGLE_SHAPE
-                                                    } `}
-                                                </Text>
-                                                to reset drawing process
+                                                <Trans
+                                                    t={t}
+                                                    i18nKey='Press <strong>{{shortcut}}</strong> to reset drawing process'
+                                                    values={{ shortcut: normalizedKeyMap.CANCEL_SINGLE_SHAPE }}
+                                                    components={{ strong: <Text strong /> }}
+                                                />
                                             </Text>
                                         </li>
                                     ) }
@@ -517,26 +533,26 @@ function SingleShapeSidebar(): JSX.Element {
                                     { (isPolylabel && (!state.pointsCountIsPredefined || state.pointsCount > 1)) && (
                                         <li>
                                             <Text>
-                                                Press
-                                                <Text strong>
-                                                    {` ${
-                                                        normalizedKeyMap.SWITCH_DRAW_MODE_SINGLE_SHAPE
-                                                    } `}
-                                                </Text>
-                                                to finish drawing process
+                                                <Trans
+                                                    t={t}
+                                                    i18nKey='Press <strong>{{shortcut}}</strong> to finish drawing process'
+                                                    values={{
+                                                        shortcut: normalizedKeyMap.SWITCH_DRAW_MODE_SINGLE_SHAPE,
+                                                    }}
+                                                    components={{ strong: <Text strong /> }}
+                                                />
                                             </Text>
                                         </li>
                                     ) }
                                     { activatedStateID !== null && (
                                         <li>
                                             <Text>
-                                                Press
-                                                <Text strong>
-                                                    {` ${
-                                                        normalizedKeyMap.DELETE_OBJECT_SINGLE_SHAPE
-                                                    } `}
-                                                </Text>
-                                                to delete current object
+                                                <Trans
+                                                    t={t}
+                                                    i18nKey='Press <strong>{{shortcut}}</strong> to delete current object'
+                                                    values={{ shortcut: normalizedKeyMap.DELETE_OBJECT_SINGLE_SHAPE }}
+                                                    components={{ strong: <Text strong /> }}
+                                                />
                                             </Text>
                                         </li>
                                     )}
@@ -550,7 +566,7 @@ function SingleShapeSidebar(): JSX.Element {
                 <>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-label'>
                         <Col>
-                            <Text strong>Label selector</Text>
+                            <Text strong>{t('Label selector')}</Text>
                         </Col>
                     </Row>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-label-select'>
@@ -568,7 +584,7 @@ function SingleShapeSidebar(): JSX.Element {
                 <>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-label-type'>
                         <Col>
-                            <Text strong>Label type selector</Text>
+                            <Text strong>{t('Label type selector')}</Text>
                         </Col>
                     </Row>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-label-type-selector'>
@@ -579,13 +595,13 @@ function SingleShapeSidebar(): JSX.Element {
                                     actionCreators.setActiveLabel(state.label as Label, labelType),
                                 )}
                             >
-                                <Select.Option value={LabelType.RECTANGLE}>{LabelType.RECTANGLE}</Select.Option>
-                                <Select.Option value={LabelType.POLYGON}>{LabelType.POLYGON}</Select.Option>
-                                <Select.Option value={LabelType.POLYLINE}>{LabelType.POLYLINE}</Select.Option>
-                                <Select.Option value={LabelType.POINTS}>{LabelType.POINTS}</Select.Option>
-                                <Select.Option value={LabelType.ELLIPSE}>{LabelType.ELLIPSE}</Select.Option>
-                                <Select.Option value={LabelType.CUBOID}>{LabelType.CUBOID}</Select.Option>
-                                <Select.Option value={LabelType.MASK}>{LabelType.MASK}</Select.Option>
+                                <Select.Option value={LabelType.RECTANGLE}>{t(LabelType.RECTANGLE)}</Select.Option>
+                                <Select.Option value={LabelType.POLYGON}>{t(LabelType.POLYGON)}</Select.Option>
+                                <Select.Option value={LabelType.POLYLINE}>{t(LabelType.POLYLINE)}</Select.Option>
+                                <Select.Option value={LabelType.POINTS}>{t(LabelType.POINTS)}</Select.Option>
+                                <Select.Option value={LabelType.ELLIPSE}>{t(LabelType.ELLIPSE)}</Select.Option>
+                                <Select.Option value={LabelType.CUBOID}>{t(LabelType.CUBOID)}</Select.Option>
+                                <Select.Option value={LabelType.MASK}>{t(LabelType.MASK)}</Select.Option>
                             </Select>
                         </Col>
                     </Row>
@@ -600,7 +616,7 @@ function SingleShapeSidebar(): JSX.Element {
                             dispatch(actionCreators.switchAutoNextFrame(!state.autoNextFrame));
                         }}
                     >
-                        Automatically go to the next frame
+                        {t('Automatically go to the next frame')}
                     </Checkbox>
                 </Col>
             </Row>
@@ -613,7 +629,7 @@ function SingleShapeSidebar(): JSX.Element {
                             dispatch(actionCreators.switchAutoSaveOnFinish());
                         }}
                     >
-                        Automatically save when finish
+                        {t('Automatically save when finish')}
                     </Checkbox>
                 </Col>
             </Row>
@@ -630,7 +646,7 @@ function SingleShapeSidebar(): JSX.Element {
                             }
                         }}
                     >
-                        Navigate only empty frames
+                        {t('Navigate only empty frames')}
                     </Checkbox>
                 </Col>
             </Row>
@@ -644,7 +660,7 @@ function SingleShapeSidebar(): JSX.Element {
                                 dispatch(actionCreators.switchCountOfPointsIsPredefined());
                             }}
                         >
-                            Predefined number of points
+                            {t('Predefined number of points')}
                         </Checkbox>
                     </Col>
                 </Row>
@@ -653,7 +669,7 @@ function SingleShapeSidebar(): JSX.Element {
                 <>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-points-count'>
                         <Col>
-                            <Text strong>Number of points</Text>
+                            <Text strong>{t('Number of points')}</Text>
                         </Col>
                     </Row>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-points-count-input'>

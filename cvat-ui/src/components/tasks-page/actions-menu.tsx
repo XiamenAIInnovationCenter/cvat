@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { shallowEqual } from 'utils/redux';
 import { useHistory } from 'react-router';
 import Modal from 'antd/lib/modal';
+import { useTranslation } from 'react-i18next';
 import Dropdown from 'antd/lib/dropdown';
 
 import {
@@ -40,6 +41,7 @@ interface Props {
 }
 
 function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         taskInstance, triggerElement, dropdownTrigger, onUpdateTask,
     } = props;
@@ -87,8 +89,8 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
     const onMergeConsensusJobs = useCallback(() => {
         if (taskInstance.consensusEnabled) {
             Modal.confirm({
-                title: 'The consensus jobs will be merged',
-                content: 'Existing annotations in parent jobs will be updated. Continue?',
+                title: t('The consensus jobs will be merged'),
+                content: t('Existing annotations in parent jobs will be updated. Continue?'),
                 className: 'cvat-modal-confirm-consensus-merge-task',
                 onOk: () => {
                     dispatch(mergeConsensusJobsAsync(taskInstance));
@@ -97,10 +99,10 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     type: 'primary',
                     danger: true,
                 },
-                okText: 'Merge',
+                okText: t('Merge'),
             });
         }
-    }, [taskInstance.consensusEnabled, taskInstance]);
+    }, [taskInstance.consensusEnabled, taskInstance, t]);
 
     const onExportDataset = useCallback(() => {
         dispatch(exportActions.openExportDatasetModal(taskInstance));
@@ -151,19 +153,21 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     await dispatch(updateTaskAsync(task, { assignee }));
                 }
             },
-            (task, idx, total) => `Updating assignee for task #${task.id} (${idx + 1}/${total})`,
+            (task, idx, total) => t('Updating assignee for task #{{id}} ({{current}}/{{total}})', {
+                id: task.id, current: idx + 1, total,
+            }),
         ));
-    }, [taskInstance, stopEditField, dispatch, collectObjectsForBulkUpdate]);
+    }, [taskInstance, stopEditField, dispatch, collectObjectsForBulkUpdate, t]);
 
     const onDeleteTask = useCallback(() => {
         const tasksToDelete = currentTasks.filter((task) => selectedIds.includes(task.id));
         Modal.confirm({
             title: isBulkMode ?
-                `Delete ${tasksToDelete.length} selected tasks` :
-                `The task ${taskInstance.id} will be deleted`,
+                t('Delete {{count}} selected tasks', { count: tasksToDelete.length }) :
+                t('The task {{id}} will be deleted', { id: taskInstance.id }),
             content: isBulkMode ?
-                'All related data (images, annotations) for all selected tasks will be lost. Continue?' :
-                'All related data (images, annotations) will be lost. Continue?',
+                t('All related data (images, annotations) for all selected tasks will be lost. Continue?') :
+                t('All related data (images, annotations) will be lost. Continue?'),
             className: 'cvat-modal-confirm-delete-task',
             onOk: () => {
                 dispatch(makeBulkOperationAsync(
@@ -171,29 +175,31 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     async (task) => {
                         await dispatch(deleteTaskAsync(task));
                     },
-                    (task, idx, total) => `Deleting task #${task.id} (${idx + 1}/${total})`,
+                    (task, idx, total) => t('Deleting task #{{id}} ({{current}}/{{total}})', {
+                        id: task.id, current: idx + 1, total,
+                    }),
                 ));
             },
             okButtonProps: {
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulkMode ? 'Delete selected' : 'Delete',
+            okText: isBulkMode ? t('Delete selected') : t('Delete'),
         });
-    }, [taskInstance, currentTasks, selectedIds, isBulkMode]);
+    }, [taskInstance, currentTasks, selectedIds, isBulkMode, t]);
 
     const onUpdateTaskOrganization = useCallback((newOrganization: Organization | null) => {
         stopEditField();
 
         const tasksToUpdate = onUpdateTask ? [taskInstance] : collectObjectsForBulkUpdate();
-        const updateCurrent = () => {
+        const updateCurrent = (): void => {
             taskInstance.organizationId = newOrganization?.id ?? null;
             onUpdateTask!(taskInstance).then(() => {
                 history.push('/tasks');
             });
         };
 
-        const updateBulk = () => {
+        const updateBulk = (): void => {
             dispatch(makeBulkOperationAsync(
                 tasksToUpdate,
                 async (task) => {
@@ -201,7 +207,9 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     task.organizationId = newOrganization?.id ?? null;
                     await dispatch(updateTaskAsync(task, {}, ResourceUpdateTypes.UPDATE_ORGANIZATION));
                 },
-                (task, idx, total) => `Updating organization for task #${task.id} (${idx + 1}/${total})`,
+                (task, idx, total) => t('Updating organization for task #{{id}} ({{current}}/{{total}})', {
+                    id: task.id, current: idx + 1, total,
+                }),
             )).then((processedCount: number) => {
                 if (processedCount) {
                     // as for some tasks org has changed
@@ -231,7 +239,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                 }
             },
         );
-    }, [currentOrganization, taskInstance, stopEditField, onUpdateTask, collectObjectsForBulkUpdate]);
+    }, [currentOrganization, taskInstance, stopEditField, onUpdateTask, collectObjectsForBulkUpdate, t]);
 
     let menuItems;
     if (editField) {
@@ -255,6 +263,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
         }];
     } else {
         menuItems = TaskActionsItems({
+            t,
             startEditField,
             taskId: taskInstance.id,
             projectId: taskInstance.projectId,

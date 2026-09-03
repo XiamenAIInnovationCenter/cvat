@@ -12,6 +12,7 @@ import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import Icon from '@ant-design/icons';
 import { MenuProps } from 'antd/lib/menu';
+import { useTranslation } from 'react-i18next';
 
 import { MainMenuIcon } from 'icons';
 import { Job, JobState } from 'cvat-core-wrapper';
@@ -42,6 +43,7 @@ interface Props {
 }
 
 function AnnotationMenuComponent(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         removeAnnotationsConfirmComponent: RemoveAnnotationsConfirmComponent = RemoveAnnotationsConfirm,
     } = props;
@@ -69,7 +71,7 @@ function AnnotationMenuComponent(props: Props): JSX.Element {
             message.open({
                 duration: 1,
                 type: 'success',
-                content: 'You tagged the job as completed',
+                content: t('You tagged the job as completed'),
                 className: 'cvat-annotation-job-finished-success',
             });
         }));
@@ -85,16 +87,16 @@ function AnnotationMenuComponent(props: Props): JSX.Element {
 
     const changeState = useCallback((state: JobState) => {
         dispatch(updateJobAsync(jobInstance, { state })).then(() => {
-            message.info('Job state updated', 2);
+            message.info(t('Job state updated'), 2);
         });
     }, [jobInstance]);
 
     const changeJobState = useCallback((state: JobState) => () => {
         Modal.confirm({
-            title: 'Would you like to update current job state?',
-            content: `Job state will be switched to "${state}"`,
-            okText: 'Continue',
-            cancelText: 'Cancel',
+            title: t('Would you like to update current job state?'),
+            content: t('Job state will be switched to "{{state}}"', { state: t(state) }),
+            okText: t('Continue'),
+            cancelText: t('Cancel'),
             className: 'cvat-modal-content-change-job-state',
             onOk: () => changeState(state),
         });
@@ -109,25 +111,25 @@ function AnnotationMenuComponent(props: Props): JSX.Element {
 
     menuItems.push([{
         key: Actions.LOAD_JOB_ANNO,
-        label: 'Upload annotations',
+        label: t('Upload annotations'),
         onClick: uploadAnnotations,
     }, 10]);
 
     menuItems.push([{
         key: Actions.EXPORT_JOB_DATASET,
-        label: 'Export job dataset',
+        label: t('Export job dataset'),
         onClick: exportDataset,
     }, 20]);
 
     menuItems.push([{
         key: Actions.REMOVE_ANNOTATIONS,
-        label: 'Remove annotations',
+        label: t('Remove annotations'),
         onClick: () => setRemoveAnnotationsConfirmOpen(true),
     }, 30]);
 
     menuItems.push([{
         key: Actions.RUN_ACTIONS,
-        label: 'Run actions',
+        label: t('Run actions'),
         onClick: () => {
             openAnnotationsActionModal();
         },
@@ -135,32 +137,32 @@ function AnnotationMenuComponent(props: Props): JSX.Element {
 
     menuItems.push([{
         key: Actions.OPEN_TASK,
-        label: 'Open the task',
+        label: t('Open the task'),
         onClick: openTask,
     }, 50]);
 
     menuItems.push([{
         key: 'job-state-submenu',
         popupClassName: 'cvat-annotation-menu-job-state-submenu',
-        label: 'Change job state',
+        label: t('Change job state'),
         children: [{
             key: `state:${JobState.NEW}`,
-            label: JobState.NEW,
+            label: t(JobState.NEW),
             className: computeClassName(JobState.NEW),
             onClick: changeJobState(JobState.NEW),
         }, {
             key: `state:${JobState.IN_PROGRESS}`,
-            label: JobState.IN_PROGRESS,
+            label: t(JobState.IN_PROGRESS),
             className: computeClassName(JobState.IN_PROGRESS),
             onClick: changeJobState(JobState.IN_PROGRESS),
         }, {
             key: `state:${JobState.REJECTED}`,
-            label: JobState.REJECTED,
+            label: t(JobState.REJECTED),
             className: computeClassName(JobState.REJECTED),
             onClick: changeJobState(JobState.REJECTED),
         }, {
             key: `state:${JobState.COMPLETED}`,
-            label: JobState.COMPLETED,
+            label: t(JobState.COMPLETED),
             className: computeClassName(JobState.COMPLETED),
             onClick: changeJobState(JobState.COMPLETED),
         }],
@@ -168,13 +170,13 @@ function AnnotationMenuComponent(props: Props): JSX.Element {
 
     menuItems.push([{
         key: Actions.FINISH_JOB,
-        label: 'Finish the job',
+        label: t('Finish the job'),
         onClick: () => {
             Modal.confirm({
-                title: 'Would you like to finish the job?',
-                content: 'It will save annotations and set the job state to "completed"',
-                okText: 'Continue',
-                cancelText: 'Cancel',
+                title: t('Would you like to finish the job?'),
+                content: t('It will save annotations and set the job state to "completed"'),
+                okText: t('Continue'),
+                cancelText: t('Cancel'),
                 className: 'cvat-modal-content-finish-job',
                 onOk: finishJob,
             });
@@ -212,7 +214,7 @@ function AnnotationMenuComponent(props: Props): JSX.Element {
             >
                 <Button type='link' className='cvat-annotation-header-menu-button cvat-annotation-header-button'>
                     <Icon component={MainMenuIcon} />
-                    Menu
+                    {t('Menu')}
                 </Button>
             </Dropdown>
         </>

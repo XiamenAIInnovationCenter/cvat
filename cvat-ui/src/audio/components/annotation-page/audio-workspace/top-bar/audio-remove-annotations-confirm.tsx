@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Modal from 'antd/lib/modal';
 import Text from 'antd/lib/typography/Text';
 import InputNumber from 'antd/lib/input-number';
@@ -36,12 +37,14 @@ function AudioTimeInput({
     value: TimeValue;
     onChange(value: TimeValue): void;
 }): JSX.Element {
+    const { t } = useTranslation('business');
+
     return (
         <div className='cvat-audio-remove-annotations-time-row'>
             <Text className='cvat-audio-remove-annotations-time-label'>{`${label}:`}</Text>
             <InputNumber
                 min={0}
-                placeholder='min'
+                placeholder={t('min')}
                 className='cvat-audio-remove-annotations-time-input'
                 value={value.minutes}
                 onChange={(minutes) => onChange({ ...value, minutes: minutes ?? undefined })}
@@ -50,7 +53,7 @@ function AudioTimeInput({
             <InputNumber
                 min={0}
                 max={59}
-                placeholder='sec'
+                placeholder={t('sec')}
                 className='cvat-audio-remove-annotations-time-input'
                 value={value.seconds}
                 onChange={(seconds) => onChange({ ...value, seconds: seconds ?? undefined })}
@@ -59,7 +62,7 @@ function AudioTimeInput({
             <InputNumber
                 min={0}
                 max={999}
-                placeholder='ms'
+                placeholder={t('ms')}
                 className='cvat-audio-remove-annotations-time-input'
                 value={value.milliseconds}
                 onChange={(milliseconds) => onChange({ ...value, milliseconds: milliseconds ?? undefined })}
@@ -69,6 +72,7 @@ function AudioTimeInput({
 }
 
 function AudioRemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         open,
         stopFrame,
@@ -89,13 +93,13 @@ function AudioRemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JS
         <Modal
             destroyOnClose
             open={open}
-            title='Remove Audio Annotations'
+            title={t('Remove Audio Annotations')}
             className='cvat-modal-confirm-remove-annotation cvat-modal-confirm-remove-audio-annotation'
             okButtonProps={{
                 type: 'primary',
                 danger: true,
             }}
-            okText='Remove'
+            okText={t('Remove')}
             onCancel={onClose}
             onOk={() => {
                 const from = timeToMilliseconds(removeFrom);
@@ -109,10 +113,10 @@ function AudioRemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JS
             }}
         >
             <div>
-                <Text>You are about to remove audio intervals from this job. </Text>
-                <Text>Without a range, all audio intervals will be removed. </Text>
-                <Text>To remove intervals only in a time span, set the range below. </Text>
-                <Text>Changes take effect only when you save the job.</Text>
+                <Text>{t('You are about to remove audio intervals from this job.')} </Text>
+                <Text>{t('Without a range, all audio intervals will be removed.')} </Text>
+                <Text>{t('To remove intervals only in a time span, set the range below.')} </Text>
+                <Text>{t('Changes take effect only when you save the job.')}</Text>
                 <br />
                 <br />
                 <br />
@@ -120,11 +124,11 @@ function AudioRemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JS
                     bordered={false}
                     items={[{
                         key: 1,
-                        label: <Text>Select Time Range</Text>,
+                        label: <Text>{t('Select Time Range')}</Text>,
                         children: (
                             <div className='cvat-audio-remove-annotations-time-range'>
-                                <AudioTimeInput label='From' value={removeFrom} onChange={setRemoveFrom} />
-                                <AudioTimeInput label='To' value={removeUpTo} onChange={setRemoveUpTo} />
+                                <AudioTimeInput label={t('From')} value={removeFrom} onChange={setRemoveFrom} />
+                                <AudioTimeInput label={t('To')} value={removeUpTo} onChange={setRemoveUpTo} />
                             </div>
                         ),
                     }]}

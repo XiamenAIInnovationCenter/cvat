@@ -19,6 +19,7 @@ import {
     MoreOutlined, PlusOutlined, QuestionCircleOutlined,
 } from '@ant-design/icons';
 import type { ColumnType } from 'antd/lib/table';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState } from 'reducers';
 import { ApiToken, ApiTokenModifiableFields } from 'cvat-core-wrapper';
@@ -42,6 +43,7 @@ interface RowData {
 }
 
 function ApiTokensCard(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const [showCreateTokenForm, setShowCreateTokenForm] = useState(false);
     const [showTokenModal, setShowTokenModal] = useState(false);
@@ -84,15 +86,17 @@ function ApiTokensCard(): JSX.Element {
 
     const onRevokeToken = useCallback((token: ApiToken): void => {
         Modal.confirm({
-            title: 'Revoke API Token',
-            content: `Are you sure you want to revoke the token "${token.name}"? This action cannot be undone.`,
-            okText: 'Revoke',
+            title: t('Revoke API Token'),
+            content: t('Are you sure you want to revoke the token "{{name}}"? This action cannot be undone.', {
+                name: token.name,
+            }),
+            okText: t('Revoke'),
             okButtonProps: {
                 type: 'primary',
                 danger: true,
                 className: 'cvat-api-token-revoke-button',
             },
-            cancelText: 'Cancel',
+            cancelText: t('Cancel'),
             onOk: () => {
                 dispatch(revokeApiTokenAsync(token, () => {
                     dispatch(getApiTokensAsync());
@@ -100,7 +104,7 @@ function ApiTokensCard(): JSX.Element {
             },
             className: 'cvat-modal-confirm-revoke-token',
         });
-    }, [dispatch]);
+    }, [dispatch, t]);
 
     const onSubmitTokenForm = async (data: ApiTokenModifiableFields): Promise<void> => {
         if (editingToken) {
@@ -129,7 +133,7 @@ function ApiTokensCard(): JSX.Element {
 
     const apiTokenColumns: ColumnType<RowData>[] = [
         {
-            title: 'Name',
+            title: t('Name'),
             dataIndex: 'name',
             key: 'name',
             width: 250,
@@ -137,7 +141,7 @@ function ApiTokensCard(): JSX.Element {
             className: 'cvat-api-token-name',
         },
         {
-            title: 'Permissions',
+            title: t('Permissions'),
             dataIndex: 'readOnly',
             key: 'readOnly',
             align: 'center' as const,
@@ -146,19 +150,19 @@ function ApiTokensCard(): JSX.Element {
                 return a.readOnly ? -1 : 1;
             },
             filters: [
-                { text: 'Read Only', value: true },
-                { text: 'Read/Write', value: false },
+                { text: t('Read Only'), value: true },
+                { text: t('Read/Write'), value: false },
             ],
             onFilter: (value: boolean | Key, record: RowData) => record.readOnly === value,
             render: (readOnly: boolean) => (
                 <Tag color={readOnly ? 'blue' : 'orange'}>
-                    {readOnly ? 'Read Only' : 'Read/Write'}
+                    {readOnly ? t('Read Only') : t('Read/Write')}
                 </Tag>
             ),
             className: 'cvat-api-token-permissions',
         },
         {
-            title: 'Created',
+            title: t('Created'),
             dataIndex: 'createdDate',
             key: 'createdDate',
             sorter: (a: RowData, b: RowData) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime(),
@@ -166,7 +170,7 @@ function ApiTokensCard(): JSX.Element {
             className: 'cvat-api-token-created-date',
         },
         {
-            title: 'Expires',
+            title: t('Expires'),
             dataIndex: 'expiryDate',
             key: 'expiryDate',
             sorter: (a: RowData, b: RowData) => {
@@ -176,12 +180,12 @@ function ApiTokensCard(): JSX.Element {
                 return new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime();
             },
             render: (date: string | null) => (
-                date ? new Date(date).toLocaleDateString() : <Text underline>Never</Text>
+                date ? new Date(date).toLocaleDateString() : <Text underline>{t('Never')}</Text>
             ),
             className: 'cvat-api-token-expire-date',
         },
         {
-            title: 'Last Used',
+            title: t('Last Used'),
             dataIndex: 'lastUsedDate',
             key: 'lastUsedDate',
             sorter: (a: RowData, b: RowData) => {
@@ -190,11 +194,11 @@ function ApiTokensCard(): JSX.Element {
                 if (!b.lastUsedDate) return -1;
                 return new Date(a.lastUsedDate).getTime() - new Date(b.lastUsedDate).getTime();
             },
-            render: (date: string | null) => (date ? new Date(date).toLocaleDateString() : 'Never'),
+            render: (date: string | null) => (date ? new Date(date).toLocaleDateString() : t('Never')),
             className: 'cvat-api-token-last-used',
         },
         {
-            title: 'Actions',
+            title: t('Actions'),
             key: 'actions',
             align: 'center' as const,
             width: 60,
@@ -204,13 +208,13 @@ function ApiTokensCard(): JSX.Element {
                         items: [
                             {
                                 key: 'edit',
-                                label: 'Edit',
+                                label: t('Edit'),
                                 onClick: () => onEditToken(row.token),
                             },
                             { type: 'divider' },
                             {
                                 key: 'revoke',
-                                label: 'Revoke',
+                                label: t('Revoke'),
                                 onClick: () => onRevokeToken(row.token),
                             },
                         ],
@@ -230,28 +234,18 @@ function ApiTokensCard(): JSX.Element {
                 title={(
                     <Row className='cvat-security-api-tokens-card-title' justify='space-between'>
                         <Col>
-                            <Title level={5}>Personal Access Tokens (PATs)</Title>
+                            <Title level={5}>{t('Personal Access Tokens (PATs)')}</Title>
                             <CVATTooltip
                                 title={(
                                     <Row className='cvat-api-tokens-tooltip-inner'>
                                         <Row>
                                             <Col>
-                                                <Text>
-                                                    Personal Access Tokens (PATs) are text strings that
-                                                    can be used for authentication instead of a username/email
-                                                    and password. They allow interaction with the CVAT server
-                                                    API via various clients, including custom scripts, the CVAT
-                                                    Python SDK, and the CVAT CLI.
-                                                </Text>
+                                                <Text>{t('Personal Access Tokens help')}</Text>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col>
-                                                <Text>
-                                                    For additional security, each token can have an expiration
-                                                    date and restricted permissions. Users can create or revoke
-                                                    tokens at any time.
-                                                </Text>
+                                                <Text>{t('Personal Access Tokens security help')}</Text>
                                             </Col>
                                         </Row>
                                     </Row>
@@ -283,7 +277,7 @@ function ApiTokensCard(): JSX.Element {
                     />
                 ) : (
                     <CVATTable
-                        tableTitle={<Title level={5}>Existing Tokens</Title>}
+                        tableTitle={<Title level={5}>{t('Existing Tokens')}</Title>}
                         className='cvat-api-tokens-table'
                         csvExport={{ filename: 'access_tokens.csv' }}
                         columns={apiTokenColumns}

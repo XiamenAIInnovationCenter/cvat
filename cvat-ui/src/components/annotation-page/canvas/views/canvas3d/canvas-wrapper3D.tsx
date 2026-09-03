@@ -5,6 +5,7 @@
 
 import './styles.scss';
 import React, { useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import {
     ArrowDownOutlined, ArrowLeftOutlined, ArrowRightOutlined, ArrowUpOutlined,
@@ -44,7 +45,7 @@ import {
 } from 'cvat-core-wrapper';
 import GlobalHotKeys from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { scrollAndExpandState } from 'utils/objects-sidebar';
 
@@ -125,7 +126,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 interface StateToProps {
     opacity: number;
@@ -504,6 +505,7 @@ export const PerspectiveViewComponent = React.memo(
 
 export const TopViewComponent = React.memo(
     (): JSX.Element => {
+        const { t } = useTranslation('business');
         const ref = useRef<HTMLDivElement>(null);
         const { canvas, canvasIsReady } = useSelector((state: CombinedState) => ({
             canvas: state.annotation.canvas.instance as Canvas3d,
@@ -519,7 +521,7 @@ export const TopViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-topview'>
                 {!canvasIsReady && <Spinner />}
-                <div className='cvat-canvas3d-header'>Top</div>
+                <div className='cvat-canvas3d-header'>{t('Top')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}
@@ -531,6 +533,7 @@ export const TopViewComponent = React.memo(
 
 export const SideViewComponent = React.memo(
     (): JSX.Element => {
+        const { t } = useTranslation('business');
         const ref = useRef<HTMLDivElement>(null);
         const { canvas, canvasIsReady } = useSelector((state: CombinedState) => ({
             canvas: state.annotation.canvas.instance as Canvas3d,
@@ -546,7 +549,7 @@ export const SideViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-sideview'>
                 {!canvasIsReady && <Spinner />}
-                <div className='cvat-canvas3d-header'>Side</div>
+                <div className='cvat-canvas3d-header'>{t('Side')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}
@@ -558,6 +561,7 @@ export const SideViewComponent = React.memo(
 
 export const FrontViewComponent = React.memo(
     (): JSX.Element => {
+        const { t } = useTranslation('business');
         const ref = useRef<HTMLDivElement>(null);
         const { canvas, canvasIsReady } = useSelector((state: CombinedState) => ({
             canvas: state.annotation.canvas.instance as Canvas3d,
@@ -573,7 +577,7 @@ export const FrontViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-frontview'>
                 {!canvasIsReady && <Spinner />}
-                <div className='cvat-canvas3d-header'>Front</div>
+                <div className='cvat-canvas3d-header'>{t('Front')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}

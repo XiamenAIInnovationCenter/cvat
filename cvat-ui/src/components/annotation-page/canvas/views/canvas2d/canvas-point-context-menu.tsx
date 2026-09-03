@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom';
 import Button from 'antd/lib/button';
 import { DeleteOutlined, EnvironmentOutlined } from '@ant-design/icons';
@@ -66,6 +67,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 type Props = StateToProps & DispatchToProps;
 
 function CanvasPointContextMenu(props: Props): React.ReactPortal | null {
+    const { t } = useTranslation('business');
     const {
         onCloseContextMenu, onUpdateAnnotations, activatedState, visible, type, top, left,
     } = props;
@@ -109,14 +111,14 @@ function CanvasPointContextMenu(props: Props): React.ReactPortal | null {
                     (contextMenuFor.shapeType === ShapeType.POLYLINE && contextMenuFor.points.length > 4) ||
                     (contextMenuFor.shapeType === ShapeType.POINTS && contextMenuFor.points.length > 2)) &&
                 (
-                    <CVATTooltip title='Delete point [Alt + dblclick]'>
+                    <CVATTooltip title={t('Delete point [Alt + double click]')}>
                         <Button
                             type='link'
                             icon={<DeleteOutlined />}
                             onClick={onPointDelete}
                             className='cvat-canvas-point-context-menu-delete'
                         >
-                            Delete point
+                            {t('Delete point')}
                         </Button>
                     </CVATTooltip>
                 )}
@@ -128,7 +130,7 @@ function CanvasPointContextMenu(props: Props): React.ReactPortal | null {
                         onClick={onSetStartPoint}
                         className='cvat-canvas-point-context-menu-set-start'
                     >
-                        Set start point
+                        {t('Set start point')}
                     </Button>
                 )}
             </div>,

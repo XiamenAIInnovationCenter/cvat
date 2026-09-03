@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { RefObject } from 'react';
+import i18n from 'i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
@@ -183,13 +184,13 @@ export default class RawViewer extends React.PureComponent<Props> {
 
         if (deletedLabels.length || deletedAttributes.length) {
             Modal.confirm({
-                title: 'You are going to remove existing labels/attributes',
+                title: i18n.t('You are going to remove existing labels/attributes', { ns: 'business' }),
                 className: 'cvat-modal-confirm-remove-existing-labels',
                 content: (
                     <>
                         {deletedLabels.length ? (
                             <Paragraph>
-                                Following labels are going to be removed:
+                                {i18n.t('Following labels are going to be removed:', { ns: 'business' })}
                                 <div className='cvat-modal-confirm-content-remove-existing-labels'>
                                     {deletedLabels
                                         .map((_label: LabelOptColor): JSX.Element => (
@@ -201,7 +202,7 @@ export default class RawViewer extends React.PureComponent<Props> {
                         ) : null}
                         {deletedAttributes.length ? (
                             <Paragraph>
-                                Following attributes are going to be removed:
+                                {i18n.t('Following attributes are going to be removed:', { ns: 'business' })}
                                 <div className='cvat-modal-confirm-content-remove-existing-attributes'>
                                     {deletedAttributes.map(({ attribute, labelPath }: AttributeWithLabelPath) => (
                                         <Tag key={attribute.id as number}>{`${labelPath}: ${attribute.name}`}</Tag>
@@ -209,10 +210,12 @@ export default class RawViewer extends React.PureComponent<Props> {
                                 </div>
                             </Paragraph>
                         ) : null}
-                        <Paragraph type='danger'>All related annotations will be destroyed. Continue?</Paragraph>
+                        <Paragraph type='danger'>
+                            {i18n.t('All related annotations will be destroyed. Continue?', { ns: 'business' })}
+                        </Paragraph>
                     </>
                 ),
-                okText: 'Delete existing data',
+                okText: i18n.t('Delete existing data', { ns: 'business' }),
                 okButtonProps: {
                     danger: true,
                 },
@@ -268,7 +271,7 @@ export default class RawViewer extends React.PureComponent<Props> {
                         return (
                             <Row justify='start' align='middle'>
                                 <Col>
-                                    <CVATTooltip title='Save labels'>
+                                    <CVATTooltip title={i18n.t('Save labels', { ns: 'business' })}>
                                         <Button
                                             className='cvat-submit-raw-labels-conf-button'
                                             style={{ width: '150px' }}
@@ -277,12 +280,12 @@ export default class RawViewer extends React.PureComponent<Props> {
                                             loading={submitting}
                                             disabled={!hasChanges || hasErrors || submitting}
                                         >
-                                            Save
+                                            {i18n.t('Save', { ns: 'business' })}
                                         </Button>
                                     </CVATTooltip>
                                 </Col>
                                 <Col offset={1}>
-                                    <CVATTooltip title='Reset all changes'>
+                                    <CVATTooltip title={i18n.t('Reset all changes', { ns: 'business' })}>
                                         <Button
                                             className='cvat-reset-raw-labels-conf-button'
                                             type='primary'
@@ -295,7 +298,7 @@ export default class RawViewer extends React.PureComponent<Props> {
                                                 }
                                             }}
                                         >
-                                            Cancel
+                                            {i18n.t('Cancel', { ns: 'business' })}
                                         </Button>
                                     </CVATTooltip>
                                 </Col>

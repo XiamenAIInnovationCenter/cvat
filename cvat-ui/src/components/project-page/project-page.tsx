@@ -10,6 +10,7 @@ import React, {
 import { useSelector, useDispatch } from 'react-redux';
 import { shallowEqual } from 'utils/redux';
 import { useHistory, useParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import Spin from 'antd/lib/spin';
 import { Row, Col } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
@@ -57,6 +58,7 @@ interface ParamType {
 }
 
 export default function ProjectPageComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const id = +useParams<ParamType>().id;
     const dispatch = useDispatch();
     const history = useHistory();
@@ -102,7 +104,7 @@ export default function ProjectPageComponent(): JSX.Element {
                 }).catch((error: Error) => {
                     if (mounted.current) {
                         notification.error({
-                            message: 'Could not receive the requested project from the server',
+                            message: t('Could not receive the requested project from the server'),
                             description: error.toString(),
                         });
                     }
@@ -113,8 +115,8 @@ export default function ProjectPageComponent(): JSX.Element {
                 });
         } else {
             notification.error({
-                message: 'Could not receive the requested project from the server',
-                description: `Requested project id "${id}" is not valid`,
+                message: t('Could not receive the requested project from the server'),
+                description: t('Requested project ID "{{id}}" is not valid', { id }),
             });
             setFetchingProject(false);
         }
@@ -139,7 +141,7 @@ export default function ProjectPageComponent(): JSX.Element {
 
     const onSelectAll = useCallback(() => {
         dispatch(selectionActions.selectResources(
-            tasks.map((t) => t.id).filter((taskId) => !deletedTasks[taskId]),
+            tasks.map((task) => task.id).filter((taskId) => !deletedTasks[taskId]),
             SelectedResourceType.TASKS,
         ));
     }, [tasks, deletedTasks]);
@@ -238,7 +240,7 @@ export default function ProjectPageComponent(): JSX.Element {
             )}
         </BulkWrapper>
     ) : (
-        <Empty description='No tasks found' />
+        <Empty description={t('No tasks found')} />
     );
 
     return (
@@ -275,7 +277,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                     }}
                                     defaultValue={tasksQuery.search ?? ''}
                                     className='cvat-project-page-tasks-search-bar'
-                                    placeholder='Search ...'
+                                    placeholder={t('Search ...')}
                                 />
                                 <ResourceSelectionInfo
                                     selectedCount={selectedCount}
@@ -341,7 +343,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-task-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}`)}
                                     >
-                                        Create a new task
+                                        {t('Create a new task')}
                                     </Button>
                                     <Button
                                         type='primary'
@@ -349,7 +351,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-multi-tasks-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}&many=true`)}
                                     >
-                                        Create multi tasks
+                                        {t('Create multi tasks')}
                                     </Button>
                                 </CvatDropdownMenuPaper>
                             )}

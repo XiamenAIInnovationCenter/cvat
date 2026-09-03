@@ -1,0 +1,729 @@
+{
+  "Could not receive a list of organizations": "Could not receive a list of organizations",
+  "about": {
+    "description": "Computer Vision Annotation Tool",
+    "What's new": "What's new",
+    "MIT License": "MIT License",
+    "Find us on Discord": "Find us on Discord",
+    "Server version": "Server version:",
+    "UI version": "UI version"
+  },
+  "Admin page": "Admin page",
+  "Switch organization": "Switch organization",
+  "Personal workspace": "Personal workspace",
+  "Type to search": "Type to search",
+  "Click to open": "Click to open ",
+  "Press {{shortcut}} to switch": "Press {{shortcut}} to switch",
+  "settings": {
+    "Failed to load settings from local storage": "Failed to load settings from local storage",
+    "title": "Settings",
+    "Player": {
+      "label": "Player",
+      "step": "Player step",
+      "step-tips": "Number of frames skipped when selecting<1/>or<3/>",
+      "speed": "Player speed",
+      "speeds": {
+        "Fastest": "Fastest",
+        "Fast": "Fast",
+        "Usual": "Usual",
+        "Slow": "Slow",
+        "Slower": "Slower",
+        "Slowest": "Slowest"
+      },
+      "Select canvas background color": "Select canvas background color",
+      "Reset zoom": "Reset zoom",
+      "Fit image after changing frame": "Fit image after changing frame",
+      "Rotate all images": "Rotate all images",
+      "Rotate all images simultaneously": "Rotate all images simultaneously",
+      "Smooth image": "Smooth image",
+      "Smooth image when zoom-in it": "Smooth image when zoom-in it",
+      "Show deleted frames": "Show deleted frames",
+      "You will be able to navigate and restore deleted frames": "You will be able to navigate and restore deleted frames"
+    },
+    "Workspace": {
+      "label": "Workspace",
+      "Enable auto save": "Enable auto save",
+      "auto-save-tips": [
+        "Auto save every",
+        "minutes"
+      ],
+      "show-interpolated": "Show all interpolation tracks",
+      "show-interpolated-tips": "Show hidden interpolated objects in the side panel",
+      "show-text-always": "Always show object details",
+      "show-text-always-tips": "Show text for an object on the canvas not only when the object is activated",
+      "text-settings-content": "Content of a text",
+      "text-settings-contents": {
+        "ID": "ID",
+        "Label": "Label",
+        "Attributes": "Attributes",
+        "Source": "Source",
+        "Descriptions": "Descriptions",
+        "Dimensions": "Dimensions",
+        "Layer": "Layer"
+      },
+      "text-settings-text-position": "Position of a text",
+      "text-settings-text-positions": {
+        "Auto": "Auto",
+        "Center": "Center"
+      },
+      "text-settings-font-size": "Font size of a text",
+      "auto-borders": "Automatic bordering",
+      "auto-borders-tips": "Enable automatic bordering for polygons and polylines during drawing/editing",
+      "intelligent-polygon-cropping": "Intelligent polygon cropping",
+      "intelligent-polygon-cropping-tips": "Try to crop polygons automatically when editing",
+      "adaptive-zoom": "Adaptive zoom algorithm",
+      "adaptive-zoom-tips": "Enable smoother version of zooming, compatible with a trackpad and pinch gestures",
+      "Show tags on frame": "Show tags on frame",
+      "Show frame tags in the corner of the workspace": "Show frame tags in the corner of the workspace",
+      "aam-zoom-margin": "Attribute annotation mode (AAM) zoom margin",
+      "control-points-size": "Control points size",
+      "focused-object-padding": "Focused object padding",
+      "focused-object-padding-tips": "Adds extra space in pixels around an object when it gets fitted",
+      "approx-poly-threshold": "Default polygon simplification threshold",
+      "approx-poly-threshold-tips": "Higher values preserve more polygon detail. Used for serverless interactors, OpenCV scissors, and polygon simplification",
+      "less": "less",
+      "more": "more"
+    },
+    "Shortcuts": {
+      "label": "Shortcuts",
+      "Name": "Name",
+      "Shortcut": "Shortcut",
+      "Description": "Description",
+      "Active list of shortcuts": "Active list of shortcuts",
+      "restore-modal-title": "Are you sure you want to restore defaults?",
+      "restore-button": "Restore Defaults",
+      "scope": {
+        "GENERAL": "General",
+        "ANNOTATION_PAGE": "Annotation page",
+        "OBJECTS_SIDEBAR": "Objects sidebar",
+        "STANDARD_WORKSPACE": "Standard workspace",
+        "STANDARD_WORKSPACE_CONTROLS": "Standard workspace controls",
+        "ATTRIBUTE_ANNOTATION_WORKSPACE": "Attribute annotation workspace",
+        "SINGLE_SHAPE_ANNOTATION_WORKSPACE": "Single shape annotation workspace",
+        "TAG_ANNOTATION_WORKSPACE": "Tag annotation workspace",
+        "REVIEW_WORKSPACE_CONTROLS": "Review workspace controls",
+        "3D_ANNOTATION_WORKSPACE": "3D annotation workspace",
+        "3D_ANNOTATION_WORKSPACE_CONTROLS": "3D annotation workspace controls",
+        "LABELS_EDITOR": "Labels editor",
+        "AUDIO_WORKSPACE_CONTROLS": "Audio workspace controls"
+      },
+      "search-placeholder": "Search for a shortcut here...",
+      "warning": "Shortcut may consist of any combination of modifiers (alt, ctrl, or shift) and one non-modifier at the end. Some key combinations may be reserved by the browser and cannot be overridden in CVAT.",
+      "Conflicting shortcuts detected": "Conflicting shortcuts detected",
+      "Added sequence conflicts with the following shortcuts:": "Added sequence conflicts with the following shortcuts:",
+      "in the scope": "in the scope",
+      "Would you like to unset the conflicting shortcuts?": "Would you like to unset the conflicting shortcuts?",
+      "Invalid key combination": "Invalid key combination",
+      "Only one non-modifier key can be used in a combination": "Only one non-modifier key can be used in a combination",
+      "Register shortcut...": "Register shortcut...",
+      "SWITCH_SHORTCUTS": [
+        "Show shortcuts",
+        "Open/hide the list of available shortcuts"
+      ],
+      "SWITCH_SETTINGS": [
+        "Show settings",
+        "Open/hide settings dialog"
+      ],
+      "TOGGLE_ANNOTATION_PAGE": [
+        "Toggle layout grid",
+        "The grid is used to UI development"
+      ],
+      "SAVE_JOB": [
+        "Save the job",
+        "Submit unsaved changes of annotations to the server"
+      ],
+      "UNDO": [
+        "Undo action",
+        "Cancel the latest action related with objects"
+      ],
+      "REDO": [
+        "Redo action",
+        "Cancel undo action"
+      ],
+      "SWITCH_TOOLS_BLOCKER_STATE": [
+        "Switch algorithm blocker",
+        "Postpone running the algorithm for interaction tools"
+      ],
+      "AAM_SET_ATTR_VALUE_0": [
+        "Set 1 value to the current attribute",
+        "Change current value for the attribute to the 1 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_1": [
+        "Set 2 value to the current attribute",
+        "Change current value for the attribute to the 2 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_2": [
+        "Set 3 value to the current attribute",
+        "Change current value for the attribute to the 3 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_3": [
+        "Set 4 value to the current attribute",
+        "Change current value for the attribute to the 4 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_4": [
+        "Set 5 value to the current attribute",
+        "Change current value for the attribute to the 5 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_5": [
+        "Set 6 value to the current attribute",
+        "Change current value for the attribute to the 6 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_6": [
+        "Set 7 value to the current attribute",
+        "Change current value for the attribute to the 7 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_7": [
+        "Set 8 value to the current attribute",
+        "Change current value for the attribute to the 8 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_8": [
+        "Set 9 value to the current attribute",
+        "Change current value for the attribute to the 9 value in the list"
+      ],
+      "AAM_SET_ATTR_VALUE_9": [
+        "Set 10 value to the current attribute",
+        "Change current value for the attribute to the 10 value in the list"
+      ],
+      "SETUP_0_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_1_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_2_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_3_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_4_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_5_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_6_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_7_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_8_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "SETUP_9_TAG": [
+        "Create a new tag",
+        "Create a new tag with corresponding class. The class may be setup in tag annotation sidebar"
+      ],
+      "NEXT_FRAME": [
+        "Next frame",
+        "Go to the next frame"
+      ],
+      "PREV_FRAME": [
+        "Previous frame",
+        "Go to the previous frame"
+      ],
+      "FORWARD_FRAME": [
+        "Forward frame",
+        "Go forward with a step"
+      ],
+      "BACKWARD_FRAME": [
+        "Backward frame",
+        "Go backward with a step"
+      ],
+      "SEARCH_FORWARD": [
+        "Search forward",
+        "Search the next frame that satisfies the filters"
+      ],
+      "SEARCH_BACKWARD": [
+        "Search backward",
+        "Search the previous frame that satisfies the filters"
+      ],
+      "PLAY_PAUSE": [
+        "Play/pause",
+        "Start or stop automatic frame changing"
+      ],
+      "DELETE_FRAME": [
+        "Delete frame",
+        "Delete the current frame"
+      ],
+      "FOCUS_INPUT_FRAME": [
+        "Focus input frame",
+        "Focus the input used to change the current frame"
+      ],
+      "NEXT_ATTRIBUTE": [
+        "Next attribute",
+        "Go to the next attribute"
+      ],
+      "PREVIOUS_ATTRIBUTE": [
+        "Previous attribute",
+        "Go to the previous attribute"
+      ],
+      "NEXT_OBJECT": [
+        "Next object",
+        "Go to the next object"
+      ],
+      "PREVIOUS_OBJECT": [
+        "Previous object",
+        "Go to the previous object"
+      ],
+      "SWITCH_ALL_LOCK": [
+        "Lock/unlock all objects",
+        "Change the locked state for all objects in the sidebar"
+      ],
+      "SWITCH_LOCK": [
+        "Lock/unlock an object",
+        "Change the locked state for the active object"
+      ],
+      "SWITCH_ALL_HIDDEN": [
+        "Hide/show all objects",
+        "Change the hidden state for all objects in the sidebar"
+      ],
+      "SWITCH_HIDDEN": [
+        "Hide/show an object",
+        "Change the hidden state for the active object"
+      ],
+      "SWITCH_OCCLUDED": [
+        "Switch occluded",
+        "Change the occluded property for the active object"
+      ],
+      "SWITCH_PINNED": [
+        "Switch pinned property",
+        "Change the pinned property for the active object"
+      ],
+      "SWITCH_KEYFRAME": [
+        "Switch keyframe",
+        "Change the keyframe property for the active track"
+      ],
+      "SWITCH_OUTSIDE": [
+        "Switch outside",
+        "Change the outside property for the active track"
+      ],
+      "NEXT_KEY_FRAME": [
+        "Next keyframe",
+        "Go to the next keyframe of the active track"
+      ],
+      "PREV_KEY_FRAME": [
+        "Previous keyframe",
+        "Go to the previous keyframe of the active track"
+      ],
+      "DELETE_OBJECT_STANDARD_WORKSPACE": [
+        "Delete object",
+        "Delete the active object. Use Shift to force deletion of locked objects"
+      ],
+      "TO_BACKGROUND": [
+        "To background",
+        "Move the active object farther from the user by decreasing its z-axis value"
+      ],
+      "TO_FOREGROUND": [
+        "To foreground",
+        "Move the active object closer to the user by increasing its z-axis value"
+      ],
+      "TO_ONE_LAYER_BACKWARD": [
+        "Move one layer backward",
+        "Move the active object one layer backward by decreasing its z-order value"
+      ],
+      "TO_ONE_LAYER_FORWARD": [
+        "Move one layer forward",
+        "Move the active object one layer forward by increasing its z-order value"
+      ],
+      "COPY_SHAPE": [
+        "Copy shape",
+        "Copy the shape to the internal CVAT clipboard"
+      ],
+      "PASTE_SHAPE": [
+        "Paste shape",
+        "Paste a shape from the internal CVAT clipboard"
+      ],
+      "RUN_ANNOTATIONS_ACTION": [
+        "Run annotations action",
+        "Open the annotation actions dialog"
+      ],
+      "PROPAGATE_OBJECT": [
+        "Propagate object",
+        "Copy the object to subsequent frames"
+      ],
+      "CHANGE_OBJECT_COLOR": [
+        "Change color",
+        "Set the next color for the active shape"
+      ],
+      "SWITCH_LABEL_0": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_1": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_2": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_3": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_4": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_5": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_6": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_7": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_8": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "SWITCH_LABEL_9": [
+        "Switch label",
+        "Change the label of the active object or the default label for the next object"
+      ],
+      "CLOCKWISE_ROTATION_STANDARD_CONTROLS": [
+        "Rotate clockwise",
+        "Add 90 degrees to the image angle"
+      ],
+      "ANTICLOCKWISE_ROTATION_STANDARD_CONTROLS": [
+        "Rotate anticlockwise",
+        "Subtract 90 degrees from the image angle"
+      ],
+      "SWITCH_DRAW_MODE_STANDARD_CONTROLS": [
+        "Draw mode",
+        "Repeat the latest drawing procedure with the same parameters"
+      ],
+      "SWITCH_REDRAW_MODE_STANDARD_CONTROLS": [
+        "Redraw shape",
+        "Remove the selected shape and redraw it from scratch"
+      ],
+      "SWITCH_GROUP_MODE_STANDARD_CONTROLS": [
+        "Group mode",
+        "Activate or deactivate shape grouping mode"
+      ],
+      "RESET_GROUP_STANDARD_CONTROLS": [
+        "Reset group",
+        "Reset the group for selected shapes in group mode"
+      ],
+      "SWITCH_MERGE_MODE_STANDARD_CONTROLS": [
+        "Merge mode",
+        "Activate or deactivate shape merging mode"
+      ],
+      "SWITCH_SPLIT_MODE_STANDARD_CONTROLS": [
+        "Split mode",
+        "Activate or deactivate shape splitting mode"
+      ],
+      "SWITCH_JOIN_MODE_STANDARD_CONTROLS": [
+        "Join mode",
+        "Activate or deactivate mask joining mode"
+      ],
+      "SWITCH_SLICE_MODE_STANDARD_CONTROLS": [
+        "Slice mode",
+        "Activate or deactivate polygon or mask slicing mode"
+      ],
+      "CANCEL": [
+        "Cancel",
+        "Cancel any active canvas mode"
+      ],
+      "SWITCH_AUTOMATIC_BORDERING": [
+        "Switch automatic bordering",
+        "Switch automatic bordering for polygons and polylines during drawing or editing"
+      ],
+      "ACTIVATE_BRUSH_TOOL_STANDARD_CONTROLS": [
+        "Brush tool",
+        "Activate the brush tool in the mask drawing toolbox"
+      ],
+      "ACTIVATE_ERASER_TOOL_STANDARD_CONTROLS": [
+        "Eraser tool",
+        "Activate the eraser tool in the mask drawing toolbox"
+      ],
+      "ACTIVATE_POLYGON_TOOL_STANDARD_CONTROLS": [
+        "Polygon tool",
+        "Activate the polygon tool in the mask drawing toolbox"
+      ],
+      "ACTIVATE_POLYGON_REMOVE_TOOL_STANDARD_CONTROLS": [
+        "Polygon remove tool",
+        "Activate the polygon removal tool in the mask drawing toolbox"
+      ],
+      "SWITCH_DRAW_MODE_STANDARD_3D_CONTROLS": [
+        "Draw mode",
+        "Repeat the latest drawing procedure with the same parameters"
+      ],
+      "SWITCH_REDRAW_MODE_STANDARD_3D_CONTROLS": [
+        "Redraw shape",
+        "Remove the selected shape and redraw it from scratch"
+      ],
+      "SWITCH_GROUP_MODE_STANDARD_3D_CONTROLS": [
+        "Group mode",
+        "Activate or deactivate shape grouping mode"
+      ],
+      "RESET_GROUP_STANDARD_3D_CONTROLS": [
+        "Reset group",
+        "Reset the group for selected shapes in group mode"
+      ],
+      "SWITCH_MERGE_MODE_STANDARD_3D_CONTROLS": [
+        "Merge mode",
+        "Activate or deactivate shape merging mode"
+      ],
+      "SWITCH_SPLIT_MODE_STANDARD_3D_CONTROLS": [
+        "Split mode",
+        "Activate or deactivate shape splitting mode"
+      ],
+      "TILT_UP": [
+        "Camera roll angle up",
+        "Increase the camera roll angle"
+      ],
+      "TILT_DOWN": [
+        "Camera roll angle down",
+        "Decrease the camera roll angle"
+      ],
+      "ROTATE_LEFT": [
+        "Camera pitch angle left",
+        "Decrease the camera pitch angle"
+      ],
+      "ROTATE_RIGHT": [
+        "Camera pitch angle right",
+        "Increase the camera pitch angle"
+      ],
+      "MOVE_UP": [
+        "Camera move up",
+        "Move the camera up"
+      ],
+      "MOVE_DOWN": [
+        "Camera move down",
+        "Move the camera down"
+      ],
+      "MOVE_LEFT": [
+        "Camera move left",
+        "Move the camera left"
+      ],
+      "MOVE_RIGHT": [
+        "Camera move right",
+        "Move the camera right"
+      ],
+      "ZOOM_IN": [
+        "Camera zoom in",
+        "Zoom the camera in"
+      ],
+      "ZOOM_OUT": [
+        "Camera zoom out",
+        "Zoom the camera out"
+      ],
+      "SWITCH_DRAW_MODE_SINGLE_SHAPE": [
+        "Draw mode",
+        "Repeat the latest drawing procedure with the same parameters"
+      ],
+      "CANCEL_SINGLE_SHAPE": [
+        "Cancel",
+        "Cancel any active canvas mode"
+      ],
+      "DELETE_OBJECT_SINGLE_SHAPE": [
+        "Delete object",
+        "Delete the active object. Use Shift to force deletion of locked objects"
+      ],
+      "HIDE_MASK_SINGLE_SHAPE": [
+        "Hide mask",
+        "Hide the mask currently being edited"
+      ],
+      "SWITCH_DRAW_MODE_TAG_ANNOTATION": [
+        "Draw mode",
+        "Repeat the latest drawing procedure with the same parameters"
+      ],
+      "SWITCH_REDRAW_MODE_TAG_ANNOTATION": [
+        "Redraw shape",
+        "Remove the selected shape and redraw it from scratch"
+      ],
+      "OPEN_REVIEW_ISSUE": [
+        "Open an issue",
+        "Create a new issue in the review workspace"
+      ],
+      "CANCEL_SKELETON_EDGE": [
+        "Cancel skeleton drawing",
+        "Stop drawing a new skeleton edge"
+      ],
+      "AUDIO_SWITCH_ALL_LOCK": [
+        "Lock/unlock all intervals",
+        "Change locked state for all audio intervals in the side bar"
+      ],
+      "AUDIO_SWITCH_LOCK": [
+        "Lock/unlock an interval",
+        "Change locked state for the active audio interval"
+      ],
+      "AUDIO_SWITCH_ALL_PINNED": [
+        "Pin/unpin all intervals",
+        "Change pinned state for all unlocked audio intervals in the side bar"
+      ],
+      "AUDIO_SWITCH_PINNED": [
+        "Pin/unpin an interval",
+        "Change pinned state for the active audio interval"
+      ],
+      "AUDIO_SWITCH_ALL_HIDDEN": [
+        "Hide/show all intervals",
+        "Change hidden state for all audio intervals in the side bar"
+      ],
+      "AUDIO_SWITCH_HIDDEN": [
+        "Hide/show an interval",
+        "Change hidden state for the active audio interval"
+      ],
+      "AUDIO_DELETE_REGION": [
+        "Delete interval",
+        "Delete the active audio interval. Use Shift to force deletion of locked intervals"
+      ],
+      "AUDIO_SET_PLAYBACK_TO_INTERVAL_START": [
+        "Set playback to interval start",
+        "Set the playback position to the selected interval start without starting or stopping playback"
+      ],
+      "AUDIO_SET_PLAYBACK_TO_INTERVAL_END": [
+        "Set playback to interval end",
+        "Set the playback position to the selected interval end without starting or stopping playback"
+      ],
+      "AUDIO_PLAY_INTERVAL_ONCE": [
+        "Play interval as range",
+        "Play the active audio interval once"
+      ],
+      "AUDIO_FIT_INTERVAL": [
+        "Fit interval",
+        "Fit the active audio interval into the waveform viewport"
+      ],
+      "SPLIT_AUDIO_INTERVAL_AT_PLAYBACK_POSITION": [
+        "Split audio interval at playback position",
+        "Split the interval at the current playback position"
+      ],
+      "CREATE_AUDIO_REGION": [
+        "Create audio interval",
+        "Enable audio interval creation mode; drag on the waveform to create an interval"
+      ],
+      "RECORD_AUDIO_REGION": [
+        "Record audio interval",
+        "Start or finish live audio interval recording at the current playback position"
+      ],
+      "EXTEND_AUDIO_REGION_FROM_LAST": [
+        "Extend interval from last region",
+        "Create an audio interval from the end of the last region to the current playback position"
+      ],
+      "TOGGLE_AUDIO_LOOP": [
+        "Toggle interval loop playback",
+        "Toggle loop playback for the active audio interval"
+      ],
+      "CANCEL_AUDIO": [
+        "Cancel",
+        "Cancel any active audio control mode"
+      ],
+      "PLAY_PAUSE_AUDIO": [
+        "Play/Pause audio",
+        "Play or pause audio playback"
+      ],
+      "AUDIO_BACKWARD": [
+        "Audio backward",
+        "Rewind audio by a short step"
+      ],
+      "AUDIO_FORWARD": [
+        "Audio forward",
+        "Forward audio by a short step"
+      ],
+      "AUDIO_FAST_BACKWARD": [
+        "Audio fast backward",
+        "Rewind audio by a long step"
+      ],
+      "AUDIO_FAST_FORWARD": [
+        "Audio fast forward",
+        "Forward audio by a long step"
+      ],
+      "AUDIO_UNDO": [
+        "Undo audio action",
+        "Cancel the latest action related to audio regions"
+      ],
+      "AUDIO_REDO": [
+        "Redo audio action",
+        "Cancel undo of audio action"
+      ],
+      "CHAPTER_BACKWARD": [
+        "Chapter backward",
+        "Go to the previous chapter"
+      ],
+      "CHAPTER_FORWARD": [
+        "Chapter forward",
+        "Go to the next chapter"
+      ],
+      "SEARCH_FRAME_BY_NAME": [
+        "Search frame by name",
+        "Open search frame by name dialog"
+      ],
+      "SIMPLIFY_POLYGON": [
+        "Simplify polygon",
+        "Activate simplification mode for the selected polygon or polyline"
+      ],
+      "SWITCH_COLOR_BY_APPEARANCE": [
+        "Switch objects appearance setting \"Color by\"",
+        "Objects color mode may be by object, label, or group"
+      ],
+      "SWITCH_COLOR_BY_APPEARANCE_AUDIO": [
+        "Switch objects appearance setting \"Color by\" (audio)",
+        "Audio region color mode may be by label or instance"
+      ],
+      "SWITCH_SNAP_TO_POINT": [
+        "Toggle snap to point",
+        "Toggle automatic snapping to nearby points"
+      ],
+      "TOGGLE_SHOW_BITMAP_APPEARANCE": [
+        "Switch objects appearance setting \"Show bitmap\"",
+        "Show or hide the bitmap layer on the canvas"
+      ],
+      "SWITCH_LABEL_AUDIO_0": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_1": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_2": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_3": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_4": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_5": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_6": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_7": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_8": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ],
+      "SWITCH_LABEL_AUDIO_9": [
+        "Switch label (audio)",
+        "Change the selected audio region label or the default label for the next region"
+      ]
+    }
+  }
+}

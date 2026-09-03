@@ -13,6 +13,7 @@ import { CombinedState, SelectedResourceType } from 'reducers';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
 import { platformInfoV2 } from 'utils/platform-checker';
+import { useTranslation } from 'react-i18next';
 
 export interface BulkSelectProps {
     selected: boolean;
@@ -26,6 +27,7 @@ interface BulkWrapperProps {
 }
 
 function BulkWrapper(props: Readonly<BulkWrapperProps>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         children,
         resourceType,
@@ -61,8 +63,8 @@ function BulkWrapper(props: Readonly<BulkWrapperProps>): JSX.Element {
 
     const keyMap: KeyMap = {
         SELECT_ALL: {
-            name: 'Select all',
-            description: 'Select all resources',
+            name: t('Select all'),
+            description: t('Select all resources'),
             sequences: ['ctrl+a', 'command+a'],
             scope: ShortcutScope.GENERAL,
         },

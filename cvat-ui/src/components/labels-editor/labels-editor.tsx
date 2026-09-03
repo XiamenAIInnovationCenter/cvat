@@ -9,6 +9,7 @@ import Tabs from 'antd/lib/tabs';
 import Text from 'antd/lib/typography/Text';
 import modal from 'antd/lib/modal';
 import { EditOutlined, BuildOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import i18n from 'i18next';
 
 import { SerializedLabel, SerializedAttribute } from 'cvat-core-wrapper';
 import RawViewer from './raw-viewer';
@@ -172,8 +173,14 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
             modal.confirm({
                 className: 'cvat-modal-delete-label',
                 icon: <ExclamationCircleOutlined />,
-                title: `Do you want to delete "${label.name}" label?`,
-                content: 'This action cannot be undone. All annotations associated to the label will be deleted.',
+                title: i18n.t('Do you want to delete "{{name}}" label?', {
+                    name: label.name,
+                    ns: 'business',
+                }),
+                content: i18n.t(
+                    'This action cannot be undone. All annotations associated to the label will be deleted.',
+                    { ns: 'business' },
+                ),
                 type: 'warning',
                 okButtonProps: { type: 'primary', danger: true },
                 onOk: deleteLabel,
@@ -340,7 +347,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                     label: (
                         <span>
                             <EditOutlined />
-                            <Text>Raw</Text>
+                            <Text>{i18n.t('Raw', { ns: 'business' })}</Text>
                         </span>
                     ),
                     children: (
@@ -356,7 +363,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                     label: (
                         <span>
                             <BuildOutlined />
-                            <Text>Constructor</Text>
+                            <Text>{i18n.t('Constructor', { ns: 'business' })}</Text>
                         </span>
                     ),
                     children: configuratorContent,

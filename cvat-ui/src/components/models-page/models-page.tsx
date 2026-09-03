@@ -13,6 +13,7 @@ import { getModelsAsync } from 'actions/models-actions';
 import { updateHistoryFromQuery } from 'components/resource-sorting-filtering';
 import Spin from 'antd/lib/spin';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState, ModelsQuery, SelectedResourceType } from 'reducers';
 import { useResourceQuery } from 'utils/hooks';
@@ -31,6 +32,7 @@ function setUpModelsList(models: MLModel[], newPage: number, pageSize: number): 
 }
 
 function ModelsPageComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const history = useHistory();
     const dispatch = useDispatch();
     const {
@@ -75,8 +77,8 @@ function ModelsPageComponent(): JSX.Element {
         dispatch(getModelsAsync(updatedQuery));
         if (pageOutOfBounds) {
             notification.error({
-                message: 'Could not fetch models',
-                description: 'Invalid page',
+                message: t('Could not fetch models'),
+                description: t('Invalid page'),
             });
         }
     }, []);

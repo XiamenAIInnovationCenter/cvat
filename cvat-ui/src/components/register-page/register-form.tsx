@@ -17,6 +17,8 @@ import CVATSigningInput, { CVATInputType } from 'components/signing-common/cvat-
 import { useAuthQuery } from 'utils/hooks';
 import patterns from 'utils/validation-patterns';
 import validationRules from 'utils/validation-rules';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18n';
 
 interface UserConfirmation {
     name: string;
@@ -67,7 +69,10 @@ export const validateConfirmation: ((firstFieldName: string) => RuleRender) = (
 ): RuleRender => ({ getFieldValue }): RuleObject => ({
     validator(_: RuleObject, value: string): Promise<void> {
         if (value && value !== getFieldValue(firstFieldName)) {
-            return Promise.reject(new Error('Two passwords that you enter is inconsistent!'));
+            return Promise.reject(new Error(i18n.t(
+                'registerForm.Two passwords that you enter is inconsistent!',
+                { ns: 'auth' },
+            )));
         }
 
         return Promise.resolve();
@@ -82,7 +87,10 @@ const validateAgreement: ((userAgreements: UserAgreement[]) => RuleRender) = (
         const [agreement] = userAgreements
             .filter((userAgreement: UserAgreement): boolean => userAgreement.name === name);
         if (agreement.required && !value) {
-            return Promise.reject(new Error(`You must accept ${agreement.urlDisplayText} to continue!`));
+            return Promise.reject(new Error(i18n.t(
+                'registerForm.You must accept agreement to continue!',
+                { ns: 'auth', agreement },
+            )));
         }
 
         return Promise.resolve();
@@ -102,6 +110,28 @@ function RegisterFormComponent(props: Props): JSX.Element {
         form.setFieldsValue({ email: predefinedEmail });
     }
     const [usernameEdited, setUsernameEdited] = useState(false);
+    const { t } = useTranslation('base');
+    const { t: tRegisterForm } = useTranslation('auth', { keyPrefix: 'registerForm' });
+
+    const localizedValidationRules = {
+        ...validationRules,
+        firstName: validationRules.firstName.map((rule) => ({
+            ...rule,
+            message: tRegisterForm('Please specify a first name'),
+        })),
+        lastName: validationRules.lastName.map((rule) => ({
+            ...rule,
+            message: tRegisterForm('Please specify a last name'),
+        })),
+        email: validationRules.email.map((rule) => ({
+            ...rule,
+            message: tRegisterForm(rule.required ?
+                'Please specify an email address' : 'The input is not valid E-mail!'),
+        })),
+        userName: validationRules.userName.map((rule) => (
+            'required' in rule ? { ...rule, message: tRegisterForm('Please specify a username') } : rule
+        )),
+    };
     return (
         <div className={`cvat-register-form-wrapper ${userAgreements.length ? 'cvat-register-form-wrapper-extended' : ''}`}>
             {
@@ -142,11 +172,11 @@ function RegisterFormComponent(props: Props): JSX.Element {
                         <Form.Item
                             className='cvat-credentials-form-item'
                             name='firstName'
-                            rules={validationRules.firstName}
+                            rules={localizedValidationRules.firstName}
                         >
                             <CVATSigningInput
                                 id='firstName'
-                                placeholder='First name'
+                                placeholder={t('First name')}
                                 autoComplete='given-name'
                                 onReset={() => form.setFieldsValue({ firstName: '' })}
                             />
@@ -156,11 +186,11 @@ function RegisterFormComponent(props: Props): JSX.Element {
                         <Form.Item
                             className='cvat-credentials-form-item'
                             name='lastName'
-                            rules={validationRules.lastName}
+                            rules={localizedValidationRules.lastName}
                         >
                             <CVATSigningInput
                                 id='lastName'
-                                placeholder='Last name'
+                                placeholder={t('Last name')}
                                 autoComplete='family-name'
                                 onReset={() => form.setFieldsValue({ lastName: '' })}
                             />
@@ -170,12 +200,12 @@ function RegisterFormComponent(props: Props): JSX.Element {
                 <Form.Item
                     className='cvat-credentials-form-item'
                     name='email'
-                    rules={validationRules.email}
+                    rules={localizedValidationRules.email}
                 >
                     <CVATSigningInput
                         id='email'
                         autoComplete='email'
-                        placeholder='Email'
+                        placeholder={t('Email')}
                         disabled={!!predefinedEmail}
                         value={predefinedEmail}
                         onReset={() => form.setFieldsValue({ email: '', username: '' })}
@@ -191,11 +221,11 @@ function RegisterFormComponent(props: Props): JSX.Element {
                 <Form.Item
                     className='cvat-credentials-form-item'
                     name='username'
-                    rules={validationRules.userName}
+                    rules={localizedValidationRules.userName}
                 >
                     <CVATSigningInput
                         id='username'
-                        placeholder='Username'
+                        placeholder={t('Username')}
                         autoComplete='username'
                         onReset={() => form.setFieldsValue({ username: '' })}
                         onChange={() => setUsernameEdited(true)}
@@ -207,14 +237,14 @@ function RegisterFormComponent(props: Props): JSX.Element {
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your password!',
+                            message: tRegisterForm('Please input your password!'),
                         }, validatePassword,
                     ]}
                 >
                     <CVATSigningInput
                         type={CVATInputType.PASSWORD}
                         id='password1'
-                        placeholder='Password'
+                        placeholder={t('Password')}
                         autoComplete='new-password'
                     />
                 </Form.Item>
@@ -228,7 +258,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                         rules={[
                             {
                                 required: true,
-                                message: 'You must accept to continue!',
+                                message: tRegisterForm('You must accept to continue!'),
                             }, validateAgreement(userAgreements),
                         ]}
                     >
@@ -252,7 +282,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                             loading={fetching}
                             disabled={fetching}
                         >
-                            Create account
+                            {tRegisterForm('Create account')}
                         </Button>
                     )}
                 </Form.Item>

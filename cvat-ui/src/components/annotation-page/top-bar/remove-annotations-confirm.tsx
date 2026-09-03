@@ -8,6 +8,7 @@ import Text from 'antd/lib/typography/Text';
 import InputNumber from 'antd/lib/input-number';
 import Checkbox from 'antd/lib/checkbox';
 import Collapse from 'antd/lib/collapse';
+import { useTranslation } from 'react-i18next';
 
 import CVATTooltip from 'components/common/cvat-tooltip';
 
@@ -19,6 +20,7 @@ export interface RemoveAnnotationsConfirmProps {
 }
 
 function RemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         open,
         stopFrame,
@@ -41,13 +43,14 @@ function RemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JSX.Ele
         <Modal
             destroyOnClose
             open={open}
-            title='Remove Annotations'
+            title={t('Remove Annotations')}
             className='cvat-modal-confirm-remove-annotation'
             okButtonProps={{
                 type: 'primary',
                 danger: true,
             }}
-            okText='Remove'
+            okText={t('Remove')}
+            cancelText={t('Cancel')}
             onCancel={onClose}
             onOk={() => {
                 onRemove(removeFrom, removeUpTo, removeOnlyKeyframes);
@@ -55,9 +58,9 @@ function RemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JSX.Ele
             }}
         >
             <div>
-                <Text>You are about to remove all annotations from every frame. </Text>
-                <Text>If you want to remove them from certain frames only, select a range below. </Text>
-                <Text>Changes take effect only when you save the job.</Text>
+                <Text>{t('You are about to remove all annotations from every frame.')}</Text>{' '}
+                <Text>{t('If you want to remove them from certain frames only, select a range below.')}</Text>{' '}
+                <Text>{t('Changes take effect only when you save the job.')}</Text>
                 <br />
                 <br />
                 <br />
@@ -65,10 +68,10 @@ function RemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JSX.Ele
                     bordered={false}
                     items={[{
                         key: 1,
-                        label: <Text>Select Range</Text>,
+                        label: <Text>{t('Select Range')}</Text>,
                         children: (
                             <>
-                                <Text>From: </Text>
+                                <Text>{`${t('From')}: `}</Text>
                                 <InputNumber
                                     min={0}
                                     max={stopFrame}
@@ -76,7 +79,7 @@ function RemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JSX.Ele
                                         setRemoveFrom(value ?? undefined);
                                     }}
                                 />
-                                <Text>  To: </Text>
+                                <Text>{`  ${t('To')}: `}</Text>
                                 <InputNumber
                                     min={0}
                                     max={stopFrame}
@@ -84,7 +87,7 @@ function RemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JSX.Ele
                                         setRemoveUpTo(value ?? undefined);
                                     }}
                                 />
-                                <CVATTooltip title='Applicable only for annotations in range'>
+                                <CVATTooltip title={t('Applicable only for annotations in range')}>
                                     <br />
                                     <br />
                                     <Checkbox
@@ -93,7 +96,7 @@ function RemoveAnnotationsConfirm(props: RemoveAnnotationsConfirmProps): JSX.Ele
                                             setRemoveOnlyKeyframes(check.target.checked);
                                         }}
                                     >
-                                        Delete only keyframes for tracks
+                                        {t('Delete only keyframes for tracks')}
                                     </Checkbox>
                                 </CVATTooltip>
                             </>

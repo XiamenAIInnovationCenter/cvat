@@ -10,6 +10,7 @@ import InputNumber from 'antd/lib/input-number';
 import Text from 'antd/lib/typography/Text';
 import Slider from 'antd/lib/slider';
 import Select from 'antd/lib/select';
+import { useTranslation } from 'react-i18next';
 
 import {
     MAX_ACCURACY,
@@ -75,6 +76,8 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
         onSwitchShowingTagsOnFrame,
     } = props;
 
+    const { t } = useTranslation('header', { keyPrefix: 'settings.Workspace' });
+
     const minAutoSaveInterval = 1;
     const maxAutoSaveInterval = 60;
     const minFocusedObjectPadding = 0;
@@ -93,11 +96,11 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchAutoSave(event.target.checked);
                         }}
                     >
-                        Enable auto save
+                        {t('Enable auto save')}
                     </Checkbox>
                 </Col>
                 <Col className='cvat-workspace-settings-auto-save-interval'>
-                    <Text type='secondary'> Auto save every </Text>
+                    <Text type='secondary'>{t('auto-save-tips.0')}</Text>
                     <InputNumber
                         size='small'
                         min={minAutoSaveInterval}
@@ -112,7 +115,7 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             }
                         }}
                     />
-                    <Text type='secondary'> minutes </Text>
+                    <Text type='secondary'>{t('auto-save-tips.1')}</Text>
                 </Col>
             </Row>
             <Row className='cvat-player-setting'>
@@ -125,11 +128,11 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                                 onSwitchShowingInterpolatedTracks(event.target.checked);
                             }}
                         >
-                            Show all interpolation tracks
+                            {t('show-interpolated')}
                         </Checkbox>
                     </Row>
                     <Row>
-                        <Text type='secondary'> Show hidden interpolated objects in the side panel</Text>
+                        <Text type='secondary'>{t('show-interpolated-tips')}</Text>
                     </Row>
                 </Col>
             </Row>
@@ -142,18 +145,18 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchShowingObjectsTextAlways(event.target.checked);
                         }}
                     >
-                        Always show object details
+                        {t('show-text-always')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
                     <Text type='secondary'>
-                        Show text for an object on the canvas not only when the object is activated
+                        {t('show-text-always-tips')}
                     </Text>
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-text-settings cvat-player-setting'>
                 <Col span={24}>
-                    <Text>Content of a text</Text>
+                    <Text>{t('text-settings-content')}</Text>
                 </Col>
                 <Col span={16}>
                     <Select
@@ -162,22 +165,22 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                         value={textContent.split(',').filter((entry: string) => !!entry)}
                         onChange={onChangeTextContent}
                     >
-                        <Select.Option value='id'>ID</Select.Option>
-                        <Select.Option value='label'>Label</Select.Option>
-                        <Select.Option value='attributes'>Attributes</Select.Option>
-                        <Select.Option value='source'>Source</Select.Option>
-                        <Select.Option value='descriptions'>Descriptions</Select.Option>
-                        <Select.Option value='dimensions'>Dimensions</Select.Option>
-                        <Select.Option value='layer'>Layer</Select.Option>
+                        <Select.Option value='id'>{t('text-settings-contents.ID')}</Select.Option>
+                        <Select.Option value='label'>{t('text-settings-contents.Label')}</Select.Option>
+                        <Select.Option value='attributes'>{t('text-settings-contents.Attributes')}</Select.Option>
+                        <Select.Option value='source'>{t('text-settings-contents.Source')}</Select.Option>
+                        <Select.Option value='descriptions'>{t('text-settings-contents.Descriptions')}</Select.Option>
+                        <Select.Option value='dimensions'>{t('text-settings-contents.Dimensions')}</Select.Option>
+                        <Select.Option value='layer'>{t('text-settings-contents.Layer')}</Select.Option>
                     </Select>
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-text-settings cvat-player-setting'>
                 <Col span={12}>
-                    <Text>Position of a text</Text>
+                    <Text>{t('text-settings-text-position')}</Text>
                 </Col>
                 <Col span={12}>
-                    <Text>Font size of a text</Text>
+                    <Text>{t('text-settings-font-size')}</Text>
                 </Col>
                 <Col span={12}>
                     <Select
@@ -185,8 +188,8 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                         value={textPosition}
                         onChange={onChangeTextPosition}
                     >
-                        <Select.Option value='auto'>Auto</Select.Option>
-                        <Select.Option value='center'>Center</Select.Option>
+                        <Select.Option value='auto'>{t('text-settings-text-positions.Auto')}</Select.Option>
+                        <Select.Option value='center'>{t('text-settings-text-positions.Center')}</Select.Option>
                     </Select>
                 </Col>
                 <Col span={12}>
@@ -208,12 +211,12 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchAdaptiveZoom(event.target.checked);
                         }}
                     >
-                        Adaptive zoom algorithm
+                        {t('adaptive-zoom')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
                     <Text type='secondary'>
-                        Enable smoother version of zooming, compatible with a trackpad and pinch gestures
+                        {t('adaptive-zoom-tips')}
                     </Text>
                 </Col>
             </Row>
@@ -226,11 +229,11 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchIntelligentPolygonCrop(event.target.checked);
                         }}
                     >
-                        Intelligent polygon cropping
+                        {t('intelligent-polygon-cropping')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
-                    <Text type='secondary'>Try to crop polygons automatically when editing</Text>
+                    <Text type='secondary'>{t('intelligent-polygon-cropping-tips')}</Text>
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-show-frame-tags cvat-player-setting'>
@@ -242,16 +245,16 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchShowingTagsOnFrame(event.target.checked);
                         }}
                     >
-                        Show tags on frame
+                        {t('Show tags on frame')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
-                    <Text type='secondary'>Show frame tags in the corner of the workspace</Text>
+                    <Text type='secondary'>{t('Show frame tags in the corner of the workspace')}</Text>
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-focused-object-padding cvat-player-setting'>
                 <Col>
-                    <Text className='cvat-text-color'> Focused object padding </Text>
+                    <Text className='cvat-text-color'>{t('focused-object-padding')}</Text>
                     <InputNumber
                         min={minFocusedObjectPadding}
                         max={maxFocusedObjectPadding}
@@ -266,12 +269,12 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                     />
                 </Col>
                 <Col span={24}>
-                    <Text type='secondary'>Adds extra space in pixels around an object when it gets fitted</Text>
+                    <Text type='secondary'>{t('focused-object-padding-tips')}</Text>
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-control-points-size cvat-player-setting'>
                 <Col>
-                    <Text className='cvat-text-color'> Control points size </Text>
+                    <Text className='cvat-text-color'>{t('control-points-size')}</Text>
                     <InputNumber
                         min={minControlPointsSize}
                         max={maxControlPointsSize}
@@ -288,7 +291,7 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
             </Row>
             <Row className='cvat-workspace-settings-approx-poly-threshold cvat-player-setting'>
                 <Col>
-                    <Text className='cvat-text-color'>Default polygon simplification threshold</Text>
+                    <Text className='cvat-text-color'>{t('approx-poly-threshold')}</Text>
                 </Col>
                 <Col span={7} offset={1}>
                     <Slider
@@ -302,8 +305,7 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                 </Col>
                 <Col>
                     <Text type='secondary'>
-                        Higher values preserve more polygon detail. Used for serverless interactors,
-                        OpenCV scissors, and polygon simplification
+                        {t('approx-poly-threshold-tips')}
                     </Text>
                 </Col>
             </Row>

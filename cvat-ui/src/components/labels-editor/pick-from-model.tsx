@@ -9,6 +9,7 @@ import Empty from 'antd/lib/empty';
 import Select from 'antd/lib/select';
 import Text from 'antd/lib/typography';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState } from 'reducers';
 import { LabelType, MLModel } from 'cvat-core-wrapper';
@@ -30,6 +31,7 @@ function compareProps(prevProps: Props, nextProps: Props): boolean {
 }
 
 function PickFromModelComponent(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { onCreate, onCancel, labelNames } = props;
     const [selectedModel, setSelectedModel] = useState<MLModel | null>(null);
     const models = useSelector((state: CombinedState) => state.models.detectors);
@@ -40,7 +42,7 @@ function PickFromModelComponent(props: Props): JSX.Element {
             { models.length ? (
                 <>
                     <div>
-                        <Text>Select a model to pick labels:</Text>
+                        <Text>{t('Select a model to pick labels:')}</Text>
                     </div>
                     <Select
                         onSelect={(id: string): void => {
@@ -57,15 +59,15 @@ function PickFromModelComponent(props: Props): JSX.Element {
                         style={{ width: '150px' }}
                         onClick={onCancel}
                     >
-                        Done
+                        {t('Done')}
                     </Button>
                 </>
 
             ) : (
                 <Empty description={(
                     <>
-                        <Text>No deployed models found</Text>
-                        <Button type='primary' onClick={onCancel}>Cancel</Button>
+                        <Text>{t('No deployed models found')}</Text>
+                        <Button type='primary' onClick={onCancel}>{t('Cancel')}</Button>
                     </>
                 )}
                 />
@@ -73,7 +75,7 @@ function PickFromModelComponent(props: Props): JSX.Element {
 
             <div className='cvat-label-constructor-pick-from-model-list'>
                 { !!selectedModel && !labels.length && (
-                    <Empty description='Labels not found in the specified model' />
+                    <Empty description={t('Labels not found in the specified model')} />
                 )}
                 {labels.map((label) => (
                     <Button

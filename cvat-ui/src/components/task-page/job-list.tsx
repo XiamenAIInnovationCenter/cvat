@@ -15,6 +15,7 @@ import Pagination from 'antd/lib/pagination';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
 import { PlusOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import { Task, Job } from 'cvat-core-wrapper';
 import JobItem from 'components/job-item/job-item';
 import {
@@ -74,6 +75,7 @@ function setUpJobsList(jobs: Job[], newPage: number, pageSize: number): Job[] {
 
 function JobListComponent(props: Readonly<Props>): JSX.Element {
     const { task: taskInstance, onJobUpdate } = props;
+    const { t } = useTranslation('business');
     const [visibility, setVisibility] = useState(defaultVisibility);
 
     const history = useHistory();
@@ -130,7 +132,7 @@ function JobListComponent(props: Readonly<Props>): JSX.Element {
             <div className='cvat-jobs-list-wrapper'>
                 <Row>
                     <Col>
-                        <Text className='cvat-text-color cvat-jobs-header'> Jobs </Text>
+                        <Text className='cvat-text-color cvat-jobs-header'>{t('Jobs')}</Text>
                         <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                     </Col>
                 </Row>
@@ -201,7 +203,7 @@ function JobListComponent(props: Readonly<Props>): JSX.Element {
                     </Col>
                 </div>
             ) : (
-                <Empty description='No jobs found' />
+                <Empty description={t('No jobs found')} />
             )}
             <Row justify='center' align='middle'>
                 <Col>
