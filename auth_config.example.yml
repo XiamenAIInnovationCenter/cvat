@@ -1,0 +1,24 @@
+---
+basic:
+  registration:
+    enabled: false
+  login:
+    enabled: true
+
+sso:
+  # Configure the Keycloak client before changing this to true.
+  enabled: false
+  enable_pkce: true
+  identity_providers:
+    - id: keycloak
+      protocol: OIDC
+      name: Keycloak
+      server_url: https://keycloak.example.com/realms/cvat/.well-known/openid-configuration
+      client_id: cvat
+      client_secret: replace-me
+      # Optional: use a separate confidential client for the sync command.
+      # Its service account needs query-users, view-users, and query-groups.
+      sync_client_id: cvat-user-sync
+      sync_client_secret: replace-me
+      email_domain: example.com
+      token_auth_method: client_secret_post

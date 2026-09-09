@@ -13,6 +13,7 @@ interface StateToProps {
     hasEmailVerificationBeenSent: boolean;
     renderRegistrationComponent: boolean;
     renderBasicLoginComponent: boolean;
+    renderSSOLoginComponent: boolean;
 }
 
 interface DispatchToProps {
@@ -25,6 +26,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         renderResetPassword: state.serverAPI.configuration.isPasswordResetEnabled,
         renderRegistrationComponent: state.serverAPI.configuration.isRegistrationEnabled,
         renderBasicLoginComponent: state.serverAPI.configuration.isBasicLoginEnabled,
+        renderSSOLoginComponent: state.serverAPI.configuration.isSSOLoginEnabled,
         hasEmailVerificationBeenSent: state.auth.hasEmailVerificationBeenSent,
     };
 }

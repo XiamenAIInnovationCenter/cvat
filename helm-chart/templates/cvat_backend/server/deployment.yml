@@ -58,6 +58,10 @@ spec:
           - name: ALLOWED_HOSTS
             value: {{ $localValues.envs.ALLOWED_HOSTS | squote}}
           {{ include "cvat.sharedBackendEnv" . | indent 10 }}
+          {{- if $localValues.authConfig.existingSecret }}
+          - name: AUTH_CONFIG_PATH
+            value: {{ $localValues.authConfig.mountPath | quote }}
+          {{- end }}
           {{- with concat .Values.cvat.backend.additionalEnv $localValues.additionalEnv }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -75,6 +79,12 @@ spec:
           - mountPath: /home/django/logs
             name: cvat-backend-data
             subPath: logs
+          {{- if $localValues.authConfig.existingSecret }}
+          - mountPath: {{ $localValues.authConfig.mountPath | quote }}
+            name: cvat-auth-config
+            subPath: {{ $localValues.authConfig.key | quote }}
+            readOnly: true
+          {{- end }}
           {{- with concat .Values.cvat.backend.additionalVolumeMounts $localValues.additionalVolumeMounts }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -132,6 +142,14 @@ spec:
         - name: cvat-backend-data
           persistentVolumeClaim:
             claimName: "{{ .Release.Name }}-backend-data"
+        {{- end }}
+        {{- if $localValues.authConfig.existingSecret }}
+        - name: cvat-auth-config
+          secret:
+            secretName: {{ $localValues.authConfig.existingSecret | quote }}
+            items:
+            - key: {{ $localValues.authConfig.key | quote }}
+              path: {{ $localValues.authConfig.key | quote }}
         {{- end }}
         {{- with concat .Values.cvat.backend.additionalVolumes $localValues.additionalVolumes }}
         {{- toYaml . | nindent 8 }}

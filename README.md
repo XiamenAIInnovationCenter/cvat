@@ -54,6 +54,14 @@ For a fully managed setup, annotation services, or enterprise features, see
 [CVAT Enterprise](https://www.cvat.ai/enterprise) and
 [CVAT Labeling Services](https://www.cvat.ai/annotation-services).
 
+## CVAT XAIC 定制版本新增功能
+
+XAIC 定制版本新增 Keycloak OIDC 单点登录、本地注册/密码登录开关，以及基于 Kubernetes
+Secret 的 Helm 配置支持，同时保持现有 CVAT API Token 和 Session 认证兼容。
+
+详细配置和部署步骤请参阅
+[XAIC Custom Edition authentication guide](docs/xaic-custom-edition.md)。
+
 ## Getting Started
 
 > 💡 Want to explore CVAT before deploying anything?

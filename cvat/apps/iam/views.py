@@ -17,10 +17,11 @@ from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.views.decorators.http import etag as django_etag
 from drf_spectacular.contrib.rest_auth import get_token_serializer_class
-from drf_spectacular.utils import extend_schema
-from rest_framework import views
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import serializers, views
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from cvat.apps.engine.log import ServerLogManager
 
@@ -147,6 +148,33 @@ class RulesView(views.APIView):
     @_etag(lambda request: get_opa_bundle()[1])
     def get(self, request):
         return HttpResponse(get_opa_bundle()[0], content_type="application/x-tar")
+
+
+class SSOConfigView(views.APIView):
+    serializer_class = None
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    throttle_classes = []
+
+    @extend_schema(
+        responses=inline_serializer(
+            name="SSOConfig",
+            fields={
+                "enabled": serializers.BooleanField(),
+                "name": serializers.CharField(),
+                "login_url": serializers.CharField(),
+            },
+        )
+    )
+    def get(self, request):
+        provider = settings.SSO_IDENTITY_PROVIDER
+        return Response(
+            {
+                "enabled": settings.SSO_ENABLED,
+                "name": provider["name"],
+                "login_url": f'/api/auth/oidc/{provider["id"]}/login/',
+            }
+        )
 
 
 class ConfirmEmailViewEx(ConfirmEmailView):

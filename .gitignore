@@ -54,6 +54,7 @@ yarn-error.log*
 node_modules
 /*env*/
 /.*env*
+/auth_config.yml
 perfkit.egg-info/
 
 # Ignore all js dists

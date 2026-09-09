@@ -47,6 +47,12 @@ cvat:
       tolerations: []
       envs:
         ALLOWED_HOSTS: "*"
+      # Mount an existing Kubernetes Secret containing auth_config.yml and
+      # expose it to the CVAT server through AUTH_CONFIG_PATH.
+      authConfig:
+        existingSecret: ""
+        key: auth_config.yml
+        mountPath: /home/django/auth_config.yml
       additionalEnv: []
       additionalVolumes: []
       additionalVolumeMounts: []

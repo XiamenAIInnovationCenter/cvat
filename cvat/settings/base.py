@@ -29,6 +29,7 @@ from django.core.exceptions import ImproperlyConfigured
 from logstash_async.constants import constants as logstash_async_constants
 
 from cvat import __version__
+from cvat.apps.iam.auth_config import load_auth_config
 from cvat.apps.iam.password_validation import DEFAULT_MIN_PASSWORD_LENGTH
 
 # Build paths inside the project like this: BASE_DIR / ...
@@ -285,12 +286,55 @@ IAM_TYPE = "BASIC"
 IAM_BASE_EXCEPTION = None  # a class which will be used by IAM to report errors
 IAM_DEFAULT_ROLE = "user"
 
+AUTH_CONFIG = load_auth_config(os.getenv("AUTH_CONFIG_PATH"))
+BASIC_REGISTRATION_ENABLED = AUTH_CONFIG["basic"]["registration"]["enabled"]
+BASIC_LOGIN_ENABLED = AUTH_CONFIG["basic"]["login"]["enabled"]
+SSO_ENABLED = AUTH_CONFIG["sso"]["enabled"]
+SSO_IDENTITY_PROVIDER = None
+
+if not BASIC_LOGIN_ENABLED:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"].remove(
+        "cvat.apps.iam.authentication.BasicAuthenticationEx"
+    )
+
+if SSO_ENABLED:
+    SSO_IDENTITY_PROVIDER = AUTH_CONFIG["sso"]["identity_providers"][0]
+    INSTALLED_APPS += ["allauth.socialaccount.providers.openid_connect"]
+
+    oidc_settings = {
+        "server_url": SSO_IDENTITY_PROVIDER["server_url"],
+        "uid_field": "sub",
+        "fetch_userinfo": True,
+        "oauth_pkce_enabled": AUTH_CONFIG["sso"]["enable_pkce"],
+    }
+    if token_auth_method := SSO_IDENTITY_PROVIDER.get("token_auth_method"):
+        oidc_settings["token_auth_method"] = token_auth_method
+
+    SOCIALACCOUNT_PROVIDERS = {
+        "openid_connect": {
+            "APPS": [
+                {
+                    "provider_id": SSO_IDENTITY_PROVIDER["id"],
+                    "name": SSO_IDENTITY_PROVIDER["name"],
+                    "client_id": SSO_IDENTITY_PROVIDER["client_id"],
+                    "secret": SSO_IDENTITY_PROVIDER["client_secret"],
+                    "settings": oidc_settings,
+                }
+            ],
+        }
+    }
+    SOCIALACCOUNT_ADAPTER = "cvat.apps.iam.adapters.CVATSocialAccountAdapter"
+    SOCIALACCOUNT_AUTO_SIGNUP = True
+    SOCIALACCOUNT_EMAIL_REQUIRED = True
+    SOCIALACCOUNT_LOGIN_ON_GET = True
+    SOCIALACCOUNT_STORE_TOKENS = False
+
 IAM_ADMIN_ROLE = "admin"
 # Index in the list below corresponds to the priority (0 has highest priority)
 IAM_ROLES = [IAM_ADMIN_ROLE, "user", "worker"]
 IAM_OPA_URL = os.getenv("CVAT_OPA_URL", "http://opa:8181")
 IAM_OPA_DATA_URL = f"{IAM_OPA_URL}/v1/data"
-LOGIN_URL = "rest_login"
+LOGIN_URL = "rest_login" if BASIC_LOGIN_ENABLED else "/auth/login"
 LOGIN_REDIRECT_URL = "/"
 
 OBJECTS_NOT_RELATED_WITH_ORG = [

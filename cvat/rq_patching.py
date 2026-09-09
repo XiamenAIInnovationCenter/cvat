@@ -152,7 +152,7 @@ def cancel_job(self: Job, pipeline: Pipeline | None = None, enqueue_dependents: 
 
 
 def patch_rq() -> None:
-    assert VERSION == "1.16.0"
+    assert VERSION in {"1.16.0", "1.16.2"}
     # don't forget to check if the issue https://github.com/rq/rq/issues/2006 has been resolved in upstream
     rq.registry.StartedJobRegistry.cleanup = custom_started_job_registry_cleanup
     # don't forget to check if the PR https://github.com/rq/rq/pull/2241 has been merged
