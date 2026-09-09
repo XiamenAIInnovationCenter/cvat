@@ -530,7 +530,6 @@ export interface ServerAPIState {
     configuration: {
         isRegistrationEnabled: boolean;
         isBasicLoginEnabled: boolean;
-        isSSOLoginEnabled: boolean;
         isPasswordResetEnabled: boolean;
         isPasswordChangeEnabled: boolean;
     };

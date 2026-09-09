@@ -13,7 +13,6 @@ const defaultState: ServerAPIState = {
     configuration: {
         isRegistrationEnabled: true,
         isBasicLoginEnabled: true,
-        isSSOLoginEnabled: false,
         isPasswordResetEnabled: true,
         isPasswordChangeEnabled: true,
     },
@@ -35,7 +34,6 @@ export default function (
             const { schema } = action.payload;
             const isRegistrationEnabled = Object.keys(schema.paths).includes('/api/auth/register');
             const isBasicLoginEnabled = Object.keys(schema.paths).includes('/api/auth/login');
-            const isSSOLoginEnabled = Object.keys(schema.paths).includes('/api/auth/sso/config');
             const isPasswordResetEnabled = Object.keys(schema.paths).includes('/api/auth/password/reset');
             const isPasswordChangeEnabled = Object.keys(schema.paths).includes('/api/auth/password/change');
 
@@ -47,7 +45,6 @@ export default function (
                 configuration: {
                     isRegistrationEnabled,
                     isBasicLoginEnabled,
-                    isSSOLoginEnabled,
                     isPasswordResetEnabled,
                     isPasswordChangeEnabled,
                 },
