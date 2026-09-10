@@ -12,7 +12,7 @@ import Input from 'antd/lib/input';
 import { Col, Row } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
-import Icon, { LoginOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
 import {
     BackArrowIcon, ClearIcon,
 } from 'icons';
@@ -30,7 +30,6 @@ interface Props {
     renderResetPassword: boolean;
     renderRegistrationComponent: boolean;
     renderBasicLoginComponent: boolean;
-    renderSSOLoginComponent: boolean;
     fetching: boolean;
     onSubmit(loginData: LoginData): void;
 }
@@ -38,7 +37,6 @@ interface Props {
 function LoginFormComponent(props: Props): JSX.Element {
     const {
         fetching, onSubmit, renderResetPassword, renderRegistrationComponent, renderBasicLoginComponent,
-        renderSSOLoginComponent,
     } = props;
 
     const authQuery = useAuthQuery();
@@ -65,21 +63,6 @@ function LoginFormComponent(props: Props): JSX.Element {
             </Text>
         </Col>
     );
-
-    const startSSOLogin = (): void => {
-        const currentParams = new URLSearchParams(window.location.search);
-        const returnParams = new URLSearchParams();
-        ['next', 'email', 'invitation'].forEach((name) => {
-            const value = currentParams.get(name);
-            if (value) returnParams.set(name, value);
-        });
-
-        const returnQuery = returnParams.toString();
-        const returnURL = `/auth/login${returnQuery ? `?${returnQuery}` : ''}`;
-        const loginURL = new URL('/api/auth/oidc/keycloak/login/', window.location.origin);
-        loginURL.searchParams.set('next', returnURL);
-        window.location.assign(loginURL.toString());
-    };
 
     return (
         <div className='cvat-login-form-wrapper'>
@@ -192,19 +175,6 @@ function LoginFormComponent(props: Props): JSX.Element {
                         }
                     </>
                 )}
-                {
-                    renderSSOLoginComponent && !credential && (
-                        <Form.Item>
-                            <Button
-                                className='cvat-credentials-action-button'
-                                icon={<LoginOutlined />}
-                                onClick={startSSOLogin}
-                            >
-                                Continue with Keycloak
-                            </Button>
-                        </Form.Item>
-                    )
-                }
                 {
                     pluginsToRender.map(({ component: Component }, index) => (
                         <Component targetProps={props} targetState={{ credential }} key={index} />
