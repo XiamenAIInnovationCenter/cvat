@@ -5,6 +5,7 @@
 import { CombinedState } from 'reducers';
 import { ThunkDispatch } from 'utils/redux';
 import IncrementalCSVWriter, { CSVColumn, downloadCSV } from 'utils/csv-writer';
+import i18n from 'i18n';
 import { bulkActions } from './bulk-actions';
 
 export interface CSVExportOptions<T> {
@@ -63,7 +64,12 @@ export function exportToCSVAsync<T>(options: CSVExportOptions<T>) {
 
                 const loadedCount = (page - 1) * pageSize + response.results.length;
                 dispatch(bulkActions.updateBulkActionStatus({
-                    message: `Exporting ${resourceName}: ${loadedCount} of ${totalCount}`,
+                    message: i18n.t('Exporting {{resource}}: {{loaded}} of {{total}}', {
+                        resource: i18n.t(resourceName, { ns: 'business' }),
+                        loaded: loadedCount,
+                        total: totalCount,
+                        ns: 'business',
+                    }),
                     percent: Math.round((page / totalPages) * 100),
                 }));
             }

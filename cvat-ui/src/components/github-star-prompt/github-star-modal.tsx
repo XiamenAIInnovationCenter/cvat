@@ -8,6 +8,7 @@ import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
 import Typography from 'antd/lib/typography';
 import { StarFilled } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import SVGGitHubStarPromptArrow from '../../assets/github-star-prompt-arrow.svg';
 
 const { Title, Paragraph } = Typography;
@@ -20,6 +21,7 @@ interface Props {
 }
 
 function GitHubStarModal(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         open,
         onShown,
@@ -54,15 +56,15 @@ function GitHubStarModal(props: Props): JSX.Element {
                         <i />
                     </div>
                     <Title level={1} className='cvat-github-star-modal-title'>
-                        Like labeling
+                        {t('Like labeling with')}
                         <br />
-                        with <span>CVAT?</span>
+                        <span>{t('CVAT?')}</span>
                     </Title>
                     <Title level={3} className='cvat-github-star-modal-subtitle'>
-                        Help others find it too. <StarFilled />
+                        {t('Help others find it too.')} <StarFilled />
                     </Title>
                     <Paragraph className='cvat-github-star-modal-text'>
-                        Your GitHub star helps more people discover CVAT.
+                        {t('Your GitHub star helps more people discover CVAT.')}
                     </Paragraph>
                     <div className='cvat-github-star-modal-actions'>
                         <Button
@@ -75,14 +77,14 @@ function GitHubStarModal(props: Props): JSX.Element {
                                 onClose();
                             }}
                         >
-                            Star CVAT on GitHub
+                            {t('Star CVAT on GitHub')}
                         </Button>
                         <Button
                             type='link'
                             className='cvat-github-star-prompt-not-now-button'
                             onClick={onClose}
                         >
-                            Maybe later
+                            {t('Maybe later')}
                         </Button>
                     </div>
                     <div className='cvat-github-star-modal-arrow' aria-hidden='true'>

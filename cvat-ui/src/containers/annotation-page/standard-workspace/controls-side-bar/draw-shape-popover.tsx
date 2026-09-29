@@ -10,6 +10,7 @@ import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 
 import { CombinedState } from 'reducers';
+import i18n from 'i18n';
 import { rememberObject } from 'actions/annotation-actions';
 import { Canvas, RectDrawingMethod, CuboidDrawingMethod } from 'cvat-canvas-wrapper';
 import { Canvas3d } from 'cvat-canvas3d-wrapper';
@@ -141,13 +142,16 @@ class DrawShapePopoverContainer extends React.PureComponent<Props, State> {
             return true;
         }
 
-        const hide = message.loading('Initializing OpenCV for rotated shape drawing...', 0);
+        const hide = message.loading(
+            i18n.t('Initializing OpenCV for rotated shape drawing...', { ns: 'business' }),
+            0,
+        );
         try {
             await openCVWrapper.initialize(() => {});
             return true;
         } catch (error: any) {
             notification.error({
-                message: 'Could not initialize OpenCV',
+                message: i18n.t('Could not initialize OpenCV', { ns: 'business' }),
                 description: error.toString(),
             });
             return false;

@@ -10,6 +10,7 @@ import Button from 'antd/lib/button';
 import Typography from 'antd/lib/typography';
 import Space from 'antd/lib/space';
 import { CopyOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { ApiToken } from 'cvat-core-wrapper';
 import { toClipboard } from 'utils/to-clipboard';
@@ -23,6 +24,7 @@ interface Props {
 function ApiTokenCreatedModal({
     visible, token, onClose,
 }: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const [copied, setCopied] = useState(false);
     const { value: tokenValue } = token;
 
@@ -38,7 +40,7 @@ function ApiTokenCreatedModal({
 
     return (
         <Modal
-            title='Your token is ready'
+            title={t('Your token is ready')}
             open={visible}
             onCancel={onClose}
             footer={[
@@ -49,9 +51,7 @@ function ApiTokenCreatedModal({
                     style={{ background: '#faad14' }}
                     className='cvat-api-token-created-modal-confirm-saved-button'
                 >
-                    I have&nbsp;
-                    <strong>securely</strong>
-                    &nbsp;saved my token
+                    {t('I have securely saved my token')}
                 </Button>,
             ]}
             width={500}
@@ -61,9 +61,7 @@ function ApiTokenCreatedModal({
             <Space direction='vertical' size='large' style={{ width: '100%' }}>
                 <div className='cvat-api-token-created-modal-content'>
                     <Typography.Text type='secondary'>
-                        Make sure to copy your new personal access token now.
-                        <br />
-                        You won&apos;t be able to see it again!
+                        {t("Make sure to copy your new personal access token now. You won't be able to see it again!")}
                     </Typography.Text>
                     <Space.Compact style={{ width: '100%' }}>
                         <Input
@@ -78,7 +76,7 @@ function ApiTokenCreatedModal({
                             onClick={handleCopyToClipboard}
                             className='cvat-api-token-copy-button'
                         >
-                            {copied ? 'Copied!' : 'Copy'}
+                            {copied ? t('Copied!') : t('Copy')}
                         </Button>
                     </Space.Compact>
                 </div>

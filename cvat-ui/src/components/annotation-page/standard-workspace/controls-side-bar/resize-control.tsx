@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@ant-design/icons';
 
 import { ZoomIcon } from 'icons';
@@ -16,10 +17,11 @@ export interface Props {
 }
 
 function ResizeControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { activeControl, canvasInstance } = props;
 
     return (
-        <CVATTooltip title='Select a region of interest' placement='right'>
+        <CVATTooltip title={t('Select a region of interest')} placement='right'>
             <Icon
                 component={ZoomIcon}
                 className={

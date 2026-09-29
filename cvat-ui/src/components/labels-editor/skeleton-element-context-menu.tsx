@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
@@ -55,6 +56,7 @@ function WrappedSkeletonElementLabelForm(props: ContextMenuProps & { hideConfigu
 }
 
 function SkeletonElementContextMenu(props: ContextMenuProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         container, disabled, elementID, onDelete,
     } = props;
@@ -96,7 +98,7 @@ function SkeletonElementContextMenu(props: ContextMenuProps): JSX.Element {
                         icon={<EditOutlined />}
                         key='configure_label'
                     >
-                        Configure
+                        {t('Configure')}
                     </Button>
                     <Button
                         type='link'
@@ -107,7 +109,7 @@ function SkeletonElementContextMenu(props: ContextMenuProps): JSX.Element {
                         icon={<DeleteOutlined />}
                         key='delete'
                     >
-                        Delete
+                        {t('Delete')}
                     </Button>
                 </div>
             )}

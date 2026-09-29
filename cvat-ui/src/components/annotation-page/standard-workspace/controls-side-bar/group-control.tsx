@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@ant-design/icons';
 
 import { GroupIcon } from 'icons';
@@ -20,6 +21,7 @@ export interface Props {
 }
 
 function GroupControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         disabled,
         dynamicIconProps,
@@ -28,19 +30,23 @@ function GroupControl(props: Props): JSX.Element {
 
     const { normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
-    const title = [];
+    let title = '';
     if (canvasInstance instanceof Canvas) {
-        title.push(`Group shapes ${normalizedKeyMap.SWITCH_GROUP_MODE_STANDARD_CONTROLS}`);
-        title.push(`Select and press ${normalizedKeyMap.RESET_GROUP_STANDARD_CONTROLS} to reset a group.`);
+        title = t('Group shapes {{groupShortcut}} Select and press {{resetShortcut}} to reset a group.', {
+            groupShortcut: normalizedKeyMap.SWITCH_GROUP_MODE_STANDARD_CONTROLS,
+            resetShortcut: normalizedKeyMap.RESET_GROUP_STANDARD_CONTROLS,
+        });
     } else if (canvasInstance instanceof Canvas3d) {
-        title.push(`Group shapes/tracks ${normalizedKeyMap.SWITCH_GROUP_MODE_STANDARD_3D_CONTROLS}`);
-        title.push(`Select and press ${normalizedKeyMap.RESET_GROUP_STANDARD_3D_CONTROLS} to reset a group.`);
+        title = t('Group shapes/tracks {{groupShortcut}} Select and press {{resetShortcut}} to reset a group.', {
+            groupShortcut: normalizedKeyMap.SWITCH_GROUP_MODE_STANDARD_3D_CONTROLS,
+            resetShortcut: normalizedKeyMap.RESET_GROUP_STANDARD_3D_CONTROLS,
+        });
     }
 
     return disabled ? (
         <Icon className='cvat-group-control cvat-disabled-canvas-control' component={GroupIcon} />
     ) : (
-        <CVATTooltip title={title.join(' ')} placement='right'>
+        <CVATTooltip title={title} placement='right'>
             <Icon {...dynamicIconProps} component={GroupIcon} />
         </CVATTooltip>
     );

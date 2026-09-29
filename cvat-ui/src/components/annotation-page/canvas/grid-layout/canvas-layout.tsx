@@ -6,6 +6,8 @@ import './styles.scss';
 import 'react-grid-layout/css/styles.css';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18n';
 import { useSelector } from 'react-redux';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import PropTypes from 'prop-types';
@@ -64,7 +66,7 @@ const ViewFabric = (itemLayout: ItemLayout): JSX.Element => {
             component = <TopViewComponent />;
             break;
         default:
-            component = <div> Undefined view </div>;
+            component = <div>{i18n.t('Undefined view', { ns: 'business' })}</div>;
     }
 
     return component;
@@ -144,6 +146,7 @@ const fitLayout = (type: DimensionType, layoutConfig: ItemLayout[]): ItemLayout[
 };
 
 function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         relatedFiles,
         canvasInstance,
@@ -309,7 +312,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
             )}
             { type === DimensionType.DIMENSION_3D && <CanvasWrapper3DComponent /> }
             <div className='cvat-grid-layout-common-setups'>
-                <CVATTooltip title='Fit views'>
+                <CVATTooltip title={t('Fit views')}>
                     <PicCenterOutlined
                         onClick={() => {
                             setLayoutConfig(fitLayout(type as DimensionType, layoutConfig));
@@ -317,7 +320,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Add context image'>
+                <CVATTooltip title={t('Add context image')}>
                     <PlusOutlined
                         style={{
                             pointerEvents: !relatedFiles ? 'none' : undefined,
@@ -356,7 +359,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Reload layout'>
+                <CVATTooltip title={t('Reload layout')}>
                     <ReloadOutlined onClick={() => {
                         setLayoutConfig([...getLayout()]);
                         window.dispatchEvent(new Event('resize'));

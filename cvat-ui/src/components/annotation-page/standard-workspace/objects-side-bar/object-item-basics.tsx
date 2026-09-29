@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import { CloseOutlined, MoreOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
@@ -29,6 +30,7 @@ interface LayerPickerProps {
 }
 
 function LayerPicker(props: LayerPickerProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         children, value, visible, onChange, onVisibleChange,
     } = props;
@@ -67,17 +69,17 @@ function LayerPicker(props: LayerPickerProps): JSX.Element {
                         type='primary'
                         onClick={submitLayer}
                     >
-                        OK
+                        {t('OK')}
                     </Button>
                 </div>
             )}
             title={(
                 <Row justify='space-between' align='middle'>
                     <Col span={14}>
-                        <Text strong>Move to layer</Text>
+                        <Text strong>{t('Move to layer')}</Text>
                     </Col>
                     <Col span={4}>
-                        <CVATTooltip title='Close'>
+                        <CVATTooltip title={t('Close')}>
                             <Button
                                 className='cvat-object-item-menu-to-layer-close-button'
                                 type='link'
@@ -145,6 +147,7 @@ interface Props {
 }
 
 function ItemTopComponent(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         clientID,
         serverID,
@@ -305,7 +308,7 @@ function ItemTopComponent(props: Props): JSX.Element {
                     labels={labels}
                     value={labelID}
                     onChange={changeLabel}
-                    tooltip='Change current label'
+                    tooltip={t('Change current label')}
                     className='cvat-objects-sidebar-state-item-label-selector'
                     popupClassName='cvat-objects-sidebar-state-item-label-dropdown'
                     popupMatchSelectWidth={false}

@@ -20,6 +20,7 @@ import { collapseSidebar as collapseSidebarAction } from 'actions/annotation-act
 import AppearanceBlock from 'components/annotation-page/appearance-block';
 import IssuesListComponent from 'components/annotation-page/standard-workspace/objects-side-bar/issues-list';
 import { OBJECTS_SIDEBAR_OPEN_Z_LAYER_EVENT } from 'utils/objects-sidebar';
+import { useTranslation } from 'react-i18next';
 
 interface OwnProps {
     objectsList: JSX.Element;
@@ -57,6 +58,7 @@ function mapDispatchToProps(dispatch: Dispatch<AnyAction>): DispatchToProps {
 }
 
 function ObjectsSideBar(props: StateToProps & DispatchToProps & OwnProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         sidebarCollapsed, collapseSidebar, objectsList, jobInstance,
     } = props;
@@ -106,7 +108,9 @@ function ObjectsSideBar(props: StateToProps & DispatchToProps & OwnProps): JSX.E
                 className='cvat-objects-sidebar-sider'
                 onClick={collapse}
             >
-                {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                {sidebarCollapsed ?
+                    <MenuFoldOutlined title={t('Show')} /> :
+                    <MenuUnfoldOutlined title={t('Hide')} />}
             </span>
 
             <Tabs
@@ -116,14 +120,14 @@ function ObjectsSideBar(props: StateToProps & DispatchToProps & OwnProps): JSX.E
                 className='cvat-objects-sidebar-tabs'
                 items={[{
                     key: 'objects',
-                    label: 'Objects',
+                    label: t('Objects'),
                     children: objectsList,
                 }, {
                     key: 'labels',
-                    label: 'Labels',
+                    label: t('Labels'),
                     forceRender: true,
                     children: <LabelsList />,
-                }, ...(is2D ? [{ key: 'issues', label: 'Issues', children: <IssuesListComponent /> }] : [])]}
+                }, ...(is2D ? [{ key: 'issues', label: t('Issues'), children: <IssuesListComponent /> }] : [])]}
             />
             {!sidebarCollapsed && <AppearanceBlock />}
         </Layout.Sider>

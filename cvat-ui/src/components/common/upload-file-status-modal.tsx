@@ -5,6 +5,7 @@
 
 import './styles.scss';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import Modal from 'antd/lib/modal';
 import Alert from 'antd/lib/alert';
@@ -14,6 +15,7 @@ import { shallowEqual } from 'utils/redux';
 import { CombinedState } from 'reducers';
 
 function UploadFileStatusModal(): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         id: importingId,
         progress: importingProgress,
@@ -29,7 +31,7 @@ function UploadFileStatusModal(): JSX.Element {
 
     return (
         <Modal
-            title='Uploading the file'
+            title={t('Uploading the file')}
             open={!!importingId && importingProgress < 100}
             closable={false}
             footer={null}

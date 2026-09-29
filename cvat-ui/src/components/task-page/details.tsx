@@ -6,6 +6,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import dayjs from 'dayjs';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
@@ -69,7 +70,7 @@ interface State {
     consensusEnabled: boolean;
 }
 
-type Props = DispatchToProps & StateToProps & OwnProps;
+type Props = DispatchToProps & StateToProps & OwnProps & WithTranslation<'business'>;
 
 function DetailsTopBarExtras({ targetProps, targetState }: {
     targetProps: Props;
@@ -151,12 +152,13 @@ class DetailsComponent extends React.PureComponent<Props, State> {
             taskMeta,
             cloudStorageInstance,
             onUpdateTaskMeta,
+            t,
         } = this.props;
 
         const { consensusEnabled } = this.state;
         const owner = taskInstance.owner ? taskInstance.owner.username : null;
         const assignee = taskInstance.assignee ? taskInstance.assignee : null;
-        const created = dayjs(taskInstance.createdDate).format('MMMM Do YYYY');
+        const created = dayjs(taskInstance.createdDate).format('LL');
         const assigneeSelect = (
             <UserSelector
                 value={assignee}
@@ -175,14 +177,16 @@ class DetailsComponent extends React.PureComponent<Props, State> {
                         {owner && (
                             <div>
                                 <Text type='secondary'>
-                                    {`Task #${taskInstance.id} Created by ${owner} on ${created}`}
+                                    {t('Task #{{id}} created by {{owner}} on {{date}}', {
+                                        id: taskInstance.id, owner, date: created,
+                                    })}
                                 </Text>
                             </div>
                         )}
                         {consensusEnabled && <CVATTag type={TagType.CONSENSUS} />}
                     </Col>
                     <Col>
-                        <Text type='secondary'>Assigned to</Text>
+                        <Text type='secondary'>{t('Assigned to')}</Text>
                         {assigneeSelect}
                     </Col>
                 </Row>
@@ -219,12 +223,14 @@ class DetailsComponent extends React.PureComponent<Props, State> {
 
     private renderSubsetField(): JSX.Element {
         const { subset } = this.state;
-        const { task: taskInstance, project, onUpdateTask } = this.props;
+        const {
+            task: taskInstance, project, onUpdateTask, t,
+        } = this.props;
 
         return (
             <Row>
                 <Col span={24}>
-                    <Text className='cvat-text-color'>Subset:</Text>
+                    <Text className='cvat-text-color'>{t('Subset')}:</Text>
                 </Col>
                 <Col span={24}>
                     <ProjectSubsetField
@@ -303,4 +309,6 @@ class DetailsComponent extends React.PureComponent<Props, State> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsComponent);
+export default withTranslation('business')(
+    connect(mapStateToProps, mapDispatchToProps)(DetailsComponent),
+);

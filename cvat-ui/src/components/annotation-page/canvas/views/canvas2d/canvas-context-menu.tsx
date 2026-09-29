@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom';
 import Menu from 'antd/lib/menu';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -13,7 +14,6 @@ import ObjectItemElementComponent from 'components/annotation-page/standard-work
 import ObjectItemContainer from 'containers/annotation-page/standard-workspace/objects-side-bar/object-item';
 import { Workspace } from 'reducers';
 import { rotatePoint } from 'utils/math';
-import config from 'config';
 import {
     AnnotationConflict, ObjectState, ShapeType, QualityConflict,
 } from 'cvat-core-wrapper';
@@ -54,28 +54,29 @@ enum ReviewContextMenuKeys {
 function ReviewContextMenu({
     top, left, latestComments, conflict, copyObject, onClick,
 }: ReviewContextMenuProps): JSX.Element {
+    const { t } = useTranslation('business');
     return (
         <Menu onClick={onClick} selectable={false} className='cvat-canvas-context-menu' style={{ top, left }}>
             <Menu.Item className='cvat-context-menu-item' key={ReviewContextMenuKeys.OPEN_ISSUE}>
-                Open an issue ...
+                {t('Open an issue ...')}
             </Menu.Item>
             {conflict ? (
                 <Menu.Item
                     className='cvat-context-menu-item cvat-quick-issue-from-conflict'
                     key={ReviewContextMenuKeys.QUICK_ISSUE_FROM_CONFLICT}
                 >
-                    {`Quick issue: ${conflict.description}`}
+                    {t('Quick issue: {{description}}', { description: conflict.description })}
                 </Menu.Item>
             ) : null}
             <Menu.Item className='cvat-context-menu-item' key={ReviewContextMenuKeys.QUICK_ISSUE_POSITION}>
-                Quick issue: incorrect position
+                {t('Quick issue: incorrect position')}
             </Menu.Item>
             <Menu.Item className='cvat-context-menu-item' key={ReviewContextMenuKeys.QUICK_ISSUE_ATTRIBUTE}>
-                Quick issue: incorrect attribute
+                {t('Quick issue: incorrect attribute')}
             </Menu.Item>
             {latestComments.length ? (
                 <Menu.SubMenu
-                    title='Quick issue ...'
+                    title={t('Quick issue ...')}
                     className='cvat-context-menu-item'
                     key={ReviewContextMenuKeys.QUICK_ISSUE_FROM_LATEST}
                 >
@@ -96,7 +97,7 @@ function ReviewContextMenu({
                     className='cvat-context-menu-item cvat-quick-copy-object'
                     key={ReviewContextMenuKeys.COPY_OBJECT}
                 >
-                    Copy annotation
+                    {t('Copy annotation')}
                 </Menu.Item>
             ) : null}
         </Menu>
@@ -104,6 +105,7 @@ function ReviewContextMenu({
 }
 
 export default function CanvasContextMenu(props: Props): JSX.Element | null {
+    const { t } = useTranslation('business');
     const {
         contextMenuClientID,
         contextMenuParentID,
@@ -182,9 +184,9 @@ export default function CanvasContextMenu(props: Props): JSX.Element | null {
                         if (param.key === ReviewContextMenuKeys.OPEN_ISSUE) {
                             onStartIssue(points);
                         } else if (param.key === ReviewContextMenuKeys.QUICK_ISSUE_POSITION) {
-                            openIssue(points, config.QUICK_ISSUE_INCORRECT_POSITION_TEXT);
+                            openIssue(points, t('Wrong position'));
                         } else if (param.key === ReviewContextMenuKeys.QUICK_ISSUE_ATTRIBUTE) {
-                            openIssue(points, config.QUICK_ISSUE_INCORRECT_ATTRIBUTE_TEXT);
+                            openIssue(points, t('Wrong attribute'));
                         } else if (param.key === ReviewContextMenuKeys.QUICK_ISSUE_FROM_CONFLICT) {
                             if (conflict) openIssue(points, conflict.description);
                         } else if (param.key === ReviewContextMenuKeys.COPY_OBJECT) {

@@ -8,6 +8,7 @@ import { shallowEqual } from 'utils/redux';
 import { useHistory } from 'react-router';
 import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
+import { useTranslation } from 'react-i18next';
 
 import {
     DimensionType, Organization, Project, User,
@@ -39,6 +40,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
     } = props;
 
     const history = useHistory();
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const pluginActions = usePlugins((state: CombinedState) => state.plugins.components.projectActions.items, props);
 
@@ -122,14 +124,14 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
         stopEditField();
 
         const projectsToUpdate = onUpdateProject ? [projectInstance] : collectObjectsForBulkUpdate();
-        const updateCurrent = () => {
+        const updateCurrent = (): void => {
             projectInstance.organizationId = newOrganization?.id ?? null;
             onUpdateProject!(projectInstance).then(() => {
                 history.push('/projects');
             });
         };
 
-        const updateBulk = () => {
+        const updateBulk = (): void => {
             dispatch(makeBulkOperationAsync(
                 projectsToUpdate,
                 async (project) => {
@@ -217,6 +219,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
         }];
     } else {
         menuItems = ProjectActionsItems({
+            t,
             startEditField,
             projectId: projectInstance.id,
             pluginActions,

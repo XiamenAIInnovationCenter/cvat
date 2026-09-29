@@ -9,6 +9,7 @@ import { Row, Col } from 'antd/lib/grid';
 import { LeftOutlined, MoreOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 import TaskActionsComponent from 'components/tasks-page/actions-menu';
 
 import { Task } from 'cvat-core-wrapper';
@@ -21,6 +22,7 @@ interface DetailsComponentProps {
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
     const { taskInstance, onUpdateTask } = props;
     const history = useHistory();
+    const { t } = useTranslation('business');
 
     return (
         <Row className='cvat-task-top-bar' justify='space-between' align='middle'>
@@ -33,7 +35,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                         size='large'
                     >
                         <LeftOutlined />
-                        Back to project
+                        {t('Back to project')}
                     </Button>
                 ) : (
                     <Button
@@ -43,7 +45,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                         size='large'
                     >
                         <LeftOutlined />
-                        Back to tasks
+                        {t('Back to tasks')}
                     </Button>
                 )}
             </Col>
@@ -53,7 +55,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                     onUpdateTask={onUpdateTask}
                     triggerElement={(
                         <Button size='middle' className='cvat-task-page-actions-button cvat-actions-menu-button'>
-                            <Text className='cvat-text-color'>Actions</Text>
+                            <Text className='cvat-text-color'>{t('Actions')}</Text>
                             <MoreOutlined className='cvat-menu-icon' />
                         </Button>
                     )}

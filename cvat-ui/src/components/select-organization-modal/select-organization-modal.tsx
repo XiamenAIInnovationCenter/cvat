@@ -12,8 +12,10 @@ import { CombinedState } from 'reducers';
 import { Organization } from 'cvat-core-wrapper';
 import { organizationActions } from 'actions/organization-actions';
 import OrganizationSelector from 'components/selectors/organization-selector';
+import { useTranslation } from 'react-i18next';
 
 function SelectOrganizationModal(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const {
         visible,
@@ -25,7 +27,7 @@ function SelectOrganizationModal(): JSX.Element {
 
     return (
         <Modal
-            title='Select an organization'
+            title={t('Select an organization')}
             open={visible}
             footer={null}
             onCancel={() => dispatch(organizationActions.closeSelectOrganizationModal())}

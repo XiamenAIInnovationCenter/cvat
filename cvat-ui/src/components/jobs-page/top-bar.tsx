@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'antd/lib/grid';
 import Input from 'antd/lib/input';
+import { useTranslation } from 'react-i18next';
 
 import { JobsQuery } from 'reducers';
 import dimensions from 'utils/dimensions';
@@ -33,6 +34,7 @@ interface Props {
 }
 
 function TopBarComponent(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         query, onApplyFilter, onApplySorting, onApplySearch, selectedCount, onSelectAll,
     } = props;
@@ -50,7 +52,7 @@ function TopBarComponent(props: Readonly<Props>): JSX.Element {
                             }}
                             defaultValue={query.search ?? ''}
                             className='cvat-jobs-page-search-bar'
-                            placeholder='Search ...'
+                            placeholder={t('Search ...')}
                         />
                         <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                     </div>

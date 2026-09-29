@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { SoundOutlined } from '@ant-design/icons';
 
 import AudioSliderControl from './audio-slider-control';
@@ -13,12 +14,13 @@ export interface Props {
 }
 
 function VolumeControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { volume, onVolumeChange } = props;
 
     return (
         <AudioSliderControl
             icon={<SoundOutlined />}
-            tooltip='Volume'
+            tooltip={t('Volume')}
             value={volume}
             min={0}
             max={1}

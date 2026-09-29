@@ -7,9 +7,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { shallowEqual } from 'utils/redux';
 import Icon from '@ant-design/icons';
 import Button from 'antd/lib/button';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState } from 'reducers';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import GlobalHotKeys from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
@@ -26,9 +27,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function AudioSaveAnnotationsButton(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const {
         isSaving, keyMap, normKeyMap,
@@ -53,7 +55,9 @@ function AudioSaveAnnotationsButton(): JSX.Element {
     return (
         <>
             <GlobalHotKeys keyMap={subKeyMap(componentShortcuts, keyMap)} handlers={handlers} />
-            <CVATTooltip overlay={`Save current changes ${normKeyMap.SAVE_JOB}`}>
+            <CVATTooltip overlay={t('Save current changes {{shortcut}}', {
+                shortcut: normKeyMap.SAVE_JOB ?? '',
+            })}>
                 <Button
                     type='link'
                     onClick={trySave}
@@ -61,7 +65,7 @@ function AudioSaveAnnotationsButton(): JSX.Element {
                         'cvat-annotation-header-save-button cvat-annotation-header-button'}
                 >
                     <Icon component={SaveIcon} />
-                    {isSaving ? 'Saving...' : 'Save'}
+                    {isSaving ? t('Saving...') : t('Save')}
                 </Button>
             </CVATTooltip>
         </>

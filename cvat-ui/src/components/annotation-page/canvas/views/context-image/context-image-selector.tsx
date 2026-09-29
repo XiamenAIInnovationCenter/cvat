@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Text from 'antd/lib/typography/Text';
@@ -43,6 +44,7 @@ function CanvasWithRef({
 }
 
 function ContextImageSelector(props: Props): React.ReactPortal {
+    const { t } = useTranslation('business');
     const {
         images, offset, onChangeOffset, onClose,
     } = props;
@@ -54,7 +56,7 @@ function ContextImageSelector(props: Props): React.ReactPortal {
             <div className='cvat-context-image-gallery'>
                 <div className='cvat-context-image-gallery-header'>
                     <Text>
-                        Click the image to display it as a context image
+                        {t('Click the image to display it as a context image')}
                     </Text>
                     <CloseOutlined className='cvat-context-image-close-button' onClick={onClose} />
                 </div>

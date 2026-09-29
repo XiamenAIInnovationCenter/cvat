@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     AntdConfig,
     AntdWidgets,
@@ -135,49 +136,49 @@ const getAttributesSubfields = (labels: Label[], includeSublabels = true): Recor
     return subfields;
 };
 
-const getShapeSubfields = (labels: Label[]): Record<string, unknown> => ({
+const getShapeSubfields = (labels: Label[], t: (key: string) => string): Record<string, unknown> => ({
     label: {
-        label: 'Label',
+        label: t('Label'),
         type: 'text',
     },
     type: {
-        label: 'Type',
+        label: t('Type'),
         type: 'select',
         fieldSettings: {
-            listValues: ANNOTATION_TYPE_VALUES,
+            listValues: ANNOTATION_TYPE_VALUES.map(({ value, title }) => ({ value, title: t(title) })),
         },
     },
     area: {
-        label: 'Area',
+        label: t('Area'),
         type: 'number',
         fieldSettings: { min: 0 },
     },
     source: {
-        label: 'Source',
+        label: t('Source'),
         type: 'select',
         fieldSettings: {
-            listValues: SOURCE_VALUES,
+            listValues: SOURCE_VALUES.map(({ value, title }) => ({ value, title: t(title) })),
         },
     },
     occluded: {
-        label: 'Occluded',
+        label: t('Occluded'),
         type: 'boolean',
     },
     track_id: {
-        label: 'Track Id',
+        label: t('Track Id'),
         type: 'number',
         fieldSettings: { min: 0 },
     },
     outside: {
-        label: 'Outside',
+        label: t('Outside'),
         type: 'boolean',
     },
     keyframe: {
-        label: 'Keyframe',
+        label: t('Keyframe'),
         type: 'boolean',
     },
     attribute: {
-        label: 'Attributes',
+        label: t('Attributes'),
         type: '!struct',
         subfields: getAttributesSubfields(labels),
         fieldSettings: {
@@ -431,9 +432,10 @@ const loadTreeFromValue = (value: string | undefined, config: Config): Immutable
 };
 
 export default function QualityRequirementFilter(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         labels,
-        value,
+        value: currentValue,
         parentFilters = [],
         disabled,
         onChange,
@@ -451,12 +453,12 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
 
     const config = useMemo<Config>(() => {
         const attributeSubfields = getAttributesSubfields(labels);
-        const shapeSubfields = getShapeSubfields(labels);
+        const shapeSubfields = getShapeSubfields(labels, t);
         return {
             ...AntdConfig,
             fields: {
                 'shape.label': {
-                    label: 'Label',
+                    label: t('Label'),
                     type: 'select',
                     valueSources: ['value'] as 'value'[],
                     fieldSettings: {
@@ -464,26 +466,26 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                     },
                 },
                 'shape.type': {
-                    label: 'Type',
+                    label: t('Type'),
                     type: 'select',
                     fieldSettings: {
-                        listValues: ANNOTATION_TYPE_VALUES,
+                        listValues: ANNOTATION_TYPE_VALUES.map(({ value, title }) => ({ value, title: t(title) })),
                     },
                 },
                 'shape.area': {
-                    label: 'Area',
+                    label: t('Area'),
                     type: 'number',
                     fieldSettings: { min: 0 },
                 },
                 'shape.source': {
-                    label: 'Source',
+                    label: t('Source'),
                     type: 'select',
                     fieldSettings: {
-                        listValues: SOURCE_VALUES,
+                        listValues: SOURCE_VALUES.map(({ value, title }) => ({ value, title: t(title) })),
                     },
                 },
                 'shape.skeleton': {
-                    label: 'Skeleton',
+                    label: t('Skeleton'),
                     type: '!struct',
                     subfields: shapeSubfields,
                     fieldSettings: {
@@ -493,7 +495,7 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                     },
                 },
                 'shape.track': {
-                    label: 'Track',
+                    label: t('Track'),
                     type: '!struct',
                     subfields: shapeSubfields,
                     fieldSettings: {
@@ -503,7 +505,7 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                     },
                 },
                 'shape.attribute': {
-                    label: 'Attributes',
+                    label: t('Attributes'),
                     type: '!struct',
                     subfields: attributeSubfields,
                     fieldSettings: {
@@ -513,50 +515,50 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                     },
                 },
                 'shape.attribute.name': {
-                    label: 'Attribute name',
+                    label: t('Attribute name'),
                     type: 'text',
                     hideForSelect: true,
                 },
                 'shape.attribute.value': {
-                    label: 'Attribute value',
+                    label: t('Attribute value'),
                     type: 'text',
                     hideForSelect: true,
                 },
                 'shape.track.attribute.name': {
-                    label: 'Track attribute name',
+                    label: t('Track attribute name'),
                     type: 'text',
                     hideForSelect: true,
                 },
                 'shape.track.attribute.value': {
-                    label: 'Track attribute value',
+                    label: t('Track attribute value'),
                     type: 'text',
                     hideForSelect: true,
                 },
                 'shape.skeleton.attribute.name': {
-                    label: 'Skeleton attribute name',
+                    label: t('Skeleton attribute name'),
                     type: 'text',
                     hideForSelect: true,
                 },
                 'shape.skeleton.attribute.value': {
-                    label: 'Skeleton attribute value',
+                    label: t('Skeleton attribute value'),
                     type: 'text',
                     hideForSelect: true,
                 },
                 'shape.occluded': {
-                    label: 'Occluded',
+                    label: t('Occluded'),
                     type: 'boolean',
                 },
                 'shape.track_id': {
-                    label: 'Track Id',
+                    label: t('Track Id'),
                     type: 'number',
                     fieldSettings: { min: 0 },
                 },
                 'shape.outside': {
-                    label: 'Outside',
+                    label: t('Outside'),
                     type: 'boolean',
                 },
                 'shape.keyframe': {
-                    label: 'Keyframe',
+                    label: t('Keyframe'),
                     type: 'boolean',
                 },
             },
@@ -565,7 +567,7 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                 renderField: (_props: any) => <FieldDropdown {..._props} />,
             },
         };
-    }, [labels]);
+    }, [labels, t]);
     const readonlyConfig = useMemo<Config>(() => ({
         ...config,
         settings: {
@@ -592,18 +594,18 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
     }, [parentFilters, readonlyConfig]);
 
     const preview = useMemo(() => {
-        const logic = convertAttributeServerLogicToUi(parseFilter(value));
+        const logic = convertAttributeServerLogicToUi(parseFilter(currentValue));
         if (isEmptyLogic(logic)) {
             return '';
         }
 
         const tree = QbUtils.loadFromJsonLogic(logic as Record<string, unknown>, config);
-        return tree ? QbUtils.queryString(tree, config) || value || '' : value || '';
-    }, [config, value]);
+        return tree ? QbUtils.queryString(tree, config) || currentValue || '' : currentValue || '';
+    }, [config, currentValue]);
 
     const showBuilder = (): void => {
         if (!disabled) {
-            setDraftTree(loadTreeFromValue(value, config));
+            setDraftTree(loadTreeFromValue(currentValue, config));
             setVisible(true);
         }
     };
@@ -680,14 +682,14 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                         size='small'
                         className='cvat-quality-requirement-filter-recent-button'
                     >
-                        Recent
+                        {t('Recent')}
                         <DownOutlined />
                     </Button>
                 </Popover>
             ) : null}
             {parentFilterTree ? (
                 <div className='cvat-quality-requirement-filter-section'>
-                    <Text>Parent filter</Text>
+                    <Text>{t('Parent filter')}</Text>
                     <div className='cvat-quality-requirement-filter-readonly-builder'>
                         <Query
                             {...readonlyConfig}
@@ -699,7 +701,7 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                 </div>
             ) : null}
             {parentFilterTree ? (
-                <Text className='cvat-quality-requirement-filter-section-title'>Current filter</Text>
+                <Text className='cvat-quality-requirement-filter-section-title'>{t('Current filter')}</Text>
             ) : null}
             <Query
                 {...config}
@@ -716,7 +718,7 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                 className='cvat-quality-requirement-filter-input'
                 readOnly
                 disabled={disabled}
-                placeholder='Filter'
+                placeholder={t('Filter')}
                 value={preview}
                 onClick={showBuilder}
                 suffix={(
@@ -742,13 +744,13 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                         disabled={!QbUtils.queryString(draftTree, config)}
                         onClick={() => setDraftTree(createDefaultTree())}
                     >
-                        Reset
+                        {t('Reset')}
                     </Button>,
                     <Button
                         key='cancel'
                         onClick={() => setVisible(false)}
                     >
-                        Cancel
+                        {t('Cancel')}
                     </Button>,
                     <Button
                         key='apply'
@@ -756,7 +758,7 @@ export default function QualityRequirementFilter(props: Readonly<Props>): JSX.El
                         disabled={!QbUtils.isValidTree(draftTree, config)}
                         onClick={applyFilter}
                     >
-                        Apply
+                        {t('Apply')}
                     </Button>,
                 ]}
             >

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     CaretDownOutlined, CopyOutlined, DeleteOutlined, EditOutlined, PlusOutlined, QuestionCircleOutlined,
 } from '@ant-design/icons';
@@ -37,39 +38,6 @@ const annotationTypeFilterValues = Object.values(ANNOTATION_TYPE_LABELS)
     .map((label) => ({ value: label, title: label }));
 const metricFilterValues = Object.values(METRIC_LABELS)
     .map((label) => ({ value: label, title: label }));
-
-const requirementsFilterConfig: Partial<Config> = {
-    fields: {
-        name: {
-            label: 'Name',
-            type: 'text',
-            valueSources: ['value'],
-        },
-        annotationType: {
-            label: 'Annotation type',
-            type: 'select',
-            valueSources: ['value'],
-            operators: ['select_any_in', 'select_equals'],
-            fieldSettings: {
-                listValues: annotationTypeFilterValues,
-            },
-        },
-        metric: {
-            label: 'Metric',
-            type: 'select',
-            valueSources: ['value'],
-            operators: ['select_any_in', 'select_equals'],
-            fieldSettings: {
-                listValues: metricFilterValues,
-            },
-        },
-        enabled: {
-            label: 'Enabled',
-            type: 'boolean',
-            valueSources: ['value'],
-        },
-    },
-};
 
 const EXPANDED_REQUIREMENT_ROWS_STORAGE_KEY_PREFIX = 'qualityRequirementsConstructorExpandedRows';
 
@@ -205,6 +173,7 @@ function saveExpandedRowKeys(storageKey: string, expandedRowKeys: React.Key[]): 
 }
 
 export default function QualityRequirementsConstructor(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         form,
         settings,
@@ -222,6 +191,30 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
     );
     const [enabledValues, setEnabledValues] = useState<Record<string, boolean>>({});
     const data = useMemo(() => buildRequirementTree(settings.requirements), [settings.requirements]);
+    const requirementsFilterConfig = useMemo<Partial<Config>>(() => ({
+        fields: {
+            name: { label: t('Name'), type: 'text', valueSources: ['value'] },
+            annotationType: {
+                label: t('Annotation type'),
+                type: 'select',
+                valueSources: ['value'],
+                operators: ['select_any_in', 'select_equals'],
+                fieldSettings: {
+                    listValues: annotationTypeFilterValues.map(({ value }) => ({ value, title: t(value) })),
+                },
+            },
+            metric: {
+                label: t('Metric'),
+                type: 'select',
+                valueSources: ['value'],
+                operators: ['select_any_in', 'select_equals'],
+                fieldSettings: {
+                    listValues: metricFilterValues.map(({ value }) => ({ value, title: t(value) })),
+                },
+            },
+            enabled: { label: t('Enabled'), type: 'boolean', valueSources: ['value'] },
+        },
+    }), [t]);
 
     useEffect(() => {
         setExpandedRowKeys(readExpandedRowKeys(expandedRowsStorageKey));
@@ -270,15 +263,15 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
 
     const onDeleteRequirement = (requirement: QualityRequirement): void => {
         Modal.confirm({
-            title: `Delete "${requirement.name}" requirement?`,
-            content: 'This action cannot be undone.',
-            okText: 'Delete',
+            title: t('Delete "{{name}}" requirement?', { name: requirement.name }),
+            content: t('This action cannot be undone.'),
+            okText: t('Delete'),
             okButtonProps: { danger: true },
             onOk: async () => {
                 await updateRequirement(
                     requirement,
                     () => requirement.delete(),
-                    'Could not delete requirement',
+                    t('Could not delete requirement'),
                 );
             },
         });
@@ -292,7 +285,7 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
 
     return (
         <CVATTable
-            tableTitle='Requirements configuration'
+            tableTitle={t('Requirements configuration')}
             className='cvat-quality-requirements-configuration-table'
             searchDataIndex={['searchValue']}
             queryBuilder={{
@@ -305,30 +298,30 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
                 isRequirementEnabled(record.requirement) ? '' : 'cvat-quality-requirements-disabled-row'
             )}
             columns={[{
-                title: 'Name',
+                title: t('Name'),
                 dataIndex: 'name',
                 sorter: (first: RequirementRow, second: RequirementRow) => first.name.localeCompare(second.name),
                 render: (_: string, record: RequirementRow): JSX.Element => (
                     <Text>{record.name}</Text>
                 ),
             }, {
-                title: 'Annotation type',
+                title: t('Annotation type'),
                 dataIndex: 'annotationType',
                 sorter: (first: RequirementRow, second: RequirementRow) => (
                     first.annotationType.localeCompare(second.annotationType)
                 ),
                 render: (_: string, record: RequirementRow): JSX.Element => (
-                    <Text>{record.annotationType}</Text>
+                    <Text>{t(record.annotationType)}</Text>
                 ),
             }, {
-                title: 'Metric',
+                title: t('Metric'),
                 dataIndex: 'metric',
                 sorter: (first: RequirementRow, second: RequirementRow) => first.metric.localeCompare(second.metric),
                 render: (_: string, record: RequirementRow): JSX.Element => (
-                    <Text>{record.metric}</Text>
+                    <Text>{t(record.metric)}</Text>
                 ),
             }, {
-                title: 'Threshold',
+                title: t('Threshold'),
                 dataIndex: 'threshold',
                 sorter: (first: RequirementRow, second: RequirementRow) => (
                     first.threshold.localeCompare(second.threshold)
@@ -337,7 +330,7 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
                     <Text>{record.threshold}</Text>
                 ),
             }, {
-                title: 'Enabled',
+                title: t('Enabled'),
                 dataIndex: 'enabled',
                 sorter: (first: RequirementRow, second: RequirementRow) => (
                     Number(first.enabled) - Number(second.enabled)
@@ -350,14 +343,14 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
                     />
                 ),
             }, {
-                title: 'Actions',
+                title: t('Actions'),
                 dataIndex: 'actions',
                 render: (_: unknown, record: RequirementRow): JSX.Element => {
                     const actionsDisabled = disabled || pendingRequirementId !== null;
 
                     return (
                         <Space size='small'>
-                            <CVATTooltip title='Create child requirement'>
+                            <CVATTooltip title={t('Create child requirement')}>
                                 <Button
                                     type='text'
                                     className='cvat-quality-requirements-action-button'
@@ -367,7 +360,7 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
                                     onClick={() => onCreateRequirement(record.requirement)}
                                 />
                             </CVATTooltip>
-                            <CVATTooltip title='Edit requirement'>
+                            <CVATTooltip title={t('Edit requirement')}>
                                 <Button
                                     type='text'
                                     className='cvat-quality-requirements-action-button'
@@ -381,7 +374,7 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
                                 />
                             </CVATTooltip>
                             {!record.requirement.isBase && (
-                                <CVATTooltip title='Copy requirement'>
+                                <CVATTooltip title={t('Copy requirement')}>
                                     <Button
                                         type='text'
                                         className='cvat-quality-requirements-action-button'
@@ -393,7 +386,7 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
                                 </CVATTooltip>
                             )}
                             {!record.requirement.isBase && (
-                                <CVATTooltip title='Delete requirement'>
+                                <CVATTooltip title={t('Delete requirement')}>
                                     <Button
                                         type='text'
                                         className='cvat-quality-requirements-action-button'
@@ -437,7 +430,7 @@ export default function QualityRequirementsConstructor(props: Readonly<Props>): 
                 emptyText: (
                     <Space>
                         <QuestionCircleOutlined />
-                        <Text type='secondary'>No requirements configured</Text>
+                        <Text type='secondary'>{t('No requirements configured')}</Text>
                     </Space>
                 ),
             }}

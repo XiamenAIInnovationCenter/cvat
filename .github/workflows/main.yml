@@ -265,6 +265,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Running frontend i18n unit tests
+        run: python3 -m unittest discover -s tests/unit -p 'test_i18n.py'
+
       - name: Download CVAT server image
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:

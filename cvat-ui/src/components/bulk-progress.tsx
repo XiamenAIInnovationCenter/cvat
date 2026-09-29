@@ -8,12 +8,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import notification from 'antd/lib/notification';
 import Button from 'antd/lib/button';
 import Progress from 'antd/lib/progress';
+import { useTranslation } from 'react-i18next';
 import { CombinedState } from 'reducers';
 import { resetErrors } from 'actions/notification-actions';
 import { makeBulkOperationAsync, bulkActions } from 'actions/bulk-actions';
 import CVATMarkdown from './common/cvat-markdown';
 
 export default function BulkProgress(): JSX.Element | null {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const history = useHistory();
     const { fetching, status, bulkError } = useSelector((state: CombinedState) => ({
@@ -23,7 +25,7 @@ export default function BulkProgress(): JSX.Element | null {
     }));
 
     const percent = status?.percent ?? 0;
-    const message = status?.message ?? 'Processing...';
+    const message = status?.message ?? t('Processing...');
 
     const handleRetry = (): void => {
         if (bulkError?.retryPayload) {
@@ -39,11 +41,12 @@ export default function BulkProgress(): JSX.Element | null {
             <>
                 {remainingItemsCount > 0 ? (
                     <>
-                        Some items failed to process. You can retry the operation for the remaining
-                        {` ${remainingItemsCount} items.`}
+                        {t('Some items failed to process. You can retry the operation for the remaining {{count}} items.', {
+                            count: remainingItemsCount,
+                        })}
                     </>
                 ) : (
-                    'An error occurred during the bulk operation.'
+                    t('An error occurred during the bulk operation.')
                 )}
                 {remainingItemsCount > 0 && (
                     <>
@@ -56,7 +59,7 @@ export default function BulkProgress(): JSX.Element | null {
                                 handleRetry();
                             }}
                         >
-                            Retry
+                            {t('Retry')}
                         </Button>
                     </>
                 )}
@@ -87,7 +90,7 @@ export default function BulkProgress(): JSX.Element | null {
                 onClick={() => dispatch(bulkActions.cancelBulkAction())}
                 type='primary'
             >
-                Cancel
+                {t('Cancel')}
             </Button>
         </div>
     );

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@ant-design/icons';
 
 import { getCVATStore } from 'cvat-store';
@@ -13,7 +14,7 @@ import GlobalHotKeys from 'utils/mousetrap-react';
 import opencvWrapper from 'utils/opencv-wrapper/opencv-wrapper';
 import { SliceIcon } from 'icons';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { useSelector } from 'react-redux';
 
@@ -33,9 +34,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function SliceControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         updateActiveControl, canvasInstance, activeControl, disabled,
     } = props;
@@ -81,7 +83,12 @@ function SliceControl(props: Props): JSX.Element {
                 keyMap={subKeyMap(componentShortcuts, keyMap)}
                 handlers={handlers}
             />
-            <CVATTooltip title={`Slice a mask/polygon shape ${normalizedKeyMap.SWITCH_SLICE_MODE_STANDARD_CONTROLS}`} placement='right'>
+            <CVATTooltip
+                title={t('Slice a mask/polygon shape {{shortcut}}', {
+                    shortcut: normalizedKeyMap.SWITCH_SLICE_MODE_STANDARD_CONTROLS,
+                })}
+                placement='right'
+            >
                 <Icon {...dynamicIconProps} component={SliceIcon} />
             </CVATTooltip>
         </>

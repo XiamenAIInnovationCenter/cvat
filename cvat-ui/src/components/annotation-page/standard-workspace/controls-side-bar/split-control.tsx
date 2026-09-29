@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@ant-design/icons';
 
 import { SplitIcon } from 'icons';
@@ -20,6 +21,7 @@ export interface Props {
 }
 
 function SplitControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         dynamicIconProps,
         canvasInstance,
@@ -32,11 +34,11 @@ function SplitControl(props: Props): JSX.Element {
         <Icon className='cvat-split-track-control cvat-disabled-canvas-control' component={SplitIcon} />
     ) : (
         <CVATTooltip
-            title={`Split a track ${
-                canvasInstance instanceof Canvas3d ?
+            title={t('Split a track {{shortcut}}', {
+                shortcut: canvasInstance instanceof Canvas3d ?
                     normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_3D_CONTROLS :
-                    normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_CONTROLS
-            }`}
+                    normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_CONTROLS,
+            })}
             placement='right'
         >
             <Icon {...dynamicIconProps} component={SplitIcon} />

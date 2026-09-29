@@ -10,6 +10,7 @@ import { shallowEqual } from 'utils/redux';
 import { CombinedState } from 'reducers';
 import AutoComplete from 'antd/lib/auto-complete';
 import { useInView } from 'react-intersection-observer';
+import { useTranslation } from 'react-i18next';
 
 import { Organization } from 'cvat-core-wrapper';
 import { getOrganizationsAsync } from 'actions/organization-actions';
@@ -20,6 +21,7 @@ interface Props {
 }
 
 function OrganizationSelector(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { setNewOrganization, defaultValue } = props;
 
     const defaultPage = 1;
@@ -82,14 +84,14 @@ function OrganizationSelector(props: Props): JSX.Element {
     return (
         <AutoComplete
             defaultValue={searchPhrase}
-            placeholder='Select an organization'
+            placeholder={t('Select an organization')}
             showSearch
             onSearch={_.debounce(setSearchPhrase, 500)}
             options={[
                 ...(
                     (currentOrg) ? [{
                         value: '',
-                        label: 'Personal workspace',
+                        label: t('Personal workspace'),
                     }] : []
                 ),
                 ...searchResults

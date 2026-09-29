@@ -37,7 +37,7 @@ import {
 import { ObjectState, ObjectType, ShapeType } from 'cvat-core-wrapper';
 import { RenderData } from 'cvat-canvas-wrapper';
 import { filterAnnotations } from 'utils/filter-annotations';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { ShortcutScope } from 'utils/enums';
 import { subKeyMap } from 'utils/component-subkeymap';
 import {
@@ -215,7 +215,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function mapStateToProps(state: CombinedState): StateToProps {
     const {

@@ -4,6 +4,7 @@
 
 import './styles.scss';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from 'antd/lib/button';
 import { Row, Col } from 'antd/lib/grid';
 import { LeftOutlined } from '@ant-design/icons';
@@ -11,6 +12,7 @@ import { useHistory, useLocation } from 'react-router';
 import SetupWebhookContent from './setup-webhook-content';
 
 function CreateWebhookPage(): JSX.Element {
+    const { t } = useTranslation('business');
     const history = useHistory();
     const location = useLocation();
     const params = new URLSearchParams(location.search);
@@ -32,7 +34,7 @@ function CreateWebhookPage(): JSX.Element {
                         size='large'
                     >
                         <LeftOutlined />
-                        Back to webhooks
+                        {t('Back to webhooks')}
                     </Button>
                 </Col>
             </Row>

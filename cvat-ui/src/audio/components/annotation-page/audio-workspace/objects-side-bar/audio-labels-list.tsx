@@ -20,6 +20,7 @@ import GlobalHotKeys, { KeyMapItem } from 'utils/mousetrap-react';
 import Text from 'antd/lib/typography/Text';
 import { ShortcutScope } from 'utils/enums';
 import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import i18n, { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { useResetShortcutsOnUnmount } from 'utils/hooks';
 import { getCVATStore } from 'cvat-store';
@@ -38,7 +39,7 @@ for (const index of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]) {
     };
 }
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 interface AudioLabelItemProps {
     labelID: number;
@@ -142,9 +143,11 @@ function AudioLabelsList(): JSX.Element {
                 updated[key] = {
                     ...updated[key],
                     nonActive: false,
-                    name: `Switch audio label to ${labelName}`,
-                    description: `Change the label to ${labelName} for the active audio region,
-                        or set it as default for the next created region`,
+                    name: i18n.t('Switch audio label to {{label}}', { label: labelName, ns: 'business' }),
+                    description: i18n.t(
+                        'Change the active audio region label to {{label}}, or use it for the next region',
+                        { label: labelName, ns: 'business' },
+                    ),
                 };
             }
         }
@@ -165,7 +168,9 @@ function AudioLabelsList(): JSX.Element {
         } else {
             dispatch(audioActions.setAudioActiveLabel(labelID));
             message.destroy();
-            message.success(`Default label has been changed to "${label.name}"`);
+            message.success(i18n.t('Default label has been changed to "{{label}}"', {
+                ns: 'business', label: label.name,
+            }));
         }
     }, [dispatch, keyToLabelMapping, labels]);
 

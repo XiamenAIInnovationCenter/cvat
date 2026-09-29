@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { shallowEqual } from 'utils/redux';
 import dayjs from 'dayjs';
@@ -26,6 +27,7 @@ import { changeShowGroundTruth } from 'actions/settings-actions';
 import { ShowGroundTruthIcon } from 'icons';
 
 export default function IssuesListComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const {
         frame,
@@ -101,22 +103,22 @@ export default function IssuesListComponent(): JSX.Element {
             <div className='cvat-objects-sidebar-issues-list-header'>
                 <Row justify='space-between' align='middle'>
                     <Col span={24}>
-                        <Text>{`Items: ${frameIssues.length}`}</Text>
+                        <Text>{t('Items: {{count}}', { count: frameIssues.length })}</Text>
                     </Col>
                     <Col span={24}>
                         <Row className='cvat-objects-sidebar-issues-toolbar' justify='space-around' align='middle'>
                             <Col>
-                                <CVATTooltip title='Find the previous frame with issues'>
+                                <CVATTooltip title={t('Find the previous frame with issues')}>
                                     <LeftOutlined className='cvat-issues-sidebar-previous-frame' {...dynamicLeftProps} />
                                 </CVATTooltip>
                             </Col>
                             <Col>
-                                <CVATTooltip title='Find the next frame with issues'>
+                                <CVATTooltip title={t('Find the next frame with issues')}>
                                     <RightOutlined className='cvat-issues-sidebar-next-frame' {...dynamicRightProps} />
                                 </CVATTooltip>
                             </Col>
                             <Col>
-                                <CVATTooltip title='Show/hide all issues'>
+                                <CVATTooltip title={t('Show/hide all issues')}>
                                     {issuesHidden ? (
                                         <EyeInvisibleFilled
                                             className='cvat-issues-sidebar-hidden-issues'
@@ -131,7 +133,7 @@ export default function IssuesListComponent(): JSX.Element {
                                 </CVATTooltip>
                             </Col>
                             <Col>
-                                <CVATTooltip title='Show/hide resolved issues'>
+                                <CVATTooltip title={t('Show/hide resolved issues')}>
                                     { issuesResolvedHidden ? (
                                         <CheckCircleFilled
                                             className='cvat-issues-sidebar-hidden-resolved-status'
@@ -153,7 +155,7 @@ export default function IssuesListComponent(): JSX.Element {
                             {
                                 workspace === Workspace.REVIEW ? (
                                     <Col>
-                                        <CVATTooltip title='Show Ground truth annotations and conflicts'>
+                                        <CVATTooltip title={t('Show Ground truth annotations and conflicts')}>
                                             <Icon
                                                 className={
                                                     `cvat-objects-sidebar-show-ground-truth ${showGroundTruth ? 'cvat-objects-sidebar-show-ground-truth-active' : ''}`
@@ -205,12 +207,12 @@ export default function IssuesListComponent(): JSX.Element {
                                 <Row justify='space-between'>
                                     <Col>
                                         <Text strong>
-                                            {`#${frameIssue.id} • Issue`}
+                                            {`#${frameIssue.id} • ${t('Issue')}`}
                                         </Text>
                                     </Col>
                                     <Col offset={1}>
                                         <Text type='secondary'>
-                                            {`created ${dayjs(frameIssue.createdDate).fromNow()}`}
+                                            {t('created {{date}}', { date: dayjs(frameIssue.createdDate).fromNow() })}
                                         </Text>
                                     </Col>
                                 </Row>
@@ -267,7 +269,7 @@ export default function IssuesListComponent(): JSX.Element {
                             <Row>
                                 <Text strong>
                                     {`#${frameConflict.id} • ${frameConflict.severity === ConflictSeverity.WARNING ?
-                                        'Warning' : 'Conflict'}`}
+                                        t('Warning') : t('Conflict')}`}
                                 </Text>
                             </Row>
                             <Row>

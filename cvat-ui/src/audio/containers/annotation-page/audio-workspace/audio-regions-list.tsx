@@ -17,7 +17,7 @@ import {
     updateAudioIntervalAsync,
     updateAudioIntervalsAsync,
 } from 'actions/audio-actions';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { ShortcutScope } from 'utils/enums';
 import { subKeyMap } from 'utils/component-subkeymap';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
@@ -92,7 +92,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 interface StateToProps {
     intervals: AudioIntervalState[];

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { QuestionCircleOutlined } from '@ant-design/icons/lib/icons';
 import Text from 'antd/lib/typography/Text';
 import InputNumber from 'antd/lib/input-number';
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Element | null {
+    const { t } = useTranslation('business');
     const { form, settings, onSave } = props;
 
     const initialValues = {
@@ -42,7 +44,7 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
 
     const shapeComparisonTooltip = makeTooltip(
         <>
-            {makeTooltipFragment('Min overlap threshold (IoU)', settings.descriptions.iouThreshold)}
+            {makeTooltipFragment(t('Min overlap threshold (IoU)'), settings.descriptions.iouThreshold)}
         </>,
     );
 
@@ -56,12 +58,12 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
             <Row justify='end' className='cvat-consensus-settings-save-btn'>
                 <Col>
                     <Button onClick={onSave} type='primary'>
-                        Save
+                        {t('Save')}
                     </Button>
                 </Col>
             </Row>
             <Row className='cvat-consensus-settings-title'>
-                <Text strong>Shape comparison</Text>
+                <Text strong>{t('Shape comparison')}</Text>
                 <CVATTooltip
                     title={shapeComparisonTooltip}
                     className='cvat-settings-tooltip'
@@ -74,8 +76,8 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
                 <Col span={6}>
                     <Form.Item
                         name='iouThreshold'
-                        label='Min Overlap (%)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('Min Overlap (%)')}
+                        rules={[{ required: true, message: t('This field is required') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>

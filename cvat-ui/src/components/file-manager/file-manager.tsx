@@ -10,6 +10,7 @@ import Tabs, { TabsProps } from 'antd/lib/tabs';
 import Input from 'antd/lib/input';
 import { RcFile } from 'antd/lib/upload';
 import { FormInstance } from 'antd/lib/form';
+import i18n from 'i18next';
 
 import { CloudStorage } from 'cvat-core-wrapper';
 import CloudStorageTab from './cloud-storages-tab';
@@ -126,7 +127,7 @@ export class FileManager extends React.PureComponent<Props, State> {
 
         return {
             key: 'local',
-            label: 'My computer',
+            label: i18n.t('My computer', { ns: 'business' }),
             className: 'cvat-file-manager-local-tab',
             children: (
                 <LocalFiles
@@ -150,7 +151,7 @@ export class FileManager extends React.PureComponent<Props, State> {
     private renderShareSelector(): NonNullable<TabsProps['items']>[0] {
         return {
             key: 'share',
-            label: 'Connected file share',
+            label: i18n.t('Connected file share', { ns: 'business' }),
             className: 'cvat-file-manager-share-tab',
             children: (
                 <RemoteBrowser
@@ -167,12 +168,12 @@ export class FileManager extends React.PureComponent<Props, State> {
 
         return {
             key: 'remote',
-            label: 'Remote sources',
+            label: i18n.t('Remote sources', { ns: 'business' }),
             className: 'cvat-file-manager-remote-tab',
             children: (
                 <Input.TextArea
                     className='cvat-file-selector-remote'
-                    placeholder='Enter one URL per line'
+                    placeholder={i18n.t('Enter one URL per line', { ns: 'business' })}
                     rows={6}
                     value={[...files.remote].join('\n')}
                     onChange={(event: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -195,7 +196,7 @@ export class FileManager extends React.PureComponent<Props, State> {
 
         return {
             key: 'cloudStorage',
-            label: 'Cloud Storage',
+            label: i18n.t('Cloud Storage', { ns: 'business' }),
             className: 'cvat-create-task-page-cloud-storage-tab',
             children: (
                 <CloudStorageTab

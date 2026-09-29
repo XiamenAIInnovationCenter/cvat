@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
 
@@ -20,6 +21,7 @@ interface ConstructorViewerItemProps {
 }
 
 export default function ConstructorViewerItem(props: ConstructorViewerItemProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         color, label, onUpdate, onDelete,
     } = props;
@@ -30,7 +32,7 @@ export default function ConstructorViewerItem(props: ConstructorViewerItemProps)
     return (
         <div style={{ background: backgroundColor }} className='cvat-constructor-viewer-item'>
             <Text style={{ color: textColor }}>{label.name}</Text>
-            <CVATTooltip title='Update attributes'>
+            <CVATTooltip title={t('Update attributes')}>
                 <span
                     style={{ color: textColor }}
                     role='button'
@@ -41,7 +43,7 @@ export default function ConstructorViewerItem(props: ConstructorViewerItemProps)
                     <EditOutlined />
                 </span>
             </CVATTooltip>
-            <CVATTooltip title='Delete label'>
+            <CVATTooltip title={t('Delete label')}>
                 <span
                     style={{ color: textColor }}
                     role='button'

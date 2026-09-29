@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { shallowEqual } from 'utils/redux';
 import Modal from 'antd/lib/modal';
@@ -24,6 +25,7 @@ const SEARCH_LIMIT = 25;
 const SEARCH_DEBOUNCE_TIME = 100;
 
 function SearchFramesModal(): JSX.Element {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -101,10 +103,10 @@ function SearchFramesModal(): JSX.Element {
             <AutoComplete
                 ref={autoCompleteRef}
                 defaultValue={searchTerm}
-                placeholder='Type to search'
+                placeholder={t('Type to search')}
                 showSearch
                 onSearch={onSearch}
-                notFoundContent={searchTerm ? <Text>No frames found</Text> : null}
+                notFoundContent={searchTerm ? <Text>{t('No frames found')}</Text> : null}
                 options={searchResults.map((item) => ({
                     value: item.number,
                     label: (

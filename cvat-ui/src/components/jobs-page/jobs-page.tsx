@@ -83,7 +83,7 @@ function JobsPageComponent(): JSX.Element {
         }
     }, [history.location, updatedQuery, isMounted]);
 
-    const onApplyFilter = (filter: string | null) => {
+    const onApplyFilter = (filter: string | null): void => {
         setQuery({
             ...query,
             filter,
