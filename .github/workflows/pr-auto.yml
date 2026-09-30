@@ -1,0 +1,15 @@
+name: PR Code Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened] # 当 PR 创建、更新代码、重新打开时触发
+    branches:
+      - main # 只有针对 main 分支提起的 PR 才会触发
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Tests
+        run: npm test
