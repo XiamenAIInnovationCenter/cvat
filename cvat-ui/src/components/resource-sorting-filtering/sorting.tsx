@@ -11,6 +11,7 @@ import {
 import Button from 'antd/lib/button';
 import Popover from 'antd/lib/popover';
 import Radio from 'antd/lib/radio';
+import { useTranslation } from 'react-i18next';
 
 import CVATTooltip from 'components/common/cvat-tooltip';
 
@@ -37,6 +38,8 @@ const SortableItem = SortableElement<SortableItemProps>(
     ({
         value, appliedSorting, setAppliedSorting, valueIndex, anchorIndex,
     }: SortableItemProps): JSX.Element => {
+        const { t } = useTranslation('base', { keyPrefix: 'sort' });
+        const { t: tBusiness } = useTranslation('business');
         const isActiveField = value in appliedSorting;
         const isAscendingField = isActiveField && !appliedSorting[value]?.startsWith('-');
         const isDescendingField = isActiveField && !isAscendingField;
@@ -56,9 +59,11 @@ const SortableItem = SortableElement<SortableItemProps>(
 
         return (
             <div className='cvat-sorting-field'>
-                <Radio.Button disabled={valueIndex > anchorIndex}>{value}</Radio.Button>
+                <Radio.Button disabled={valueIndex > anchorIndex}>{tBusiness(value)}</Radio.Button>
                 <div>
-                    <CVATTooltip overlay={appliedSorting[value]?.startsWith('-') ? 'Descending sort' : 'Ascending sort'}>
+                    <CVATTooltip overlay={appliedSorting[value]?.startsWith('-') ?
+                        t('Descending sort') : t('Ascending sort')}
+                    >
                         <Button className='cvat-switch-sort-order-button' type='text' disabled={!isActiveField} onClick={onClick}>
                             {
                                 isDescendingField ? (
@@ -100,6 +105,7 @@ const SortableList = SortableContainer<SortableListProps>(
 );
 
 function SortingModalComponent(props: Props): JSX.Element {
+    const { t } = useTranslation('base', { keyPrefix: 'sort' });
     const {
         sortingFields: sortingFieldsProp,
         defaultFields, visible, onApplySorting, onVisibleChange, disabled,
@@ -205,7 +211,7 @@ function SortingModalComponent(props: Props): JSX.Element {
                 type='default'
                 onClick={() => onVisibleChange(!visible)}
             >
-                Sort by
+                {t('Sort by')}
                 <OrderedListOutlined />
             </Button>
         </Popover>

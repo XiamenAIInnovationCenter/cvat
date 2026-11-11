@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import Alert from 'antd/lib/alert';
 import Space from 'antd/lib/space';
@@ -43,13 +44,13 @@ function renderHealthCheckIcon(checkName: string): JSX.Element {
 }
 
 function DefaultServerUnavailableComponent({ details }: ServerUnavailableProps): JSX.Element {
+    const { t } = useTranslation('business');
     const rows = details ? details.split('\n').filter((row: string): boolean => !!row.trim()) : [];
     if (!rows.length) {
         return (
             <div className='cvat-server-unavailable-message'>
                 <Text>
-                    CVAT could not reach the server or one of the services required to run it.
-                    Make sure the backend, database, Redis and Open Policy Agent are running and available.
+                    {t('CVAT could not reach the server or one of the services required to run it. Make sure the backend, database, Redis and Open Policy Agent are running and available.')}
                 </Text>
             </div>
         );
@@ -64,7 +65,7 @@ function DefaultServerUnavailableComponent({ details }: ServerUnavailableProps):
                 type='error'
                 showIcon
                 icon={<ClockCircleOutlined />}
-                message='Connection check failed'
+                message={t('Connection check failed')}
                 description={summary}
             />
         );
@@ -75,7 +76,7 @@ function DefaultServerUnavailableComponent({ details }: ServerUnavailableProps):
             className='cvat-health-check-error'
             type='error'
             showIcon
-            message='Required services are not healthy'
+            message={t('Required services are not healthy')}
             description={(
                 <Space direction='vertical' size={12}>
                     <Text type='secondary'>{summary}</Text>

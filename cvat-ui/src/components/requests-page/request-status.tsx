@@ -7,6 +7,7 @@ import Text from 'antd/lib/typography/Text';
 import { BaseType } from 'antd/es/typography/Base';
 import LoadingOutlined from '@ant-design/icons/lib/icons/LoadingOutlined';
 import { RQStatus } from 'cvat-core-wrapper';
+import { useTranslation } from 'react-i18next';
 
 function statusMessage(message: string, defaultMessage: string, postfix?: JSX.Element): JSX.Element {
     if (message) {
@@ -33,6 +34,7 @@ export interface Props {
 }
 
 function StatusMessage(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { cancelled } = props;
     let { status, message } = props;
     message = message || '';
@@ -66,30 +68,30 @@ function StatusMessage(props: Props): JSX.Element {
         >
             {((): JSX.Element => {
                 if (cancelled || status === RQStatus.CANCELED) {
-                    return statusMessage(message, 'Cancelled');
+                    return statusMessage(message, t('Cancelled'));
                 }
 
                 if (status === RQStatus.FINISHED) {
-                    return statusMessage(message, 'Finished');
+                    return statusMessage(message, t('Finished'));
                 }
 
                 if ([RQStatus.QUEUED].includes(status)) {
-                    return statusMessage(message, 'Queued', <LoadingOutlined />);
+                    return statusMessage(message, t('Queued'), <LoadingOutlined />);
                 }
 
                 if ([RQStatus.STARTED].includes(status)) {
-                    return statusMessage(message, 'In progress', <LoadingOutlined />);
+                    return statusMessage(message, t('In progress'), <LoadingOutlined />);
                 }
 
                 if (status === RQStatus.FAILED) {
-                    return statusMessage(message, 'Failed');
+                    return statusMessage(message, t('Failed'));
                 }
 
                 if (status === RQStatus.UNKNOWN) {
-                    return statusMessage(message, 'Unknown status received');
+                    return statusMessage(message, t('Unknown status received'));
                 }
 
-                return statusMessage(message, 'Unknown status received');
+                return statusMessage(message, t('Unknown status received'));
             })()}
         </Text>
     );

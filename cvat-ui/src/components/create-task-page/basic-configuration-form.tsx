@@ -9,12 +9,15 @@ import Text from 'antd/lib/typography/Text';
 import Tooltip from 'antd/lib/tooltip';
 import Form, { FormInstance } from 'antd/lib/form';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { TFunction } from 'i18next';
+import i18n from 'i18n';
 
 export interface BaseConfiguration {
     name: string;
 }
 
 interface Props {
+    t?: TFunction<'business'>;
     onChange(values: BaseConfiguration): void;
     many: boolean;
     exampleMultiTaskName?: string;
@@ -72,6 +75,7 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
 
     public render(): JSX.Element {
         const { many, exampleMultiTaskName } = this.props;
+        const t = this.props.t || i18n.getFixedT(null, 'business');
 
         return (
             <Form ref={this.formRef} layout='vertical'>
@@ -79,11 +83,11 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
                     className={many ? 'cvat-task-name-field-has-tooltip' : ''}
                     hasFeedback
                     name='name'
-                    label={<span>Name</span>}
+                    label={<span>{t('Name')}</span>}
                     rules={[
                         {
                             required: true,
-                            message: 'Task name cannot be empty',
+                            message: t('Task name cannot be empty'),
                         },
                     ]}
                     initialValue={this.initialName}
@@ -97,32 +101,32 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
                     <Text type='secondary'>
                         <Tooltip title={() => (
                             <>
-                                You can use in the template:
+                                {t('You can use in the template:')}
                                 <ul>
                                     <li>
-                                        some_text - any text
+                                        {t('some_text - any text')}
                                     </li>
                                     <li>
                                         {'{{'}
                                         index
                                         {'}}'}
-                                        &nbsp;- index file in set
+                                        {t(' - index file in set')}
                                     </li>
                                     <li>
                                         {'{{'}
                                         file_name
                                         {'}}'}
-                                        &nbsp;- name of file
+                                        {t(' - name of file')}
                                     </li>
                                 </ul>
-                                Example:&nbsp;
+                                {t('Example: ')}
                                 <i>
                                     {exampleMultiTaskName || 'Task name 1 - video_1.mp4'}
                                 </i>
                             </>
                         )}
                         >
-                            When forming the name, a template is used.
+                            {t('When forming the name, a template is used.')}
                             {' '}
                             <QuestionCircleOutlined />
                         </Tooltip>

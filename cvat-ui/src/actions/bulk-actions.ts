@@ -53,6 +53,11 @@ export function makeBulkOperationAsync<T>(
 
         try {
             dispatch(bulkActions.startBulkAction());
+            // Give React an opportunity to paint the progress indicator before a fast
+            // operation can finish and batch the start/finish state updates together.
+            await new Promise<void>((resolve) => {
+                setTimeout(resolve, 0);
+            });
             for (let i = 0; i < items.length; i++) {
                 if (getState().bulkActions.cancelled) {
                     break;

@@ -5,6 +5,7 @@
 import React from 'react';
 import Popover from 'antd/lib/popover';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { Canvas } from 'cvat-canvas-wrapper';
 import { BrushIcon } from 'icons';
@@ -22,6 +23,7 @@ export interface Props {
 
 const CustomPopover = withVisibilityHandling(Popover, 'draw-mask');
 function DrawMaskControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { canvasInstance, isDrawing, disabled } = props;
     const dynamicPopoverProps = isDrawing ? {
         overlayStyle: {
@@ -47,7 +49,7 @@ function DrawMaskControl(props: Props): JSX.Element {
             placement='right'
             content={<DrawShapePopoverContainer shapeType={ShapeType.MASK} />}
         >
-            <CVATTooltip title='Draw a mask' placement='right'>
+            <CVATTooltip title={t('Draw a mask')} placement='right'>
                 <Icon {...dynamicIconProps} component={BrushIcon} />
             </CVATTooltip>
         </CustomPopover>

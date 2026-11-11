@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { CSSProperties } from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'antd/lib/grid';
 import Upload from 'antd/lib/upload';
@@ -22,7 +23,7 @@ import ShortcutsContext from 'components/shortcuts.context';
 import { Label, LabelType, ShapeType } from 'cvat-core-wrapper';
 import config from 'config';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import {
     idGenerator, LabelOptColor, SkeletonConfiguration, toSVGCoord,
@@ -37,7 +38,7 @@ function setAttributes(element: Element, attrs: Record<string, string | number |
     }
 }
 
-interface Props {
+interface Props extends WithTranslation<'business'> {
     disabled?: boolean;
     label: LabelOptColor | null;
 }
@@ -59,9 +60,9 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
-export default class SkeletonConfigurator extends React.PureComponent<Props, State> {
+export class SkeletonConfigurator extends React.PureComponent<Props, State> {
     static contextType = ShortcutsContext;
     static defaultProps = {
         disabled: false,
@@ -689,7 +690,7 @@ export default class SkeletonConfigurator extends React.PureComponent<Props, Sta
 
     public render(): JSX.Element {
         const { canvasRef, svgRef } = this;
-        const { disabled } = this.props;
+        const { disabled, t } = this.props;
         const {
             activeTool, contextMenuVisible, contextMenuElement, error,
         } = this.state;
@@ -752,8 +753,9 @@ export default class SkeletonConfigurator extends React.PureComponent<Props, Sta
                             beforeUpload={(file: RcFile) => {
                                 if (!['image/jpeg', 'image/png'].includes(file.type)) {
                                     notification.error({
-                                        message:
-                                            `File must be a JPEG or PNG image. Detected mime type is "${file.type}"`,
+                                        message: t('File must be a JPEG or PNG image. Detected mime type is "{{type}}"', {
+                                            type: file.type,
+                                        }),
                                     });
                                 }
                                 this.setState({ image: file }, () => {
@@ -763,7 +765,7 @@ export default class SkeletonConfigurator extends React.PureComponent<Props, Sta
                             }}
                         >
                             <p className='ant-upload-drag-icon'>
-                                <CVATTooltip title='Upload a background image'>
+                                <CVATTooltip title={t('Upload a background image')}>
                                     <Button className='cvat-upload-skeleton-constructor-background' icon={<PictureOutlined />} />
                                 </CVATTooltip>
                             </p>
@@ -781,25 +783,25 @@ export default class SkeletonConfigurator extends React.PureComponent<Props, Sta
                                     this.setState({ activeTool: e.target.value });
                                 }}
                             >
-                                <CVATTooltip title='Click the canvas to add a point'>
+                                <CVATTooltip title={t('Click the canvas to add a point')}>
                                     <Radio.Button defaultChecked value='point'>
                                         <Icon component={PointIcon} />
                                     </Radio.Button>
                                 </CVATTooltip>
 
-                                <CVATTooltip title='Click and drag points'>
+                                <CVATTooltip title={t('Click and drag points')}>
                                     <Radio.Button defaultChecked value='drag'>
                                         <DragOutlined />
                                     </Radio.Button>
                                 </CVATTooltip>
 
-                                <CVATTooltip title='Click two points to setup an edge'>
+                                <CVATTooltip title={t('Click two points to setup an edge')}>
                                     <Radio.Button value='join'>
                                         <LineOutlined />
                                     </Radio.Button>
                                 </CVATTooltip>
 
-                                <CVATTooltip title='Click an element to remove it'>
+                                <CVATTooltip title={t('Click an element to remove it')}>
                                     <Radio.Button value='delete'>
                                         <DeleteOutlined />
                                     </Radio.Button>
@@ -808,7 +810,7 @@ export default class SkeletonConfigurator extends React.PureComponent<Props, Sta
                         </Col>
                     </Row>
                     <Row justify='space-between' className='cvat-skeleton-configurator-svg-buttons'>
-                        <CVATTooltip title='Download skeleton as SVG'>
+                        <CVATTooltip title={t('Download skeleton as SVG')}>
                             <Button
                                 className='cvat-download-skeleton-svg-button'
                                 type='default'
@@ -888,7 +890,7 @@ export default class SkeletonConfigurator extends React.PureComponent<Props, Sta
                                         this.setupSkeleton(svg, labels as Record<string, LabelOptColor>);
                                     } catch (_: unknown) {
                                         notification.error({
-                                            message: 'Wrong skeleton structure',
+                                            message: t('Wrong skeleton structure'),
                                         });
                                     }
                                 });
@@ -896,7 +898,7 @@ export default class SkeletonConfigurator extends React.PureComponent<Props, Sta
                                 return false;
                             }}
                         >
-                            <CVATTooltip title='Upload a skeleton from SVG'>
+                            <CVATTooltip title={t('Upload a skeleton from SVG')}>
                                 <Button
                                     className='cvat-upload-skeleton-svg-button'
                                     style={disabledStyle}
@@ -916,3 +918,11 @@ export default class SkeletonConfigurator extends React.PureComponent<Props, Sta
         );
     }
 }
+
+const TranslatedSkeletonConfigurator = withTranslation('business', { withRef: true })(
+    SkeletonConfigurator,
+) as unknown as React.ForwardRefExoticComponent<
+    Omit<Props, keyof WithTranslation<'business'>> & React.RefAttributes<SkeletonConfigurator>
+>;
+
+export default TranslatedSkeletonConfigurator;

@@ -13,6 +13,7 @@ import Spin from 'antd/lib/spin';
 import { Row, Col } from 'antd/lib/grid';
 import Pagination from 'antd/lib/pagination';
 import Button from 'antd/lib/button';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState, WebhooksQuery, SelectedResourceType } from 'reducers';
 import { updateHistoryFromQuery } from 'components/resource-sorting-filtering';
@@ -32,6 +33,7 @@ interface ProjectRouteMatch {
 const core = getCore();
 
 function WebhooksPage(): JSX.Element | null {
+    const { t } = useTranslation('business');
     const dispatch = useDispatch();
     const history = useHistory();
     const {
@@ -68,7 +70,7 @@ function WebhooksPage(): JSX.Element | null {
             size='large'
         >
             <LeftOutlined />
-            {projectsMatch ? 'Back to project' : 'Back to organization'}
+            {t(projectsMatch ? 'Back to project' : 'Back to organization')}
         </Button>
     );
 

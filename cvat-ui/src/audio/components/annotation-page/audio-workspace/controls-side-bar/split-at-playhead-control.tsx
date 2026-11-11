@@ -17,7 +17,7 @@ import {
     getAudioSplitContextAtPlaybackPosition,
     splitAudioIntervalAtPlaybackPositionAsync,
 } from 'actions/audio-actions';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { SplitIcon } from 'icons';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import GlobalHotKeys from 'utils/mousetrap-react';
@@ -46,7 +46,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function SplitAtPlayheadControl({ shortcut }: Props): JSX.Element {
     const dispatch = useDispatch<ThunkDispatch>();

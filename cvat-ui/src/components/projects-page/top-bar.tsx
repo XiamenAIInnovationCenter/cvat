@@ -14,6 +14,7 @@ import { LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons
 import { importActions } from 'actions/import-actions';
 import { usePrevious } from 'utils/hooks';
 import { ProjectsQuery } from 'reducers';
+import { useTranslation } from 'react-i18next';
 import {
     SortingComponent,
     ResourceFilterHOC,
@@ -49,6 +50,8 @@ function TopBarComponent(props: Readonly<Props>): JSX.Element {
     } = props;
     const [visibility, setVisibility] = useState(defaultVisibility);
     const prevImporting = usePrevious(importing);
+    const { t } = useTranslation('base');
+    const { t: tBusiness } = useTranslation('business');
 
     useEffect(() => {
         if (prevImporting && !importing) {
@@ -69,7 +72,7 @@ function TopBarComponent(props: Readonly<Props>): JSX.Element {
                             }}
                             defaultValue={query.search ?? ''}
                             className='cvat-projects-page-search-bar'
-                            placeholder='Search ...'
+                            placeholder={tBusiness('Search ...')}
                         />
                         <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                     </div>
@@ -116,7 +119,7 @@ function TopBarComponent(props: Readonly<Props>): JSX.Element {
                                     onClick={(): void => history.push('/projects/create')}
                                     icon={<PlusOutlined />}
                                 >
-                                    Create a new project
+                                    {tBusiness('Create a new project')}
                                 </Button>
                                 <Button
                                     className='cvat-import-project-button'
@@ -125,7 +128,7 @@ function TopBarComponent(props: Readonly<Props>): JSX.Element {
                                     icon={importing ? <LoadingOutlined /> : <UploadOutlined />}
                                     onClick={() => dispatch(importActions.openImportBackupModal('project'))}
                                 >
-                                    Create from backup
+                                    {t('search.create_from_backup')}
                                 </Button>
                             </div>
                         )}

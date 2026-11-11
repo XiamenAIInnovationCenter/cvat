@@ -68,7 +68,7 @@ import { reviewActions } from 'actions/review-actions';
 import { filterAnnotations } from 'utils/filter-annotations';
 import { ImageFilter } from 'utils/image-processing';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import i18n, { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import ImageSetupsContent from './image-setups-content';
 import CanvasTipsComponent from './canvas-hints';
@@ -309,7 +309,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function mapDispatchToProps(dispatch: any): DispatchToProps {
     return {
@@ -1072,7 +1072,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
                                 } catch (error: any) {
                                     notification.error({
                                         description: error.toString(),
-                                        message: 'Image processing error occurred',
+                                        message: i18n.t('Image processing error occurred', { ns: 'business' }),
                                         className: 'cvat-notification-notice-image-processing-error',
                                     });
                                 }

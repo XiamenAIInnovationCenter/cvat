@@ -3,13 +3,14 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Icon from '@ant-design/icons';
 
 import { Workspace } from 'reducers';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { AudioSeekIntent } from 'actions/audio-actions';
 import { subKeyMap } from 'utils/component-subkeymap';
 import CVATTooltip from 'components/common/cvat-tooltip';
@@ -65,7 +66,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 const AUDIO_SEEK_INTENTS = {
     START: { kind: 'boundary', boundary: 'start' },
@@ -131,6 +132,7 @@ const RIGHT_BUTTONS: SeekButton[] = [
 ];
 
 function AudioPlayerNavigation(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         playing,
         duration,
@@ -186,11 +188,11 @@ function AudioPlayerNavigation(props: Props): JSX.Element {
     const renderSeekButton = ({
         title, icon, intent, className, shortcut,
     }: SeekButton): JSX.Element => {
-        let tooltip = title;
-        if (title === 'short-backward') tooltip = 'Short step backward';
-        if (title === 'short-forward') tooltip = 'Short step forward';
-        if (title === 'long-backward') tooltip = 'Long step backward';
-        if (title === 'long-forward') tooltip = 'Long step forward';
+        let tooltip = t(title);
+        if (title === 'short-backward') tooltip = t('Short step backward');
+        if (title === 'short-forward') tooltip = t('Short step forward');
+        if (title === 'long-backward') tooltip = t('Long step backward');
+        if (title === 'long-forward') tooltip = t('Long step forward');
 
         const shortcutValue = shortcut ? {
             backwardShortcut,
@@ -223,7 +225,7 @@ function AudioPlayerNavigation(props: Props): JSX.Element {
                 <Col>
                     <div style={blockStyle} className='cvat-player-buttons'>
                         {LEFT_BUTTONS.map(renderSeekButton)}
-                        <CVATTooltip title={`${playing ? 'Pause' : 'Play'} ${playPauseShortcut}`}>
+                        <CVATTooltip title={`${t(playing ? 'Pause' : 'Play')} ${playPauseShortcut}`}>
                             <Icon
                                 className={playing ? 'cvat-player-pause-button' : 'cvat-player-play-button'}
                                 component={playing ? PauseIcon : PlayIcon}

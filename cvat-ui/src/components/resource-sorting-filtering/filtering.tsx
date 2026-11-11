@@ -19,6 +19,7 @@ import Menu from 'antd/lib/menu';
 import { useSelector } from 'react-redux';
 import { CombinedState } from 'reducers';
 import { User } from 'cvat-core-wrapper';
+import { useTranslation } from 'react-i18next';
 
 interface ResourceFilterProps {
     predefinedVisible?: boolean;
@@ -176,6 +177,35 @@ export default function ResourceFilterHOC(
         const [recentFilters, setRecentFilters] = useState<Record<string, string>>({});
         const [appliedFilter, setAppliedFilter] = useState(defaultAppliedFilter);
         const [state, setState] = useState<ImmutableTree>(defaultTree);
+        const { t } = useTranslation();
+        const { t: tFilter } = useTranslation(undefined, { keyPrefix: 'filter' });
+        const { t: tBusiness, i18n } = useTranslation('business');
+
+        const localizedConfig: Config = React.useMemo(() => ({
+            ...config,
+            fields: Object.entries(config.fields).reduce((localizedFields, [fieldName, fieldConfig]) => ({
+                ...localizedFields,
+                [fieldName]: {
+                    ...fieldConfig,
+                    label: tBusiness(`${fieldConfig.label}`),
+                    fieldSettings: (fieldConfig as any).fieldSettings ? {
+                        ...(fieldConfig as any).fieldSettings,
+                        listValues: Array.isArray((fieldConfig as any).fieldSettings.listValues) ?
+                            (fieldConfig as any).fieldSettings.listValues.map((option: any) => ({
+                                ...option,
+                                title: tBusiness(`${option.title}`),
+                            })) : (fieldConfig as any).fieldSettings.listValues,
+                    } : (fieldConfig as any).fieldSettings,
+                },
+            }), {}),
+            settings: {
+                ...config.settings,
+                addRuleLabel: tBusiness('Add rule'),
+                addGroupLabel: tBusiness('Add group'),
+                notLabel: tBusiness('Not'),
+                fieldPlaceholder: tBusiness('Select field'),
+            },
+        }), [i18n.language]);
 
         const predefinedFilters = getPredefinedFilters(user, predefinedFilterValues);
 
@@ -284,7 +314,7 @@ export default function ResourceFilterHOC(
                                             }}
                                             key={key}
                                         >
-                                            {key}
+                                            {tFilter(`quick-filters-keys.${key}`, key)}
                                         </Checkbox>
                                     )) }
                                 </div>
@@ -295,7 +325,7 @@ export default function ResourceFilterHOC(
                                 type='default'
                                 onClick={() => onPredefinedVisibleChange(!predefinedVisible)}
                             >
-                                Quick filters
+                                {tFilter('Quick filters')}
                                 { appliedFilter.predefined ?
                                     <FilterFilled /> :
                                     <FilterOutlined />}
@@ -340,7 +370,7 @@ export default function ResourceFilterHOC(
                                                                 }
                                                             }}
                                                         >
-                                                            {QbUtils.queryString(tree, config)}
+                                                            {QbUtils.queryString(tree, localizedConfig)}
                                                         </Menu.Item>
                                                     );
                                                 })}
@@ -356,14 +386,14 @@ export default function ResourceFilterHOC(
                                             () => onRecentVisibleChange(!recentVisible)
                                         }
                                     >
-                                        Recent
+                                        {t('Recent')}
                                         <DownOutlined />
                                     </Button>
                                 </Popover>
                             ) : null}
 
                             <Query
-                                {...config}
+                                {...localizedConfig}
                                 onChange={(tree: ImmutableTree) => {
                                     setState(tree);
                                 }}
@@ -384,7 +414,7 @@ export default function ResourceFilterHOC(
                                         });
                                     }}
                                 >
-                                    Reset
+                                    {t('Reset')}
                                 </Button>
                                 <Button
                                     className='cvat-apply-filters-button'
@@ -405,7 +435,7 @@ export default function ResourceFilterHOC(
                                         });
                                     }}
                                 >
-                                    Apply
+                                    {t('Apply')}
                                 </Button>
                             </Space>
                         </div>
@@ -417,7 +447,7 @@ export default function ResourceFilterHOC(
                         type='default'
                         onClick={() => onBuilderVisibleChange(!builderVisible)}
                     >
-                        Filter
+                        {t('Filter')}
                         { appliedFilter.built || appliedFilter.recent ?
                             <FilterFilled /> :
                             <FilterOutlined />}
@@ -430,7 +460,7 @@ export default function ResourceFilterHOC(
                     type='link'
                     onClick={() => { setAppliedFilter({ ...defaultAppliedFilter }); }}
                 >
-                    Clear filters
+                    {tFilter('Clear filters')}
                 </Button>
             </div>
         );

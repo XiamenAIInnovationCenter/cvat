@@ -5,6 +5,7 @@
 import { RuleObject } from 'antd/lib/form';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RuleType } from 'rc-field-form/lib/interface';
+import { patchPathForLocaleOn } from 'i18n';
 
 import patterns from './validation-patterns';
 
@@ -62,5 +63,7 @@ const validationRules = {
         },
     ],
 };
+
+Object.values(validationRules).forEach((rules) => patchPathForLocaleOn(rules, 'message', 'validationRules'));
 
 export default validationRules;

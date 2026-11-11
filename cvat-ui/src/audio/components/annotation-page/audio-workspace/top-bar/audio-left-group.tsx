@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Col } from 'antd/lib/grid';
 import Icon, { LoadingOutlined } from '@ant-design/icons';
 import Modal from 'antd/lib/modal';
@@ -10,7 +11,7 @@ import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
 
 import { UndoIcon, RedoIcon } from 'icons';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import AnnotationMenuComponent from 'components/annotation-page/top-bar/annotation-menu';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { ShortcutScope } from 'utils/enums';
@@ -45,9 +46,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function AudioLeftGroup(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         saving,
         keyMap,
@@ -85,14 +87,16 @@ function AudioLeftGroup(props: Props): JSX.Element {
                     closable={false}
                     footer={[]}
                 >
-                    <Text>CVAT is saving your annotations, please wait </Text>
+                    <Text>{t('CVAT is saving your annotations, please wait')} </Text>
                     <LoadingOutlined />
                 </Modal>
             )}
             <Col className='cvat-annotation-header-left-group'>
                 <AnnotationMenuComponent removeAnnotationsConfirmComponent={AudioRemoveAnnotationsConfirm} />
                 <AudioSaveAnnotationsButton />
-                <CVATTooltip overlay={`Undo: ${undoAction} ${undoShortcut}`}>
+                <CVATTooltip overlay={t('Undo: {{action}} {{shortcut}}', {
+                    action: undoAction || '', shortcut: undoShortcut,
+                })}>
                     <Button
                         style={{ pointerEvents: undoAction ? 'initial' : 'none', opacity: undoAction ? 1 : 0.5 }}
                         type='link'
@@ -100,10 +104,12 @@ function AudioLeftGroup(props: Props): JSX.Element {
                         onClick={onUndoClick}
                     >
                         <Icon component={UndoIcon} />
-                        <span>Undo</span>
+                        <span>{t('Undo')}</span>
                     </Button>
                 </CVATTooltip>
-                <CVATTooltip overlay={`Redo: ${redoAction} ${redoShortcut}`}>
+                <CVATTooltip overlay={t('Redo: {{action}} {{shortcut}}', {
+                    action: redoAction || '', shortcut: redoShortcut,
+                })}>
                     <Button
                         style={{ pointerEvents: redoAction ? 'initial' : 'none', opacity: redoAction ? 1 : 0.5 }}
                         type='link'
@@ -111,7 +117,7 @@ function AudioLeftGroup(props: Props): JSX.Element {
                         onClick={onRedoClick}
                     >
                         <Icon component={RedoIcon} />
-                        Redo
+                        {t('Redo')}
                     </Button>
                 </CVATTooltip>
             </Col>

@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@ant-design/icons';
 
 import { ActiveControl, CombinedState } from 'reducers';
@@ -12,7 +13,7 @@ import { RectangleIcon } from 'icons';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import GlobalHotKeys from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { useSelector } from 'react-redux';
 
@@ -32,9 +33,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function CreateIssueControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         activeControl, canvasInstance, updateActiveControl, disabled,
     } = props;
@@ -68,7 +70,7 @@ function CreateIssueControl(props: Props): JSX.Element {
                     keyMap={subKeyMap(componentShortcuts, keyMap)}
                     handlers={handlers}
                 />
-                <CVATTooltip title='Open an issue' placement='right'>
+                <CVATTooltip title={t('Open an issue')} placement='right'>
                     <Icon
                         component={RectangleIcon}
                         className={

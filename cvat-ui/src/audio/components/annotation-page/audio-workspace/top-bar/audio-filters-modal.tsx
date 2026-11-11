@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { shallowEqual } from 'utils/redux';
 import {
@@ -69,6 +70,7 @@ const getAttributesSubfields = (labels: Label[]): Record<string, any> => {
 };
 
 function AudioFiltersModalComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const { labels, activeFilters, visible } = useSelector(
         (state: CombinedState) => ({
             labels: state.annotation.job.labels,
@@ -86,7 +88,7 @@ function AudioFiltersModalComponent(): JSX.Element {
     useEffect(() => {
         const fields: Record<string, any> = {
             label: {
-                label: 'Label',
+                label: t('Label'),
                 type: 'select',
                 valueSources: ['value'] as ('value')[],
                 fieldSettings: {
@@ -97,13 +99,13 @@ function AudioFiltersModalComponent(): JSX.Element {
                 },
             },
             serverID: {
-                label: 'ServerID',
+                label: t('ServerID'),
                 type: 'number',
                 hideForCompare: true,
                 fieldSettings: { min: 0 },
             },
             attr: {
-                label: 'Attributes',
+                label: t('Attributes'),
                 type: '!struct',
                 subfields: getAttributesSubfields(labels),
                 fieldSettings: {
@@ -111,30 +113,30 @@ function AudioFiltersModalComponent(): JSX.Element {
                 },
             },
             duration: {
-                label: 'Duration (ms)',
+                label: t('Duration (ms)'),
                 type: 'number',
                 fieldSettings: { min: 0 },
             },
             start: {
-                label: 'Start (ms)',
+                label: t('Start (ms)'),
                 type: 'number',
                 fieldSettings: { min: 0 },
             },
             end: {
-                label: 'End (ms)',
+                label: t('End (ms)'),
                 type: 'number',
                 fieldSettings: { min: 0 },
             },
             source: {
-                label: 'Source',
+                label: t('Source'),
                 type: 'select',
                 fieldSettings: {
                     listValues: [
-                        { value: 'manual', title: 'manual' },
-                        { value: 'auto', title: 'auto' },
-                        { value: 'consensus', title: 'consensus' },
-                        { value: 'semi-auto', title: 'semi-auto' },
-                        { value: 'file', title: 'file' },
+                        { value: 'manual', title: t('manual') },
+                        { value: 'auto', title: t('auto') },
+                        { value: 'consensus', title: t('consensus') },
+                        { value: 'semi-auto', title: t('semi-auto') },
+                        { value: 'file', title: t('file') },
                     ],
                 },
             },
@@ -158,7 +160,7 @@ function AudioFiltersModalComponent(): JSX.Element {
         } catch (_) {
             setFilters([]);
         }
-    }, [labels]);
+    }, [labels, t]);
 
     useEffect(() => {
         window.localStorage.setItem(FILTERS_HISTORY, JSON.stringify(filters));
@@ -256,14 +258,14 @@ function AudioFiltersModalComponent(): JSX.Element {
                     onClick={() => applyFilters([])}
                     className='cvat-filters-modal-clear-button'
                 >
-                    Clear filters
+                    {t('Clear filters')}
                 </Button>,
                 <Button
                     key='cancel'
                     onClick={() => dispatch(showFilters(false))}
                     className='cvat-filters-modal-cancel-button'
                 >
-                    Cancel
+                    {t('Cancel')}
                 </Button>,
                 <Button
                     key='submit'
@@ -272,7 +274,7 @@ function AudioFiltersModalComponent(): JSX.Element {
                     onClick={confirmModal}
                     className='cvat-filters-modal-submit-button'
                 >
-                    Submit
+                    {t('Submit')}
                 </Button>,
             ]}
         >
@@ -293,7 +295,7 @@ function AudioFiltersModalComponent(): JSX.Element {
                         type='text'
                         className='cvat-filters-modal-recently-used-button'
                     >
-                        Recently used
+                        {t('Recently used')}
                         {' '}
                         <DownOutlined />
                     </Button>

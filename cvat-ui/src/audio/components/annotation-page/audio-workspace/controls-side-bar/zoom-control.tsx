@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ZoomInOutlined } from '@ant-design/icons';
 
 import { limitZoom, ZOOM_MAX, ZOOM_MIN } from '../../../../utils/waveform-geometry';
@@ -18,13 +19,14 @@ function formatZoom(zoom: number): string {
 }
 
 function ZoomControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { zoom, onZoomChange } = props;
     const currentZoom = limitZoom(zoom);
 
     return (
         <AudioSliderControl
             icon={<ZoomInOutlined />}
-            tooltip='Zoom'
+            tooltip={t('Zoom')}
             value={currentZoom}
             min={ZOOM_MIN}
             max={ZOOM_MAX}

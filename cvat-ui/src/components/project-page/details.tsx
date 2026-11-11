@@ -16,6 +16,7 @@ import UserSelector from 'components/task-page/user-selector';
 import MdGuideControl from 'components/md-guide/md-guide-control';
 import { CombinedState } from 'reducers';
 import { usePlugins } from 'utils/hooks';
+import { useTranslation } from 'react-i18next';
 
 const core = getCore();
 
@@ -25,6 +26,7 @@ interface DetailsComponentProps {
 }
 
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
+    const { t } = useTranslation('business');
     const { project, onUpdateProject } = props;
     const [projectName, setProjectName] = useState(project.name);
     const extras = usePlugins(
@@ -61,9 +63,11 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
             <Row justify='space-between' className='cvat-project-description'>
                 <Col>
                     <Text type='secondary'>
-                        {`Project #${project.id} created`}
-                        {project.owner ? ` by ${project.owner.username}` : null}
-                        {` on ${dayjs(project.createdDate).format('MMMM Do YYYY')}`}
+                        {t('Project #{{id}} created by {{owner}} on {{date}}', {
+                            id: project.id,
+                            owner: project.owner?.username || t('Nobody'),
+                            date: dayjs(project.createdDate).format('LL'),
+                        })}
                     </Text>
                     <MdGuideControl instanceType='project' id={project.id} />
                     <BugTrackerEditor
@@ -75,7 +79,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                     />
                 </Col>
                 <Col>
-                    <Text type='secondary'>Assigned to</Text>
+                    <Text type='secondary'>{t('Assigned to')}</Text>
                     <UserSelector
                         value={project.assignee}
                         onSelect={(user) => {

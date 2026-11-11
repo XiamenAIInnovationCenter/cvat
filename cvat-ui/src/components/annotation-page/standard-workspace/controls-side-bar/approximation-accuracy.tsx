@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 import Text from 'antd/lib/typography/Text';
 import Slider from 'antd/lib/slider';
 import { Col, Row } from 'antd/lib/grid';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     approxPolyAccuracy: number;
@@ -17,6 +18,7 @@ interface Props {
 export const MAX_ACCURACY = 13;
 
 function ApproximationAccuracy(props: Props): React.ReactPortal | null {
+    const { t } = useTranslation('business');
     const { approxPolyAccuracy, onChange } = props;
     const target = window.document.getElementsByClassName('cvat-canvas-container')[0];
 
@@ -36,7 +38,7 @@ function ApproximationAccuracy(props: Props): React.ReactPortal | null {
                         onChange={onChange}
                     />
                 </Col>
-                <Text type='secondary'>approximation accuracy</Text>
+                <Text type='secondary'>{t('Approximation accuracy')}</Text>
             </Row>,
             target,
         ) :

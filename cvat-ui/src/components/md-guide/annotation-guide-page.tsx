@@ -14,6 +14,7 @@ import Button from 'antd/lib/button';
 import Space from 'antd/lib/space';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
+import i18n from 'i18next';
 
 import { getCore, AnnotationGuide } from 'cvat-core-wrapper';
 import CVATLoadingSpinner from 'components/common/loading-spinner';
@@ -21,7 +22,10 @@ import GoBackButton from 'components/common/go-back-button';
 import dimensions from 'utils/dimensions';
 
 const core = getCore();
-const confirmationMessage = 'You have unsaved changes, please confirm leaving this page.';
+const confirmationMessage = (): string => i18n.t(
+    'You have unsaved changes, please confirm leaving this page.',
+    { ns: 'business' },
+);
 
 function AnnotationGuidePage(): JSX.Element {
     const mdEditorRef = useRef<typeof MDEditor & { commandOrchestrator: commands.TextAreaCommandOrchestrator }>(null);
@@ -62,8 +66,8 @@ function AnnotationGuidePage(): JSX.Element {
 
             event.preventDefault();
             // eslint-disable-next-line no-param-reassign
-            event.returnValue = confirmationMessage;
-            return confirmationMessage;
+            event.returnValue = confirmationMessage();
+            return confirmationMessage();
         };
 
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -75,7 +79,7 @@ function AnnotationGuidePage(): JSX.Element {
     // handle react-router navigation - warn about unsaved changes
     useEffect(() => history.block((nextLocation) => {
         if (checkForUnsavedChanges() && nextLocation.pathname !== location.pathname) {
-            return confirmationMessage;
+            return confirmationMessage();
         }
 
         return undefined;
@@ -99,7 +103,11 @@ function AnnotationGuidePage(): JSX.Element {
                 updateGuide(guideInstance);
             }).catch((error: unknown) => {
                 notification.error({
-                    message: `Could not receive guide for the ${instanceType} ${id}`,
+                    message: i18n.t('Could not receive guide for the {{type}} {{id}}', {
+                        type: i18n.t(instanceType, { ns: 'business' }),
+                        id,
+                        ns: 'business',
+                    }),
                     description: error instanceof Error ? error.message : '',
                 });
             }).finally(() => {
@@ -121,10 +129,12 @@ function AnnotationGuidePage(): JSX.Element {
             updatedGuide.save().then((result: AnnotationGuide) => {
                 updateValue(result.markdown);
                 updateGuide(result);
-                notification.info({ message: 'Annotation guide was saved successfully' });
+                notification.info({
+                    message: i18n.t('Annotation guide was saved successfully', { ns: 'business' }),
+                });
             }).catch((error: unknown) => {
                 notification.error({
-                    message: 'Could not save guide on the server',
+                    message: i18n.t('Could not save guide on the server', { ns: 'business' }),
                     description: error instanceof Error ? error.message : '',
                 });
             }).finally(() => {
@@ -171,7 +181,7 @@ function AnnotationGuidePage(): JSX.Element {
                         updateValue(computeNewValue());
                     } catch (error: any) {
                         notification.error({
-                            message: 'Could not create a server asset',
+                            message: i18n.t('Could not create a server asset', { ns: 'business' }),
                             description: error.toString(),
                         });
                     } finally {
@@ -233,7 +243,7 @@ function AnnotationGuidePage(): JSX.Element {
                         disabled={fetching || !guide?.id || !hasUnsavedChanges}
                         onClick={() => submit(value)}
                     >
-                        Submit
+                        {i18n.t('Submit', { ns: 'business' })}
                     </Button>
                 </Space>
             </Col>

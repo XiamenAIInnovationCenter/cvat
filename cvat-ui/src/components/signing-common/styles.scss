@@ -41,11 +41,20 @@ $social-google-background: #4286f5;
 .cvat-signing-header {
     background: transparent;
     position: fixed;
+    z-index: 2;
     padding: $grid-unit-size * 2 0 0 0;
     width: 100%;
 
     .cvat-logo-icon {
         filter: brightness(0) invert(1);
+    }
+
+    .cvat-switch-i18n-locale-button{
+        color: $heading-color;
+    }
+
+    .cvat-switch-i18n-locale-button.cvat-switch-i18n-locale-button:hover{
+        color: $action-button-color-3;
     }
 }
 

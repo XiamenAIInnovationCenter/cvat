@@ -5,6 +5,7 @@
 import React from 'react';
 import Popover from 'antd/lib/popover';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { Canvas } from 'cvat-canvas-wrapper';
 import { EllipseIcon } from 'icons';
@@ -22,6 +23,7 @@ export interface Props {
 
 const CustomPopover = withVisibilityHandling(Popover, 'draw-ellipse');
 function DrawEllipseControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { canvasInstance, isDrawing, disabled } = props;
     const dynamicPopoverProps = isDrawing ? {
         overlayStyle: {
@@ -47,7 +49,7 @@ function DrawEllipseControl(props: Props): JSX.Element {
             placement='right'
             content={<DrawShapePopoverContainer shapeType={ShapeType.ELLIPSE} />}
         >
-            <CVATTooltip title='Draw an ellipse' placement='right'>
+            <CVATTooltip title={t('Draw an ellipse')} placement='right'>
                 <Icon {...dynamicIconProps} component={EllipseIcon} />
             </CVATTooltip>
         </CustomPopover>

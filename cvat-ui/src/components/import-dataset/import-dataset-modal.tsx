@@ -31,6 +31,7 @@ import {
 } from 'cvat-core-wrapper';
 import StorageField from 'components/storage/storage-field';
 import { createAction, ActionUnion } from 'utils/redux';
+import { useTranslation } from 'react-i18next';
 
 const { confirm } = Modal;
 
@@ -295,6 +296,7 @@ const reducer = (state: State, action: ActionUnion<typeof reducerActions>): Stat
 };
 
 function ImportDatasetModal(props: StateToProps): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         importers,
         instanceT,
@@ -341,6 +343,8 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
         uploadParams,
         resource,
     } = state;
+    const localizedInstanceType = instance ? t(`${instanceT} #{{id}}`, { id: instance.id }) : instanceType;
+    const localizedResource = resource ? t(resource) : resource;
 
     useEffect(() => {
         if (instanceT === 'project') {
@@ -372,11 +376,10 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
     }, [instance, resource]);
 
     useEffect(() => {
-        dispatch(reducerActions.setHelpMessage(
-            `Import from ${(defaultStorageLocation) ? defaultStorageLocation.split('_')[0] : 'local'} ` +
-            `storage ${(defaultStorageCloudId) ? `№${defaultStorageCloudId}` : ''}`,
-        ));
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+        const messageKey = defaultStorageLocation === StorageLocation.CLOUD_STORAGE ?
+            'Import from cloud storage #{{id}}' : 'Import from local storage';
+        dispatch(reducerActions.setHelpMessage(t(messageKey, { id: defaultStorageCloudId })));
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const uploadLocalFile = (): JSX.Element => (
         <Form.Item
@@ -387,7 +390,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                 return e?.fileList[0];
             }}
             name='dragger'
-            rules={[{ required: true, message: 'The file is required' }]}
+            rules={[{ required: true, message: t('The file is required') }]}
         >
             <Upload.Dragger
                 listType='text'
@@ -401,14 +404,16 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                 }
                 beforeUpload={(_file: RcFile): boolean => {
                     if (!selectedLoader) {
-                        message.warning('Please select a format first', 3);
+                        message.warning(t('Please select a format first'), 3);
                     } else if (isDataset() && !['application/zip', 'application/x-zip-compressed'].includes(_file.type)) {
-                        message.error('Only ZIP archive is supported for import a dataset');
+                        message.error(t('Only ZIP archive is supported for importing a dataset'));
                     } else if (isAnnotation() &&
                                 !selectedLoader.format.toLowerCase().split(', ').includes(_file.name.split('.')[_file.name.split('.').length - 1])) {
                         message.error(
-                            `For ${selectedLoader.name} format only files with ` +
-                                `${selectedLoader.format.toLowerCase()} extension can be used`,
+                            t('For {{name}} format only files with {{extension}} extension can be used', {
+                                name: selectedLoader.name,
+                                extension: selectedLoader.format.toLowerCase(),
+                            }),
                         );
                     } else {
                         dispatch(reducerActions.setFile(_file));
@@ -422,14 +427,14 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                 <p className='ant-upload-drag-icon'>
                     <InboxOutlined />
                 </p>
-                <p className='ant-upload-text'>Click or drag file to this area</p>
+                <p className='ant-upload-text'>{t('Click or drag file to this area')}</p>
             </Upload.Dragger>
         </Form.Item>
     );
 
     const validateFileName = (_: RuleObject, value: string): Promise<void> => {
         if (!selectedLoader) {
-            message.warning('Please select a format first', 3);
+            message.warning(t('Please select a format first'), 3);
             return Promise.reject();
         }
         if (value) {
@@ -445,7 +450,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
             }
             if (isDataset()) {
                 if (extension !== 'zip') {
-                    return Promise.reject(new Error('Only ZIP archive is supported for import a dataset'));
+                    return Promise.reject(new Error(t('Only ZIP archive is supported for importing a dataset')));
                 }
             }
         }
@@ -455,15 +460,15 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
 
     const renderCustomName = (): JSX.Element => (
         <Form.Item
-            label={<Text strong>File name</Text>}
+            label={<Text strong>{t('File name')}</Text>}
             name='fileName'
             hasFeedback
             dependencies={['selectedFormat']}
-            rules={[{ validator: validateFileName }, { required: true, message: 'Please, specify a name' }]}
+            rules={[{ validator: validateFileName }, { required: true, message: t('Please, specify a name') }]}
             required
         >
             <Input
-                placeholder='Dataset file name'
+                placeholder={t('Dataset file name')}
                 className='cvat-modal-import-filename-input'
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     dispatch(reducerActions.setFileName(e.target.value || ''));
@@ -496,11 +501,13 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                     uploadParams.convMaskToPoly,
                     uploadParams.importMode,
                 ));
-            const resToPrint = uploadParams.resource.charAt(0).toUpperCase() + uploadParams.resource.slice(1);
-            const description = `${resToPrint} import was started for ${instanceType}.` +
-            ' You can check progress [here](/requests).';
+            const resToPrint = t(uploadParams.resource === 'annotation' ? 'Annotations' : 'Dataset');
+            const description = t(
+                '{{resource}} import was started for {{instance}}. You can check progress [here](/requests).',
+                { resource: resToPrint, instance: localizedInstanceType },
+            );
             Notification.info({
-                message: `${resToPrint} import started`,
+                message: t('{{resource}} import started', { resource: resToPrint }),
                 description: (
                     <CVATMarkdown history={history}>{description}</CVATMarkdown>
                 ),
@@ -512,12 +519,14 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
     const confirmUpload = (): void => {
         const isAppend = uploadParams.importMode === 'append';
         const annotationEntity = isTask() ? 'task' : 'job';
-        const title = isAppend ? 'Append annotations?' : 'Replace existing annotations?';
+        const title = t(isAppend ? 'Append annotations?' : 'Replace existing annotations?');
         const content = isAppend ?
-            `Uploaded annotations will be added to the existing annotations in this ${annotationEntity}. ` +
-                'Existing annotations will not be removed.' :
-            `This will remove the current annotations in this ${annotationEntity} and ` +
-                'upload annotations from the selected file instead.';
+            t('Uploaded annotations will be added to existing annotations in this {{entity}}. Existing annotations will not be removed.', {
+                entity: t(annotationEntity),
+            }) :
+            t('Current annotations in this {{entity}} will be removed and replaced by annotations from the selected file.', {
+                entity: t(annotationEntity),
+            });
 
         confirm({
             title,
@@ -530,8 +539,8 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                 type: 'primary',
                 danger: true,
             },
-            okText: isAppend ? 'Append annotations' : 'Replace annotations',
-            cancelText: 'Cancel',
+            okText: t(isAppend ? 'Append annotations' : 'Replace annotations'),
+            cancelText: t('Cancel'),
         });
     };
 
@@ -557,15 +566,18 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
             title={(
                 <>
                     <Text strong>
-                        {`Import ${resource} to ${instanceType}`}
+                        {t('Import {{resource}} to {{instance}}', {
+                            resource: localizedResource,
+                            instance: localizedInstanceType,
+                        })}
                     </Text>
                     {
                         instance instanceof core.classes.Project && (
                             <CVATTooltip
                                 title={
                                     instance && !instance.labels.length ?
-                                        'Labels will be imported from dataset' :
-                                        'Labels from project will be used'
+                                        t('Labels will be imported from dataset') :
+                                        t('Labels from project will be used')
                                 }
                             >
                                 <QuestionCircleOutlined className='cvat-modal-import-header-question-icon' />
@@ -592,12 +604,12 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
             >
                 <Form.Item
                     name='selectedFormat'
-                    label='Import format'
-                    rules={[{ required: true, message: 'Format must be selected' }]}
+                    label={t('Import format')}
+                    rules={[{ required: true, message: t('Format must be selected') }]}
                     hasFeedback
                 >
                     <Select
-                        placeholder={`Select ${resource} format`}
+                        placeholder={t(resource === 'annotation' ? 'Select annotation format' : 'Select dataset format')}
                         className='cvat-modal-import-select'
                         virtual={false}
                         onChange={(format: string) => {
@@ -630,26 +642,23 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                             )}
                     </Select>
                 </Form.Item>
-                {
-                    instance?.dimension !== DimensionType.DIMENSION_1D &&
-                    <Space className='cvat-modal-import-switch-conv-mask-to-poly-container'>
-                        <Form.Item
-                            name='convMaskToPoly'
-                            valuePropName='checked'
-                            className='cvat-modal-import-switch-conv-mask-to-poly'
-                        >
-                            <Switch
-                                onChange={(value: boolean) => {
-                                    dispatch(reducerActions.setConvMaskToPoly(value));
-                                }}
-                            />
-                        </Form.Item>
-                        <Text strong>Convert masks to polygons</Text>
-                        <CVATTooltip title='The option is relevant for formats that work with masks only'>
-                            <QuestionCircleOutlined />
-                        </CVATTooltip>
-                    </Space>
-                }
+                {instance?.dimension !== DimensionType.DIMENSION_1D && <Space className='cvat-modal-import-switch-conv-mask-to-poly-container'>
+                    <Form.Item
+                        name='convMaskToPoly'
+                        valuePropName='checked'
+                        className='cvat-modal-import-switch-conv-mask-to-poly'
+                    >
+                        <Switch
+                            onChange={(value: boolean) => {
+                                dispatch(reducerActions.setConvMaskToPoly(value));
+                            }}
+                        />
+                    </Form.Item>
+                    <Text strong>{t('Convert masks to polygons')}</Text>
+                    <CVATTooltip title={t('The option is relevant for formats that work with masks only')}>
+                        <QuestionCircleOutlined />
+                    </CVATTooltip>
+                </Space>}
                 <Space className='cvat-modal-import-switch-use-default-storage-container'>
                     <Form.Item
                         name='useDefaultSettings'
@@ -662,7 +671,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                             }}
                         />
                     </Form.Item>
-                    <Text strong>Use default settings</Text>
+                    <Text strong>{t('Use default settings')}</Text>
                     <CVATTooltip title={helpMessage}>
                         <QuestionCircleOutlined />
                     </CVATTooltip>
@@ -672,13 +681,13 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                         name='importMode'
                         label={(
                             <Space className='cvat-modal-import-mode-label' size={4}>
-                                <Text strong>Import mode</Text>
+                                <Text strong>{t('Import mode')}</Text>
                                 <CVATTooltip
                                     title={(
                                         <div>
-                                            <div>Choose what to do with existing annotations.</div>
-                                            <div>Replace: remove existing annotations before import.</div>
-                                            <div>Append: keep existing annotations and add imported ones.</div>
+                                            <div>{t('Choose what to do with existing annotations.')}</div>
+                                            <div>{t('Replace: remove existing annotations before import.')}</div>
+                                            <div>{t('Append: keep existing annotations and add imported ones.')}</div>
                                         </div>
                                     )}
                                 >
@@ -694,8 +703,8 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                                 dispatch(reducerActions.setImportMode(event.target.value));
                             }}
                         >
-                            <Radio.Button value='replace'>Replace</Radio.Button>
-                            <Radio.Button value='append'>Append</Radio.Button>
+                            <Radio.Button value='replace'>{t('Replace')}</Radio.Button>
+                            <Radio.Button value='append'>{t('Append')}</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
                 )}

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row } from 'antd/es/grid';
 import Text from 'antd/lib/typography/Text';
 
@@ -28,6 +29,7 @@ interface Props {
 }
 
 function QualityManagementTab(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         task, gtJobInstance, gtJobId, gtJobMeta,
         validationLayout, qualitySettings,
@@ -46,19 +48,19 @@ function QualityManagementTab(props: Readonly<Props>): JSX.Element {
         <div className='cvat-quality-control-management-tab' ref={tabRef}>
             <Row className='cvat-quality-control-management-tab-summary'>
                 <Card
-                    title='Total validation frames'
+                    title={t('Total validation frames')}
                     className='cvat-allocation-summary-total'
                     value={totalCount}
                     size={{ cardSize: 8 }}
                 />
                 <Card
-                    title='Excluded validation frames'
+                    title={t('Excluded validation frames')}
                     className='cvat-allocation-summary-excluded'
                     value={excludedCount}
                     size={{ cardSize: 8 }}
                 />
                 <Card
-                    title='Active validation frames'
+                    title={t('Active validation frames')}
                     className='cvat-allocation-summary-active'
                     value={activeCount}
                     size={{ cardSize: 8 }}
@@ -67,9 +69,9 @@ function QualityManagementTab(props: Readonly<Props>): JSX.Element {
             { validationModeTextRepresentation ? (
                 <Row className='cvat-quality-control-validation-mode-hint'>
                     <Text type='secondary'>
-                        The task&apos;s validation mode is configured as&nbsp;
+                        {t("The task's validation mode is configured as")}&nbsp;
                     </Text>
-                    <Text type='secondary' strong>{validationModeTextRepresentation}</Text>
+                    <Text type='secondary' strong>{t(validationModeTextRepresentation)}</Text>
                 </Row>
             ) : null}
             <Row className='cvat-quality-control-gt-job'>

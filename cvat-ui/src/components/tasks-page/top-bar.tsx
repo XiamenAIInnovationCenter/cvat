@@ -24,6 +24,7 @@ import {
 import { TasksQuery } from 'reducers';
 import { usePrevious } from 'utils/hooks';
 import { MultiPlusIcon } from 'icons';
+import { useTranslation } from 'react-i18next';
 import dimensions from 'utils/dimensions';
 import CvatDropdownMenuPaper from 'components/common/cvat-dropdown-menu-paper';
 import TasksCSVExportButton from './tasks-csv-export-button';
@@ -54,6 +55,8 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
     const [visibility, setVisibility] = useState(defaultVisibility);
     const history = useHistory();
     const prevImporting = usePrevious(importing);
+    const { t } = useTranslation('base');
+    const { t: tBusiness } = useTranslation('business');
 
     useEffect(() => {
         if (prevImporting && !importing) {
@@ -73,7 +76,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                             }}
                             defaultValue={query.search ?? ''}
                             className='cvat-tasks-page-search-bar'
-                            placeholder='Search ...'
+                            placeholder={tBusiness('Search ...')}
                         />
                         <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                     </div>
@@ -120,7 +123,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                     onClick={(): void => history.push('/tasks/create')}
                                     icon={<PlusOutlined />}
                                 >
-                                    Create a new task
+                                    {tBusiness('Create a new task')}
                                 </Button>
                                 <Button
                                     className='cvat-create-audio-task-button'
@@ -128,7 +131,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                     onClick={(): void => history.push('/tasks/create?type=audio')}
                                     icon={<SoundOutlined />}
                                 >
-                                    Create a new audio task
+                                    {tBusiness('Create a new audio task')}
                                 </Button>
                                 <Button
                                     className='cvat-create-multi-tasks-button'
@@ -136,7 +139,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                     onClick={(): void => history.push('/tasks/create?many=true')}
                                     icon={<span className='anticon'><MultiPlusIcon /></span>}
                                 >
-                                    Create multi tasks
+                                    {tBusiness('Create multi tasks')}
                                 </Button>
                                 <Button
                                     className='cvat-import-task-button'
@@ -145,7 +148,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                     icon={importing ? <LoadingOutlined /> : <UploadOutlined />}
                                     onClick={() => dispatch(importActions.openImportBackupModal('task'))}
                                 >
-                                    Create from backup
+                                    {t('search.create_from_backup')}
                                 </Button>
                             </CvatDropdownMenuPaper>
                         )}

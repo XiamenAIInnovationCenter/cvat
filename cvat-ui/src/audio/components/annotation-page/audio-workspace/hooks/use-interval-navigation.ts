@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { audioActions } from 'actions/audio-actions';
 import { ActiveControl, CombinedState } from 'reducers';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { ShortcutScope } from 'utils/enums';
 import { Handlers, KeyMap } from 'utils/mousetrap-react';
 import { subKeyMap } from 'utils/component-subkeymap';
@@ -30,7 +30,7 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 export interface HotkeyBindings {
     keyMap: KeyMap;

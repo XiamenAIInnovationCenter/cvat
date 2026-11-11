@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Row, Col } from 'antd/lib/grid';
 import Table from 'antd/lib/table';
@@ -50,7 +51,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         data,
         workspace,
         bugTracker: instance?.bugTracker ?? null,
-        assignee: instance?.assignee?.username || 'Nobody',
+        assignee: instance?.assignee?.username || '',
         duration,
     };
 }
@@ -68,6 +69,7 @@ function formatCoverage(value: number): string {
 }
 
 function AudioStatisticsModalComponent(props: StateToProps & DispatchToProps): JSX.Element | null {
+    const { t } = useTranslation('business');
     const {
         collecting,
         data,
@@ -113,7 +115,7 @@ function AudioStatisticsModalComponent(props: StateToProps & DispatchToProps): J
 
     rows.push({
         key: '___total',
-        label: 'Total',
+        label: t('Total'),
         count: data.total.interval.count,
         totalDuration: formatMilliseconds(data.total.interval.duration),
         coverage: formatCoverage(data.total.interval.coverage),
@@ -121,23 +123,23 @@ function AudioStatisticsModalComponent(props: StateToProps & DispatchToProps): J
 
     const columns = [
         {
-            title: <Text strong>Label</Text>,
+            title: <Text strong>{t('Label')}</Text>,
             dataIndex: 'label',
             key: 'label',
             render: (text: string) => <Text strong>{text}</Text>,
         },
         {
-            title: <Text strong>Regions</Text>,
+            title: <Text strong>{t('Regions')}</Text>,
             dataIndex: 'count',
             key: 'count',
         },
         {
-            title: <Text strong>Total duration</Text>,
+            title: <Text strong>{t('Total duration')}</Text>,
             dataIndex: 'totalDuration',
             key: 'totalDuration',
         },
         {
-            title: <Text strong>Coverage</Text>,
+            title: <Text strong>{t('Coverage')}</Text>,
             dataIndex: 'coverage',
             key: 'coverage',
         },
@@ -148,36 +150,36 @@ function AudioStatisticsModalComponent(props: StateToProps & DispatchToProps): J
             <div className='cvat-job-info-modal-window'>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text'>Overview</Text>
+                        <Text className='cvat-text'>{t('Overview')}</Text>
                     </Col>
                 </Row>
                 <Row justify='start'>
                     <Col span={6}>
-                        <Text strong className='cvat-text'>Assignee</Text>
-                        <Text className='cvat-text'>{assignee}</Text>
+                        <Text strong className='cvat-text'>{t('Assignee')}</Text>
+                        <Text className='cvat-text'>{assignee || t('Nobody')}</Text>
                     </Col>
                     <Col span={6}>
-                        <Text strong className='cvat-text'>Duration</Text>
+                        <Text strong className='cvat-text'>{t('Duration')}</Text>
                         <Text className='cvat-text'>
                             {duration > 0 ? formatMilliseconds(duration * 1000) : '—'}
                         </Text>
                     </Col>
                     <Col span={6}>
-                        <Text strong className='cvat-text'>Regions</Text>
+                        <Text strong className='cvat-text'>{t('Regions')}</Text>
                         <Text className='cvat-text'>{data.total.interval.count}</Text>
                     </Col>
                 </Row>
                 {!!bugTracker && (
                     <Row justify='start' className='cvat-job-info-bug-tracker'>
                         <Col>
-                            <Text strong className='cvat-text'>Bug tracker</Text>
+                            <Text strong className='cvat-text'>{t('Bug tracker')}</Text>
                             <a href={bugTracker}>{bugTracker}</a>
                         </Col>
                     </Row>
                 )}
                 <Row justify='space-around' className='cvat-job-info-statistics'>
                     <Col span={24}>
-                        <Text className='cvat-text'>Annotations statistics</Text>
+                        <Text className='cvat-text'>{t('Annotations statistics')}</Text>
                         <Table
                             scroll={{ y: 400 }}
                             bordered

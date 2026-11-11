@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import { AnyAction } from 'redux';
+import i18n from 'i18next';
 import { TasksQuery } from 'reducers';
 import {
     getCore, RQStatus, Storage, StorageLocation, Task, UpdateStatusData, Request, FramesMetaData,
@@ -302,14 +303,14 @@ ThunkAction {
                     let helperMessage = '';
                     if (!message) {
                         if ([RQStatus.QUEUED, RQStatus.STARTED].includes(status)) {
-                            message = 'CVAT queued the task to import';
-                            helperMessage = 'You may close the window.';
+                            message = i18n.t('CVAT queued the task to import', { ns: 'business' });
+                            helperMessage = i18n.t('You may close the window.', { ns: 'business' });
                         } else if (status === RQStatus.FAILED) {
-                            message = 'Images processing failed';
+                            message = i18n.t('Images processing failed', { ns: 'business' });
                         } else if (status === RQStatus.FINISHED) {
-                            message = 'Task creation finished';
+                            message = i18n.t('Task creation finished', { ns: 'business' });
                         } else {
-                            message = 'Unknown status received';
+                            message = i18n.t('Unknown status received', { ns: 'business' });
                         }
                     }
                     onProgress?.(`${message}${progress ? ` ${Math.floor(progress * 100)}%` : ''}. ${helperMessage}`);

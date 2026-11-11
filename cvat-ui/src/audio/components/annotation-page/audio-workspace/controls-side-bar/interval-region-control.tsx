@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@ant-design/icons';
 import Popover from 'antd/lib/popover';
 import Button from 'antd/lib/button';
@@ -16,7 +17,7 @@ import CVATTooltip from 'components/common/cvat-tooltip';
 import LabelSelector from 'components/label-selector/label-selector';
 import GlobalHotKeys from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
+import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { useSelector } from 'react-redux';
 
@@ -61,9 +62,10 @@ const componentShortcuts = {
     },
 };
 
-registerComponentShortcuts(componentShortcuts);
+registerComponentShortcutsWithAutoLocalePatch(componentShortcuts);
 
 function IntervalRegionControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         activeControl,
         createRegionShortkey,
@@ -185,12 +187,12 @@ function IntervalRegionControl(props: Props): JSX.Element {
         <div className='cvat-audio-interval-region-popover-content'>
             <Row justify='start'>
                 <Col>
-                    <Text className='cvat-text-color' strong>Audio interval</Text>
+                    <Text className='cvat-text-color' strong>{t('Audio interval')}</Text>
                 </Col>
             </Row>
             <Row justify='start' className='cvat-audio-interval-popover-label-row'>
                 <Col>
-                    <Text className='cvat-text-color'>Label</Text>
+                    <Text className='cvat-text-color'>{t('Label')}</Text>
                 </Col>
             </Row>
             <Row justify='center'>
@@ -206,8 +208,8 @@ function IntervalRegionControl(props: Props): JSX.Element {
             <Row gutter={8} style={{ marginTop: 8 }}>
                 <Col span={8}>
                     {renderAction(
-                        'Draw',
-                        'Draw an interval on the waveform',
+                        t('Draw'),
+                        t('Draw an interval on the waveform'),
                         createRegionShortkey,
                         drawInterval,
                         selectedLabelId === null,
@@ -215,8 +217,8 @@ function IntervalRegionControl(props: Props): JSX.Element {
                 </Col>
                 <Col span={8}>
                     {renderAction(
-                        'Record',
-                        'Record an interval from playback position',
+                        t('Record'),
+                        t('Record an interval from playback position'),
                         recordRegionShortkey,
                         recordInterval,
                         selectedLabelId === null,
@@ -224,8 +226,8 @@ function IntervalRegionControl(props: Props): JSX.Element {
                 </Col>
                 <Col span={8}>
                     {renderAction(
-                        'Extend',
-                        'Create an interval from the previous interval end to current time',
+                        t('Extend'),
+                        t('Create an interval from the previous interval end to current time'),
                         extendRegionShortkey,
                         extendInterval,
                         selectedLabelId === null || recording,
@@ -252,8 +254,8 @@ function IntervalRegionControl(props: Props): JSX.Element {
                 <CVATTooltip
                     title={
                         noLabels ?
-                            'Add a label to the task to create intervals' :
-                            'Audio interval tools'
+                            t('Add a label to the task to create intervals') :
+                            t('Audio interval tools')
                     }
                     placement='right'
                 >

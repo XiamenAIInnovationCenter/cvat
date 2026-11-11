@@ -14,6 +14,7 @@ import { MoreOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
 import { MenuProps } from 'antd/lib/menu';
 import { BaseType } from 'antd/lib/typography/Base';
+import i18n from 'i18next';
 
 import { RQStatus, Request } from 'cvat-core-wrapper';
 import { useContextMenuClick } from 'utils/hooks';
@@ -55,13 +56,13 @@ function constructName(operation: Request['operation']): string | null {
     } = operation;
 
     if (target === 'project' && projectID) {
-        return `Project #${projectID}`;
+        return i18n.t('Project #{{id}}', { ns: 'business', id: projectID });
     }
     if (target === 'task' && taskID) {
-        return `Task #${taskID}`;
+        return i18n.t('Task #{{id}}', { ns: 'business', id: taskID });
     }
     if (target === 'job' && jobID) {
-        return `Job #${jobID}`;
+        return i18n.t('Job #{{id}}', { ns: 'business', id: jobID });
     }
     return null;
 }
@@ -92,10 +93,12 @@ function constructTimestamps(request: Request): JSX.Element {
                 return (
                     <>
                         <Row>
-                            {renderEllipsisText(`Started by ${request.owner.username} on ${started}`, 'secondary')}
+                            {renderEllipsisText(i18n.t('Started by {{owner}} on {{date}}', {
+                                ns: 'business', owner: request.owner.username, date: started,
+                            }), 'secondary')}
                         </Row>
                         <Row>
-                            <Text type='secondary'>{`Expires on ${expired}`}</Text>
+                            <Text type='secondary'>{i18n.t('Expires on {{date}}', { ns: 'business', date: expired })}</Text>
                         </Row>
                     </>
                 );
@@ -103,10 +106,12 @@ function constructTimestamps(request: Request): JSX.Element {
             return (
                 <>
                     <Row>
-                        {renderEllipsisText(`Started by ${request.owner.username} on ${started}`, 'secondary')}
+                        {renderEllipsisText(i18n.t('Started by {{owner}} on {{date}}', {
+                            ns: 'business', owner: request.owner.username, date: started,
+                        }), 'secondary')}
                     </Row>
                     <Row>
-                        <Text type='secondary'>{`Finished on ${finished}`}</Text>
+                        <Text type='secondary'>{i18n.t('Finished on {{date}}', { ns: 'business', date: finished })}</Text>
                     </Row>
                 </>
             );
@@ -114,11 +119,15 @@ function constructTimestamps(request: Request): JSX.Element {
         case RQStatus.FAILED: {
             return (request.startedDate ? (
                 <Row>
-                    {renderEllipsisText(`Started by ${request.owner.username} on ${started}`, 'secondary')}
+                    {renderEllipsisText(i18n.t('Started by {{owner}} on {{date}}', {
+                        ns: 'business', owner: request.owner.username, date: started,
+                    }), 'secondary')}
                 </Row>
             ) : (
                 <Row>
-                    {renderEllipsisText(`Enqueued by ${request.owner.username} on ${created}`, 'secondary')}
+                    {renderEllipsisText(i18n.t('Enqueued by {{owner}} on {{date}}', {
+                        ns: 'business', owner: request.owner.username, date: created,
+                    }), 'secondary')}
                 </Row>
             ));
         }
@@ -126,10 +135,12 @@ function constructTimestamps(request: Request): JSX.Element {
             return (
                 <>
                     <Row>
-                        {renderEllipsisText(`Enqueued by ${request.owner.username} on ${created}`, 'secondary')}
+                        {renderEllipsisText(i18n.t('Enqueued by {{owner}} on {{date}}', {
+                            ns: 'business', owner: request.owner.username, date: created,
+                        }), 'secondary')}
                     </Row>
                     <Row>
-                        <Text type='secondary'>{`Started on ${started}`}</Text>
+                        <Text type='secondary'>{i18n.t('Started on {{date}}', { ns: 'business', date: started })}</Text>
                     </Row>
                 </>
             );
@@ -137,7 +148,9 @@ function constructTimestamps(request: Request): JSX.Element {
         default: {
             return (
                 <Row>
-                    {renderEllipsisText(`Enqueued by ${request.owner.username} on ${created}`, 'secondary')}
+                    {renderEllipsisText(i18n.t('Enqueued by {{owner}} on {{date}}', {
+                        ns: 'business', owner: request.owner.username, date: created,
+                    }), 'secondary')}
                 </Row>
             );
         }
@@ -164,7 +177,7 @@ function RequestCard(props: Readonly<Props>): JSX.Element {
     const linkToEntity = constructLink(request);
     const percent = request.status === RQStatus.FINISHED ? 100 : (request.progress ?? 0) * 100;
     const timestamps = constructTimestamps(request);
-    const typeText = constructTypeText(type);
+    const typeText = i18n.t(constructTypeText(type), { ns: 'business' });
 
     const name = constructName(operation);
 
@@ -238,7 +251,7 @@ function RequestCard(props: Readonly<Props>): JSX.Element {
                             {operation?.lightweight && (
                                 <Row>
                                     <Col className='cvat-lightweight-label'>
-                                        <Text type='secondary'>Lightweight backup</Text>
+                                        <Text type='secondary'>{i18n.t('Lightweight backup', { ns: 'business' })}</Text>
                                     </Col>
                                 </Row>
                             )}

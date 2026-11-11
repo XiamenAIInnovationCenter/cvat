@@ -7,6 +7,7 @@ import { Row, Col } from 'antd/lib/grid';
 import { PlusOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
+import { useTranslation } from 'react-i18next';
 
 import {
     SortingComponent,
@@ -36,6 +37,7 @@ interface VisibleTopBarProps {
 }
 
 export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JSX.Element {
+    const { t } = useTranslation('business');
     const {
         query, onApplyFilter, onApplySorting, onApplySearch, onCreateWebhook, goBackContent, selectedCount, onSelectAll,
     } = props;
@@ -59,7 +61,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                 }}
                                 defaultValue={query.search ?? ''}
                                 className='cvat-webhooks-page-search-bar'
-                                placeholder='Search ...'
+                                placeholder={t('Search ...')}
                             />
                             <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                         </div>
@@ -96,7 +98,13 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                         </div>
                     </div>
                     <div className='cvat-webhooks-add-wrapper'>
-                        <Button onClick={onCreateWebhook} type='primary' className='cvat-create-webhook' icon={<PlusOutlined />} />
+                        <Button
+                            onClick={onCreateWebhook}
+                            type='primary'
+                            className='cvat-create-webhook'
+                            icon={<PlusOutlined />}
+                            aria-label={t('Create webhook')}
+                        />
                     </div>
                 </Col>
             </Row>

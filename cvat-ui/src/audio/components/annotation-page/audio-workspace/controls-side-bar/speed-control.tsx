@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { DashboardOutlined } from '@ant-design/icons';
 
 import AudioSliderControl from './audio-slider-control';
@@ -13,12 +14,13 @@ export interface Props {
 }
 
 function SpeedControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { playbackRate, onPlaybackRateChange } = props;
 
     return (
         <AudioSliderControl
             icon={<DashboardOutlined />}
-            tooltip='Speed'
+            tooltip={t('Speed')}
             value={playbackRate}
             min={0.1}
             max={4}

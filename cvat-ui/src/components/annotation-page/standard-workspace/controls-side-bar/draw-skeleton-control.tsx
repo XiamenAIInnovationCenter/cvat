@@ -1,6 +1,7 @@
 import React from 'react';
 import Popover from 'antd/lib/popover';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { Canvas } from 'cvat-canvas-wrapper';
 import { Canvas3d } from 'cvat-canvas3d-wrapper';
@@ -20,6 +21,7 @@ export interface Props {
 
 const CustomPopover = withVisibilityHandling(Popover, 'draw-skeleton');
 function DrawSkeletonControl(props: Props): JSX.Element {
+    const { t } = useTranslation('business');
     const { canvasInstance, isDrawing, disabled } = props;
     const dynamicPopoverProps = isDrawing ? {
         overlayStyle: {
@@ -45,7 +47,7 @@ function DrawSkeletonControl(props: Props): JSX.Element {
             placement='right'
             content={<DrawShapePopoverContainer shapeType={ShapeType.SKELETON} />}
         >
-            <CVATTooltip title='Draw a skeleton' placement='right'>
+            <CVATTooltip title={t('Draw a skeleton')} placement='right'>
                 <Icon {...dynamicIconProps} component={SkeletonIcon} />
             </CVATTooltip>
         </CustomPopover>

@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     CaretDownOutlined,
     DeleteOutlined,
@@ -36,29 +37,6 @@ const ATTRIBUTE_COMPARATORS: QualityRequirementAttributeComparator[] = Object.va
     QualityRequirementAttributeComparator,
 );
 const ATTRIBUTE_RULE_DEFAULT_THRESHOLD = 0.8;
-const attributeRulesFilterConfig: Partial<Config> = {
-    fields: {
-        name: {
-            label: 'Name',
-            type: 'text',
-            valueSources: ['value'],
-        },
-        enabled: {
-            label: 'Enabled',
-            type: 'boolean',
-            valueSources: ['value'],
-        },
-        comparator: {
-            label: 'Comparator',
-            type: 'select',
-            valueSources: ['value'],
-            fieldSettings: {
-                listValues: ATTRIBUTE_COMPARATORS.map((value) => ({ value, title: value })),
-            },
-        },
-    },
-};
-
 interface AttributeRuleRow {
     key: string;
     fieldName: number;
@@ -92,6 +70,21 @@ interface Props {
 }
 
 export default function QualityRequirementAttributeRules(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation('business');
+    const attributeRulesFilterConfig = useMemo<Partial<Config>>(() => ({
+        fields: {
+            name: { label: t('Name'), type: 'text', valueSources: ['value'] },
+            enabled: { label: t('Enabled'), type: 'boolean', valueSources: ['value'] },
+            comparator: {
+                label: t('Comparator'),
+                type: 'select',
+                valueSources: ['value'],
+                fieldSettings: {
+                    listValues: ATTRIBUTE_COMPARATORS.map((value) => ({ value, title: t(value) })),
+                },
+            },
+        },
+    }), [t]);
     const {
         form,
         settingsId,
@@ -135,13 +128,13 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
 
     const renderAttributeComparisonTitle = (): JSX.Element => {
         if (!attributeComparisonOverridden) {
-            return <Text strong>Attribute comparison</Text>;
+            return <Text strong>{t('Attribute comparison')}</Text>;
         }
 
         return (
             <Space size={4} className='cvat-quality-requirement-overridden-label'>
-                <Text strong>Attribute comparison</Text>
-                <CVATTooltip title='Revert to inherited value'>
+                <Text strong>{t('Attribute comparison')}</Text>
+                <CVATTooltip title={t('Revert to inherited value')}>
                     <Button
                         type='link'
                         size='small'
@@ -179,10 +172,10 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                     <Space direction='vertical' size={0}>
                         <Space size={4}>
                             <Text className='cvat-quality-requirement-match-unspecified-label'>
-                                Match unspecified attributes exactly
+                                {t('Match unspecified attributes exactly')}
                             </Text>
                             {matchUnspecifiedOverridden && (
-                                <CVATTooltip title='Revert to inherited value'>
+                                <CVATTooltip title={t('Revert to inherited value')}>
                                     <Button
                                         type='link'
                                         size='small'
@@ -199,7 +192,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                             )}
                         </Space>
                         <Text type='secondary'>
-                            Attributes without a custom rule will be matched using Exact comparator.
+                            {t('Attributes without a custom rule will be matched using Exact comparator.')}
                         </Text>
                     </Space>
                 </Checkbox>
@@ -212,7 +205,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                             attributeOptionsBySpecId.get(rule.specId) :
                             null;
                         const name = attributeOption?.label ?? (
-                            typeof rule.specId === 'number' ? `Unknown attribute #${rule.specId}` : ''
+                            typeof rule.specId === 'number' ? t('Unknown attribute #{{id}}', { id: rule.specId }) : ''
                         );
                         const comparator = rule.comparator ?? QualityRequirementAttributeComparator.EXACT;
 
@@ -253,7 +246,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
 
                     return (
                         <CVATTable
-                            tableTitle='Attribute rules'
+                            tableTitle={t('Attribute rules')}
                             className='cvat-quality-requirement-attribute-rules-table'
                             searchDataIndex={['searchValue']}
                             queryBuilder={{
@@ -277,7 +270,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                 getAttributeComparisonStateClassName(record.isLocal, record.hasInheritedCounterpart)
                             )}
                             columns={[{
-                                title: 'Name',
+                                title: t('Name'),
                                 dataIndex: 'name',
                                 sorter: (first: AttributeRuleRow, second: AttributeRuleRow) => (
                                     first.name.localeCompare(second.name)
@@ -286,7 +279,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                     <Form.Item
                                         name={[record.fieldName, 'specId']}
                                         className='cvat-quality-requirement-attribute-rule-field'
-                                        rules={[{ required: true, message: 'This field is required' }]}
+                                        rules={[{ required: true, message: t('This field is required') }]}
                                     >
                                         <Select
                                             showSearch
@@ -310,7 +303,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                     </Form.Item>
                                 ),
                             }, {
-                                title: 'Enabled',
+                                title: t('Enabled'),
                                 dataIndex: 'enabled',
                                 sorter: (first: AttributeRuleRow, second: AttributeRuleRow) => (
                                     Number(first.enabled) - Number(second.enabled)
@@ -328,7 +321,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                     </Form.Item>
                                 ),
                             }, {
-                                title: 'Comparator',
+                                title: t('Comparator'),
                                 dataIndex: 'comparator',
                                 sorter: (first: AttributeRuleRow, second: AttributeRuleRow) => (
                                     first.comparator.localeCompare(second.comparator)
@@ -350,7 +343,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                             }}
                                         >
                                             <Select.Option value={QualityRequirementAttributeComparator.EXACT}>
-                                                Exact
+                                                {t('Exact')}
                                             </Select.Option>
                                             <Select.Option value={QualityRequirementAttributeComparator.LEVENSHTEIN}>
                                                 Levenshtein
@@ -359,16 +352,16 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                     </Form.Item>
                                 ),
                             }, {
-                                title: 'Actions',
+                                title: t('Actions'),
                                 dataIndex: 'actions',
                                 render: (_: unknown, record: AttributeRuleRow): JSX.Element => {
                                     if (parentRequirementId !== null && !record.isLocal) {
-                                        return <Text type='secondary'>Inherited</Text>;
+                                        return <Text type='secondary'>{t('Inherited')}</Text>;
                                     }
 
                                     if (parentRequirementId !== null && record.hasInheritedCounterpart) {
                                         return (
-                                            <CVATTooltip title='Revert to inherited value'>
+                                            <CVATTooltip title={t('Revert to inherited value')}>
                                                 <Button
                                                     type='text'
                                                     className='cvat-quality-requirements-action-button'
@@ -382,7 +375,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                     }
 
                                     return (
-                                        <CVATTooltip title='Delete rule'>
+                                        <CVATTooltip title={t('Delete rule')}>
                                             <Button
                                                 type='text'
                                                 className='cvat-quality-requirements-action-button'
@@ -433,8 +426,8 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                                 name={[record.fieldName, 'threshold']}
                                                 label={(
                                                     <Space>
-                                                        <Text>Threshold</Text>
-                                                        <CVATTooltip title='Minimum normalized similarity for Levenshtein comparator. Value must be from 0 to 1.'>
+                                                        <Text>{t('Threshold')}</Text>
+                                                        <CVATTooltip title={t('Minimum normalized similarity for Levenshtein comparator. Value must be from 0 to 1.')}>
                                                             <QuestionCircleOutlined className='cvat-quality-settings-tooltip-icon' />
                                                         </CVATTooltip>
                                                     </Space>
@@ -450,7 +443,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
 
                                                         return value >= 0 && value <= 1 ?
                                                             Promise.resolve() :
-                                                            Promise.reject(new Error('Value must be from 0 to 1'));
+                                                            Promise.reject(new Error(t('Value must be from 0 to 1')));
                                                     },
                                                 }]}
                                             >
@@ -468,7 +461,7 @@ export default function QualityRequirementAttributeRules(props: Readonly<Props>)
                                     </Row>
                                 ),
                             }}
-                            locale={{ emptyText: 'No attribute rules configured' }}
+                            locale={{ emptyText: t('No attribute rules configured') }}
                         />
                     );
                 }}

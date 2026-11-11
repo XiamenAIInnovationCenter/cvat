@@ -3,14 +3,19 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import ConfigProvider from 'antd/lib/config-provider';
+import enUS from 'antd/lib/locale/en_US';
+import zhCN from 'antd/lib/locale/zh_CN';
 import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localeData from 'dayjs/plugin/localeData';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
@@ -37,9 +42,11 @@ import { getServerAPISchemaAsync } from 'actions/server-actions';
 import { getGrowthDataAsync, updateGrowthDataAsync } from 'actions/growth-actions';
 import { navigationActions } from 'actions/navigation-actions';
 import { UserGrowthDataModifiableFields } from 'cvat-core-wrapper';
+import { useTranslation } from 'react-i18next';
 import {
     CombinedState, GrowthState, NotificationsState, PluginsState,
 } from './reducers';
+import './i18n';
 import './utils/dayjs-wrapper';
 
 createCVATStore(createRootReducer);
@@ -51,6 +58,7 @@ dayjs.extend(advancedFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
+dayjs.extend(localizedFormat);
 dayjs.extend(weekOfYear);
 dayjs.extend(weekYear);
 dayjs.extend(duration);
@@ -161,15 +169,36 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 
 const ReduxAppWrapper = connect(mapStateToProps, mapDispatchToProps)(CVATApplication);
 
+function ApplicationLocaleProvider({ children }: React.PropsWithChildren): JSX.Element {
+    const { i18n } = useTranslation();
+    const language = i18n.resolvedLanguage || i18n.language;
+    const isChinese = language.toLowerCase().startsWith('zh');
+
+    useEffect(() => {
+        dayjs.locale(isChinese ? 'zh-cn' : 'en');
+        document.documentElement.lang = isChinese ? 'zh-CN' : 'en';
+    }, [isChinese]);
+
+    return (
+        <ConfigProvider locale={isChinese ? zhCN : enUS}>
+            {children}
+        </ConfigProvider>
+    );
+}
+
 const root = createRoot(document.getElementById('root') as HTMLDivElement);
 root.render((
-    <Provider store={cvatStore}>
-        <BrowserRouter>
-            <PluginsEntrypoint />
-            <ReduxAppWrapper />
-        </BrowserRouter>
-        <LayoutGrid />
-    </Provider>
+    <React.Suspense fallback={null}>
+        <Provider store={cvatStore}>
+            <ApplicationLocaleProvider>
+                <BrowserRouter>
+                    <PluginsEntrypoint />
+                    <ReduxAppWrapper />
+                </BrowserRouter>
+                <LayoutGrid />
+            </ApplicationLocaleProvider>
+        </Provider>
+    </React.Suspense>
 ));
 
 window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {

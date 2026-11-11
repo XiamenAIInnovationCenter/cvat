@@ -11,6 +11,7 @@ import { shallowEqual } from 'utils/redux';
 import { Row, Col } from 'antd/lib/grid';
 import Spin from 'antd/lib/spin';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { getInferenceStatusAsync } from 'actions/models-actions';
 import { updateJobAsync, jobsActions } from 'actions/jobs-actions';
@@ -31,6 +32,7 @@ import { getCloudStorageById } from './cloud-storage-editor';
 const core = getCore();
 
 function TaskPageComponent(): JSX.Element {
+    const { t } = useTranslation('business');
     const history = useHistory();
     const id = +useParams<{ id: string }>().id;
     const dispatch = useDispatch();
@@ -74,7 +76,7 @@ function TaskPageComponent(): JSX.Element {
             }
         } catch (error: any) {
             notification.error({
-                message: 'Could not receive the requested task from the server',
+                message: t('Could not receive the requested task from the server'),
                 description: error.toString(),
             });
         }

@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 import Text from 'antd/lib/typography/Text';
 import Slider from 'antd/lib/slider';
 import { Col, Row } from 'antd/lib/grid';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     thresholdValue: number;
@@ -17,6 +18,7 @@ export const MIN_THRESHOLD = 0.2;
 export const MAX_THRESHOLD = 0.9;
 
 function ConfidenceThreshold(props: Props): React.ReactPortal | null {
+    const { t } = useTranslation('business');
     const { thresholdValue, onChange } = props;
     const target = window.document.getElementsByClassName('cvat-canvas-container')[0];
 
@@ -35,7 +37,7 @@ function ConfidenceThreshold(props: Props): React.ReactPortal | null {
                         onChange={onChange}
                     />
                 </Col>
-                <Text type='secondary'>minimum confidence filter</Text>
+                <Text type='secondary'>{t('Minimum confidence filter')}</Text>
             </Row>,
             target,
         ) :

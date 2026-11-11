@@ -7,7 +7,7 @@ import React, { useCallback, useRef } from 'react';
 import { LabelType } from 'cvat-core-wrapper';
 import LabelForm from './label-form';
 import { LabelOptColor, SkeletonConfiguration } from './common';
-import SkeletonConfigurator from './skeleton-configurator';
+import SkeletonConfiguratorComponent, { SkeletonConfigurator } from './skeleton-configurator';
 
 interface Props {
     label: LabelOptColor;
@@ -51,7 +51,7 @@ function ConstructorUpdater(props: Props): JSX.Element {
             />
             {
                 type === LabelType.SKELETON && (
-                    <SkeletonConfigurator
+                    <SkeletonConfiguratorComponent
                         ref={skeletonConfiguratorRef}
                         label={label}
                         disabled={label.id as number > 0}
