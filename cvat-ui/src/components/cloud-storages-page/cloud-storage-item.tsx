@@ -138,7 +138,7 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
                 description={(
                     <>
                         <Paragraph>
-                            <Text type='secondary'>{t('Provider:')} </Text>
+                            <Text type='secondary'>{t('Provider:', { nsSeparator: false })} </Text>
                             <Text>{providerType}</Text>
                         </Paragraph>
                         <Paragraph>

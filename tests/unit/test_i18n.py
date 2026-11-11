@@ -100,6 +100,20 @@ class I18nResourceTest(unittest.TestCase):
             ("base", "sort.Sort by"): "Sort by",
             ("base", "filter.Quick filters"): "Quick filters",
             ("business", "Ok"): "Ok",
+            ("business", "Status:"): "Status:",
+            ("business", "Provider:"): "Provider:",
+            (
+                "business",
+                'You are going to remove the cloud storage "{{name}}". Continue?',
+            ): 'You are going to remove the cloudstorage "{{name}}". Continue?',
+            (
+                "business",
+                "Could not upload annotation for the [task #{{id}}]({{url}})",
+            ): "Could not upload annotation for the [task #{{id}}]({{url}})",
+            (
+                "business",
+                "Could not import dataset to the [project #{{id}}]({{url}})",
+            ): "Could not import dataset to the [project #{{id}}]({{url}})",
             ("business", "false"): "false",
             ("business", "true"): "true",
             ("business", "ObjectID"): "ObjectID",

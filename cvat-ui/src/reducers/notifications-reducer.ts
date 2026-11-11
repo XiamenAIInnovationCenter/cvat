@@ -730,11 +730,11 @@ export default function (state = defaultState, action: AnyAction): Notifications
             const instanceType = resource === 'annotation' ? 'task' : 'project';
             const instanceId = resource === 'annotation' ? instance?.taskId || instance.id : instance.id;
             const message = i18n.t(
-                'Could not import {{resource}} to [{{instanceType}} #{{id}}]({{url}})',
+                resource === 'annotation' ?
+                    'Could not upload annotation for the [task #{{id}}]({{url}})' :
+                    'Could not import dataset to the [project #{{id}}]({{url}})',
                 {
                     ns: 'business',
-                    resource: i18n.t(resource, { ns: 'business' }),
-                    instanceType: i18n.t(instanceType, { ns: 'business' }),
                     id: instanceId,
                     url: `/${instanceType}s/${instanceId}`,
                 },

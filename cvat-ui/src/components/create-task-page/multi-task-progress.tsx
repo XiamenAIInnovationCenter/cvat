@@ -151,7 +151,7 @@ export default function MultiTasksProgress(props: Props): JSX.Element {
                                             type='primary'
                                             onClick={onOk}
                                         >
-                                            {t('OK')}
+                                            {t('Ok')}
                                         </Button>
                                     </Col>
                                 </>

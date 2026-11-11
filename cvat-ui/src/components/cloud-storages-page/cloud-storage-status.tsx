@@ -38,7 +38,7 @@ export default function Status({ cloudStorage }: Props): JSX.Element {
 
     return (
         <Paragraph>
-            <Text type='secondary'>{t('Status:')} </Text>
+            <Text type='secondary'>{t('Status:', { nsSeparator: false })} </Text>
             {message}
         </Paragraph>
     );
